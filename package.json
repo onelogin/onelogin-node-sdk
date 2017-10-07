@@ -1,0 +1,39 @@
+{
+  "name": "onelogin",
+  "version": "0.0.1",
+  "description": "Node.js web-based UX for OneLogin",
+  "homepage": "http://synchro.io/",
+  "contributors": [
+    {
+      "name": "Bob Dickinson",
+      "email": "bob.dickinson@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BobDickinson/onelogin"
+  },
+  "bugs": {
+    "url": "https://github.com/BobDickinson/onelogin/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "es6-promisify": "^5.0.0",
+    "lodash": "^4.17.4",
+    "restify-clients": "^1.5.2"
+  },
+  "scripts": {
+    "test": "nyc --reporter=html --reporter=text mocha"
+  },
+  "engines": {
+    "node": ">= 0.12"
+  },
+  "main": "lib/onelogin.js",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^3.4.2",
+    "nock": "^9.0.22",
+    "nyc": "^11.1.0",
+    "supertest": "^3.0.0"
+  }
+}
