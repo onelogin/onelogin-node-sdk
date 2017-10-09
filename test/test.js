@@ -198,14 +198,14 @@ describe('OneLogin', function()
                 return [ 200, _refreshTokenInfo ];
             });
 
+            var createdAt = _tokenInfo.created_at;
+            _tokenInfo.created_at = new Date(Date.parse(_tokenInfo.created_at) - (36001 * 1000)).toISOString();
+
             var oneLogin = new OneLogin(clientId, clientSecret, "us");
             oneLogin.getToken(function(err, tokenInfo)
             {
                 assert.ifError(err);
                 assert.deepEqual(tokenInfo, _tokenInfo);
-
-                var createdAt = _tokenInfo.created_at;
-                _tokenInfo.created_at = new Date(Date.parse(_tokenInfo.created_at) - (36001 * 1000)).toISOString();
 
                 oneLogin.refreshTokenIfNeeded(function(err, newTokenInfo)
                 {
