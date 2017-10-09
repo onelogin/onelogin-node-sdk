@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/BobDickinson/onelogin.svg?branch=master)](https://travis-ci.org/BobDickinson/onelogin)
 [![Coverage Status](https://coveralls.io/repos/BobDickinson/onelogin/badge.svg?branch=)](https://coveralls.io/r/BobDickinson/onelogin?branch=master)
+[![Known Vulnerabilities](https://snyk.io/test/github/BobDickinson/onelogin/badge.svg)](https://snyk.io/test/github/BobDickinson/onelogin)
 
 This SDK will let you execute all the API methods, version/1, described at https://developers.onelogin.com/api-docs/1/getting-started/dev-overview.
 
