@@ -16,7 +16,7 @@ If you don't have an account you can [sign up for a free developer account here]
 | ------------- | ----------- |
 | client_id     | Required: A valid OneLogin API client_id |
 | client_secret | Required: A valid OneLogin API client_secret |
-| region        | Optional: us or eu. Defaults to us from onelogin.api.client import OneLoginClient |
+| region        | Optional: 'us' or 'eu'. Defaults to 'us' |
 
     var oneLogin = require('onelogin')(client_id, client_secret, region);
 
@@ -43,7 +43,7 @@ And call them like this:
         }
     });
 
-The OneLogin module also supplies those same API methods in an asynchronous form (instead of taking a callback parameter, each method returns to a promise).  With these methods, you may handle the returned promise explicity, or if you are using a version of Node.js that supports async/await, you may await them.
+The OneLogin module also supplies those same API methods in an asynchronous (promisified) form: instead of taking a callback parameter, each method returns to a promise.  With these methods, you may handle the returned promise explicity, or if you are using a version of Node.js that supports async/await, you may await them.
 
 To get the async version of OneLogin, do:
 
