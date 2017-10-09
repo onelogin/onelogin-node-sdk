@@ -1,5 +1,7 @@
 # OneLogin Node.js SDK
 
+[![Build Status](https://travis-ci.org/BobDickinson/onelogin.svg?branch=master)](https://travis-ci.org/BobDickinson/onelogin)
+
 This SDK will let you execute all the API methods, version/1, described at https://developers.onelogin.com/api-docs/1/getting-started/dev-overview.
 
 ## Development Status
