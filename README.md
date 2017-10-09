@@ -47,7 +47,7 @@ And call them like this:
         }
     });
 
-The OneLogin module also supplies those same API methods in an asynchronous (promisified) form: instead of taking a callback parameter, each method returns to a promise.  With these methods, you may handle the returned promise explicity, or if you are using a version of Node.js that supports async/await, you may await them.
+The OneLogin module also supplies those same API methods in an asynchronous (promisified) form: instead of taking a callback parameter, each method returns a promise.  With these methods, you may handle the returned promise explicity, or if you are using a version of Node.js that supports async/await, you may await them.
 
 To get the async version of OneLogin, do:
 
