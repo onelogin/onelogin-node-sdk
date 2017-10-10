@@ -1,5 +1,3 @@
-# https://lord.io/blog/2014/travis-multiple-subdirs/
-
 language: node_js
 node_js:
     - 8
