@@ -20,12 +20,15 @@
   "dependencies": {
     "es6-promisify": "^5.0.0",
     "lodash": "^4.17.4",
-    "restify-clients": "^1.5.2"
+    "restify-clients": "^1.5.2",
+    "snyk": "^1.189.0"
   },
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "docs": "./node_modules/.bin/jsdoc lib"
+    "docs": "./node_modules/.bin/jsdoc lib",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "engines": {
     "node": ">= 0.12"
@@ -39,5 +42,6 @@
     "nock": "^9.0.22",
     "nyc": "^11.2.1",
     "supertest": "^3.0.0"
-  }
+  },
+  "snyk": true
 }
