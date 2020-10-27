@@ -20,7 +20,7 @@
   "dependencies": {
     "es6-promisify": "^5.0.0",
     "lodash": "^4.17.4",
-    "restify-clients": "^1.5.2"
+    "restify-clients": "^2.0.0"
   },
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha",
