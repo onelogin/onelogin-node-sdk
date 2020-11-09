@@ -2,8 +2,8 @@ import { expect, assert } from 'chai'
 const nock = require('nock')
 import * as crypto from 'crypto'
 
-import { OneLoginHTTPClient, Region } from '../../lib/onelogin_http_client'
-import { AxiosClient } from '../../lib/axios_client'
+import { OneLoginHTTPClient, Region } from '../../lib/http_clients/onelogin_http_client'
+import { AxiosClientAdapter } from '../../lib/http_clients/client_adapters/axios_client_adapter'
 
 let region: Region = 'us'
 let timeout = 3000
@@ -58,10 +58,22 @@ let _expiredTokenInfo = {
   account_id: 111111
 }
 
+let _appInfo = {
+  name: "some app",
+  connector_id: 1234,
+  description: "For test"
+}
+
+let _badRequest = {
+  status: 400,
+  error: "BadRequestError",
+  description: "Invalid id(s): 1234"
+}
+
 describe('onelogin client configuration', () => {
   it('configures the onelogin http client correctly', () => {
     clientConfigs.forEach(clientConfig => {
-      let client = new OneLoginHTTPClient(clientConfig, new AxiosClient())
+      let client = new OneLoginHTTPClient(clientConfig, new AxiosClientAdapter())
       expect(client.baseURL).to.equal('https://api.us.onelogin.com')
       expect(client.clientCredential).to.equal(basicCredential)
       expect(client.client).to.exist
@@ -69,7 +81,7 @@ describe('onelogin client configuration', () => {
   })
   it('raises an error if client id is missing', () => {
     invalidClientConfigs.forEach(clientConfig => {
-      expect(() => new OneLoginHTTPClient(clientConfig, new AxiosClient()) )
+      expect(() => new OneLoginHTTPClient(clientConfig, new AxiosClientAdapter()) )
         .to.throw()
     })
   })
@@ -81,7 +93,7 @@ describe('getAccessToken', () => {
       .post('/auth/oauth2/v2/token')
       .reply(200, _tokenInfo)
 
-    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClient())
+    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClientAdapter())
 
     client.getAccessToken().then(() => {
       expect(client.accessToken).to.equal(_tokenInfo.access_token)
@@ -94,7 +106,7 @@ describe('getAccessToken', () => {
       .post('/auth/oauth2/v2/token')
       .reply(200, _tokenInfo)
 
-    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClient())
+    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClientAdapter())
 
     await client.getAccessToken()
     await client.getAccessToken()
@@ -107,7 +119,7 @@ describe('getAccessToken', () => {
       .post('/auth/oauth2/v2/token')
       .reply(200, _expiredTokenInfo)
 
-    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClient())
+    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClientAdapter())
 
     await client.getAccessToken()
     assert.equal(client.accessToken, _expiredTokenInfo.access_token)
@@ -125,11 +137,42 @@ describe('getAccessToken', () => {
       .post('/auth/oauth2/v2/token')
       .reply(500, {})
 
-    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClient())
+    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClientAdapter())
 
     client.getAccessToken().then(() => {
       expect(client.accessToken).to.equal(undefined)
       expect(client.accessTokenExpiry).to.not.exist
     })
+  })
+})
+
+describe('Do', () => {
+  it('executes a successful request', async () => {
+    nock('https://api.us.onelogin.com')
+      .post('/auth/oauth2/v2/token')
+      .reply(200, _tokenInfo)
+
+    nock('https://api.us.onelogin.com')
+      .post('/api/2/apps')
+      .reply(200, _appInfo)
+
+    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClientAdapter())
+    let response = await client.Do({ url: "/api/2/apps", method: "POST", data: _appInfo })
+    expect(response.status).to.eql(200)
+    expect(response.data).to.eql(_appInfo)
+  })
+
+  it('handles a 4xx or 5xx response', async () => {
+    nock('https://api.us.onelogin.com')
+      .post('/auth/oauth2/v2/token')
+      .reply(200, _tokenInfo)
+
+    nock('https://api.us.onelogin.com')
+      .post('/api/2/apps')
+      .reply(400, _badRequest)
+
+    let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClientAdapter())
+    let response = await client.Do({ url: "/api/2/apps", method: "POST", data: _appInfo })
+    expect(response.status).to.equal(400)
   })
 })
