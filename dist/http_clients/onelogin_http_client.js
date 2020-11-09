@@ -1,4 +1,9 @@
 "use strict";
+/**
+  OneLoginHTTPClient
+  @module OneLoginHTTPClientAdapter
+  @describe Manages authentication and requests to OneLogin APIs
+*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,10 +14,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OneLoginHTTPClientAdapter = void 0;
+exports.OneLoginHTTPClient = void 0;
 const SECONDS_PER_HOUR = 3600;
-class OneLoginHTTPClientAdapter {
+class OneLoginHTTPClient {
+    /**
+      Initializes OneLogin HTTP connection and authentication information
+      @constructor
+      @param {OneLoginClientConfig} config - The configuration information used to initialize the OneLogin client
+      @param {HTTPClientAdapter} httpClient - The HTTP client that will facilitate HTTP requests (e.g. axios, https, etc)
+    */
     constructor(config, httpClient) {
+        /**
+          Executes the HTTP Request
+          @async
+          @param {HTTPRequest} request - The request assembled by the using class passed to HTTP client configured for OneLogin
+          @returns {Promise<object>} - Teh resulting data from the HTTP lookup
+        */
+        this.Do = (request) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let accessToken = yield this.getAccessToken();
+                request.headers = { 'Authorization': `Bearer ${accessToken}` };
+                let resourceResponse = yield this.client.Do(request);
+                let { data, headers, status, statusText } = resourceResponse;
+                console.log(`HTTP ${request.method} to ${request.url} complete: ${status} - ${statusText}`);
+                return { data, headers, status, statusText };
+            }
+            catch (err) {
+                console.log("Unable to carry out request.", err.message);
+                return Object.assign({}, err);
+            }
+        });
+        /**
+          Retrieves and memoizes an accessToken for OneLogin requets. Refreshes accessToken when expired
+          @param {string} authPath - The path to OneLogin's API authentication handler
+          @returns {Promise<string>} The accessToken
+        */
         this.getAccessToken = (authPath = "auth/oauth2/v2/token") => __awaiter(this, void 0, void 0, function* () {
             // token expiry before now or no accessToken?
             if (this.accessTokenExpiry < new Date() || !this.accessToken) {
@@ -58,9 +94,6 @@ class OneLoginHTTPClientAdapter {
             }
         });
     }
-    ReadResource(path, query) { }
-    WriteResource(path, payload) { }
-    DestroyResource(path, query) { }
 }
-exports.OneLoginHTTPClientAdapter = OneLoginHTTPClientAdapter;
+exports.OneLoginHTTPClient = OneLoginHTTPClient;
 //# sourceMappingURL=onelogin_http_client.js.map

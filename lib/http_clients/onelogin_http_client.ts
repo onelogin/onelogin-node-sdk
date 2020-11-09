@@ -1,8 +1,21 @@
-import { HTTPClient, HTTPClientConfig, Method } from './http_interface'
+/**
+  OneLoginHTTPClient
+  @module OneLoginHTTPClientAdapter
+  @describe Manages authentication and requests to OneLogin APIs
+*/
+
+import {
+  HTTPRequest, HTTPResponse, HTTPClient,
+  HTTPClientAdapter, HTTPClientConfig, Method
+} from './http_interface'
 
 const SECONDS_PER_HOUR = 3600
 export type Region = | 'us' | 'US' | 'eu' | 'EU'
 
+/**
+  OneLoginClientConfig
+  @describe The required information for establishing HTTP connections to OneLogin APIs
+*/
 interface OneLoginClientConfig {
   clientID: string;
   clientSecret: string;
@@ -11,14 +24,20 @@ interface OneLoginClientConfig {
   timeout: number;
 }
 
-export class OneLoginHTTPClient {
+export class OneLoginHTTPClient implements HTTPClient {
   baseURL: string
   accessToken: string
   clientCredential: string
   accessTokenExpiry: Date
-  client: HTTPClient
+  client: HTTPClientAdapter
 
-  constructor(config: OneLoginClientConfig, httpClient: HTTPClient) {
+  /**
+    Initializes OneLogin HTTP connection and authentication information
+    @constructor
+    @param {OneLoginClientConfig} config - The configuration information used to initialize the OneLogin client
+    @param {HTTPClientAdapter} httpClient - The HTTP client that will facilitate HTTP requests (e.g. axios, https, etc)
+  */
+  constructor(config: OneLoginClientConfig, httpClient: HTTPClientAdapter) {
     if(!config.region && !config.baseURL)
       throw new Error("Either region or baseURL are required")
 
@@ -50,10 +69,31 @@ export class OneLoginHTTPClient {
     })
   }
 
-  ReadResource(path: string, query: object){}
-  WriteResource(path: string, payload: object){}
-  DestroyResource(path: string, query: object){}
+  /**
+    Executes the HTTP Request
+    @async
+    @param {HTTPRequest} request - The request assembled by the using class passed to HTTP client configured for OneLogin
+    @returns {Promise<object>} - Teh resulting data from the HTTP lookup
+  */
+  Do = async (request: HTTPRequest): Promise<HTTPResponse> => {
+    try {
+      let accessToken = await this.getAccessToken()
+      request.headers = { 'Authorization': `Bearer ${accessToken}` }
+      let resourceResponse = await this.client.Do(request)
+      let { data, headers, status, statusText } = resourceResponse
+      console.log(`HTTP ${request.method} to ${request.url} complete: ${status} - ${statusText}`)
+      return { data, headers, status, statusText }
+    } catch( err ) {
+      console.log("Unable to carry out request.", err.message)
+      return { ...err }
+    }
+  }
 
+  /**
+    Retrieves and memoizes an accessToken for OneLogin requets. Refreshes accessToken when expired
+    @param {string} authPath - The path to OneLogin's API authentication handler
+    @returns {Promise<string>} The accessToken
+  */
   getAccessToken = async (authPath = "auth/oauth2/v2/token"): Promise<string> => {
     // token expiry before now or no accessToken?
     if( this.accessTokenExpiry < new Date() || !this.accessToken ) {
@@ -69,7 +109,7 @@ export class OneLoginHTTPClient {
           this.accessTokenExpiry.getHours() +
           (bearerResponse.data.expires_in / SECONDS_PER_HOUR)
         )
-      } catch(err) {
+      } catch( err ) {
         console.log("Unable to authenticate request to OneLogin.", err.message)
       }
     }
