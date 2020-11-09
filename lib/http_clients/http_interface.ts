@@ -27,7 +27,7 @@ export interface HTTPClient {
     Executes the HTTP Request
     @async
     @param {HTTPRequest} request - The request assembled by the using class passed to HTTP client configured for OneLogin
-    @returns {Promise<object>} - Teh resulting data from the HTTP lookup
+    @returns {Promise<object>} - The resulting data from the HTTP lookup
   */
   Do(request: HTTPRequest): Promise<HTTPResponse>
 }

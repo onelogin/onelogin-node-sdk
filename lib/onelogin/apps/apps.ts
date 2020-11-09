@@ -32,7 +32,8 @@ export class OneLoginAppsRepository {
   }
 
   Update = async(app: App): Promise<App> => {
-    let appID = this.pluckID(app)
+    let appID = app.id
+    delete app.id
     if( !appID ) throw new Error("Resource ID must be given")
     let request: HTTPRepositoryEntity<App> = { id: appID, data: app, url: this.endpoint }
     let result: RepositoryEntity<App> = await this.repository.WriteResource(request)
@@ -44,11 +45,5 @@ export class OneLoginAppsRepository {
     let request: HTTPRepositoryEntity<App> = { id, url: this.endpoint }
     let result: RepositoryEntity<object> = await this.repository.DestroyResource(request)
     return {...result.data}
-  }
-
-  private pluckID = (a: App): number => {
-    let id = a.id
-    delete a.id
-    return id
   }
 }
