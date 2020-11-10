@@ -29,7 +29,8 @@
   "engines": {
     "node": ">= 0.12"
   },
-  "main": "dist/onelogin.js",
+  "main": "dist/main.js",
+  "typings": "dist/main.d.ts",
   "devDependencies": {
     "@types/chai": "^4.2.14",
     "@types/chai-as-promised": "^7.1.3",

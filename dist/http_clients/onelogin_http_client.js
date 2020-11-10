@@ -41,7 +41,7 @@ class OneLoginHTTPClient {
             }
             catch (err) {
                 console.log("Unable to carry out request.", err.message);
-                return Object.assign({}, err);
+                throw new Error(...err);
             }
         });
         /**

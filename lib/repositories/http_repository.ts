@@ -24,6 +24,7 @@ export class HTTPRepository implements Repository {
     @async
     @param {HTTPRepositoryEntity} request - The information including endpoint, ID, query parameters, and payload for the request
     @returns {Promise<HTTPRepositoryEntity[]>} - Eventually returns an array of resources
+    returns empty list if there was a problem executing the request
   */
   Query = async (request: HTTPRepositoryEntity): Promise<RepositoryEntity> => {
     let {data, headers, status} = await this.client.Do({
@@ -56,6 +57,7 @@ export class HTTPRepository implements Repository {
     @async
     @param {HTTPRepositoryEntity} request - The information including endpoint, ID, query parameters, and payload for the request
     @returns {Promise<HTTPRepositoryEntity>} - Eventually returns the resource
+    returns nothing if there was a problem executing the request
   */
   ReadResource = async (request: HTTPRepositoryEntity): Promise<RepositoryEntity> => {
     let {data, status} =  await this.client.Do({
@@ -74,7 +76,8 @@ export class HTTPRepository implements Repository {
     Create or Update a resource by id
     @async
     @param {HTTPRepositoryEntity} request - The information including endpoint, ID, query parameters, and payload for the request
-    @returns {Promise<HTTPRepositoryEntity>} - Eventually returns some indication that the write request was accepted
+    @returns {Promise<HTTPRepositoryEntity>} - Eventually returns some indication that the write request was accepted.
+    returns nothing if there was a problem executing the request
   */
   WriteResource = async (request: HTTPRepositoryEntity): Promise<RepositoryEntity> => {
     let {data, status} =  await this.client.Do({

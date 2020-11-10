@@ -1,8 +1,4 @@
-import * as chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-chai.use(chaiAsPromised)
-
-const expect = chai.expect
+import { expect } from '../main.test'
 
 import { OneLoginAppsRepository } from '../../lib/onelogin/apps/apps'
 import { App } from '../../lib/onelogin/apps/model'

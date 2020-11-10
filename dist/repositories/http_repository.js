@@ -43,7 +43,7 @@ class HTTPRepository {
                         params: Object.assign({ cursor: request.cursor }, request.data)
                     });
                     result = result.concat(data);
-                    if (status >= 400 || !headers[request.cursor])
+                    if (!status || status >= 400 || !headers[request.cursor])
                         break;
                 }
             }

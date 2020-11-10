@@ -16,7 +16,7 @@ export type Region = | 'us' | 'US' | 'eu' | 'EU'
   OneLoginClientConfig
   @describe The required information for establishing HTTP connections to OneLogin APIs
 */
-interface OneLoginClientConfig {
+export interface OneLoginClientConfig {
   clientID: string;
   clientSecret: string;
   region?: Region;
@@ -75,7 +75,7 @@ export class OneLoginHTTPClient implements HTTPClient {
     @param {HTTPRequest} request - The request assembled by the using class passed to HTTP client configured for OneLogin
     @returns {Promise<object>} - The resulting data from the HTTP lookup
   */
-  Do = async (request: HTTPRequest): Promise<HTTPResponse> => {
+  Do = async (request: HTTPRequest): Promise<HTTPResponse> | never => {
     try {
       let accessToken = await this.getAccessToken()
       request.headers = { 'Authorization': `Bearer ${accessToken}` }
@@ -84,8 +84,8 @@ export class OneLoginHTTPClient implements HTTPClient {
       console.log(`HTTP ${request.method} to ${request.url} complete: ${status} - ${statusText}`)
       return { data, headers, status, statusText }
     } catch( err ) {
-      console.log("Unable to carry out request.", err.message)
-      return { ...err }
+      console.log("Unable to carry out request.", err)
+      throw new Error ( ...err )
     }
   }
 

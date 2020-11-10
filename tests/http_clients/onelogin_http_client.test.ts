@@ -1,4 +1,5 @@
-import { expect, assert } from 'chai'
+import { expect } from '../main.test'
+import { assert } from 'chai'
 const nock = require('nock')
 import * as crypto from 'crypto'
 
@@ -172,7 +173,6 @@ describe('Do', () => {
       .reply(400, _badRequest)
 
     let client = new OneLoginHTTPClient(configOnlyRegion, new AxiosClientAdapter())
-    let response = await client.Do({ url: "/api/2/apps", method: "POST", data: _appInfo })
-    expect(response.status).to.equal(400)
+    expect( client.Do({ url: "/api/2/apps", method: "POST", data: _appInfo }) ).to.eventually.throw()
   })
 })

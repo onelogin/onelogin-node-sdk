@@ -1,33 +1,7 @@
-import { expect, assert } from 'chai'
+import { expect, GoodClient, BadClient } from '../main.test'
 
 import { HTTPRepository } from '../../lib/repositories/http_repository'
 import { HTTPClient, HTTPRequest, HTTPResponse } from '../../lib/http_clients/http_interface'
-
-class GoodClient implements HTTPClient {
-  mockResponse: object
-  passes: number
-  constructor(mockResponse?: object) {
-    this.mockResponse = mockResponse
-    this.passes = 0
-  }
-
-  Do = async (request: HTTPRequest): Promise<HTTPResponse> => {
-    let response = {
-      data: this.mockResponse || (this.passes < 1 ? {name: "stuff", id: 123} : [{name: "other_stuff", id: 345}]),
-      status: 200,
-      statusText: "ok",
-      headers: this.passes < 1 ? {"After-Cursor": "asdf"} : {}
-    }
-    this.passes++
-    return response
-  }
-}
-
-class BadClient implements HTTPClient {
-  Do = async (request: HTTPRequest): Promise<HTTPResponse> => {
-    return {  data: {message: "uh oh!"}, status: 500, statusText: "is down", headers: {} }
-  }
-}
 
 describe('With a Good Client', () => {
   it('Retrieves the index when API returns one result', async () => {

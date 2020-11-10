@@ -33,7 +33,8 @@ class OneLoginAppsRepository {
             return Object.assign({}, result.data);
         });
         this.Update = (app) => __awaiter(this, void 0, void 0, function* () {
-            let appID = this.pluckID(app);
+            let appID = app.id;
+            delete app.id;
             if (!appID)
                 throw new Error("Resource ID must be given");
             let request = { id: appID, data: app, url: this.endpoint };
@@ -47,11 +48,6 @@ class OneLoginAppsRepository {
             let result = yield this.repository.DestroyResource(request);
             return Object.assign({}, result.data);
         });
-        this.pluckID = (a) => {
-            let id = a.id;
-            delete a.id;
-            return id;
-        };
         this.repository = repository;
         this.endpoint = "/api/2/apps";
     }
