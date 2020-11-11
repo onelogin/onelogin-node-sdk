@@ -6,7 +6,7 @@ import { OneLoginHTTPClient, OneLoginClientConfig } from './http_clients/onelogi
 import { HTTPRepository } from './repositories/http_repository'
 import { HTTPClient } from './http_clients/http_interface'
 
-export class OneLoginClient {
+export class Client {
   client: HTTPClient
   resourceRepository: HTTPRepository
   appsRepository: OneLoginAppsRepository
@@ -20,6 +20,4 @@ export class OneLoginClient {
   }
 }
 
-module.exports = {
-  Client: OneLoginClient
-}
+module.exports = { Client }

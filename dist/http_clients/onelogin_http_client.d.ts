@@ -35,7 +35,7 @@ export declare class OneLoginHTTPClient implements HTTPClient {
       @param {HTTPRequest} request - The request assembled by the using class passed to HTTP client configured for OneLogin
       @returns {Promise<object>} - The resulting data from the HTTP lookup
     */
-    Do: (request: HTTPRequest) => Promise<HTTPResponse>;
+    Do: (request: HTTPRequest) => Promise<HTTPResponse> | never;
     /**
       Retrieves and memoizes an accessToken for OneLogin requets. Refreshes accessToken when expired
       @param {string} authPath - The path to OneLogin's API authentication handler

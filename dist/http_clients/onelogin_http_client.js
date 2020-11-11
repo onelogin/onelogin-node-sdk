@@ -40,7 +40,7 @@ class OneLoginHTTPClient {
                 return { data, headers, status, statusText };
             }
             catch (err) {
-                console.log("Unable to carry out request.", err.message);
+                console.log("Unable to carry out request.", err);
                 throw new Error(...err);
             }
         });

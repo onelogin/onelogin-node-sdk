@@ -27,6 +27,7 @@ class HTTPRepository {
           @async
           @param {HTTPRepositoryEntity} request - The information including endpoint, ID, query parameters, and payload for the request
           @returns {Promise<HTTPRepositoryEntity[]>} - Eventually returns an array of resources
+          returns empty list if there was a problem executing the request
         */
         this.Query = (request) => __awaiter(this, void 0, void 0, function* () {
             let { data, headers, status } = yield this.client.Do({
@@ -43,7 +44,7 @@ class HTTPRepository {
                         params: Object.assign({ cursor: request.cursor }, request.data)
                     });
                     result = result.concat(data);
-                    if (!status || status >= 400 || !headers[request.cursor])
+                    if (status >= 400 || !headers[request.cursor])
                         break;
                 }
             }
@@ -59,6 +60,7 @@ class HTTPRepository {
           @async
           @param {HTTPRepositoryEntity} request - The information including endpoint, ID, query parameters, and payload for the request
           @returns {Promise<HTTPRepositoryEntity>} - Eventually returns the resource
+          returns nothing if there was a problem executing the request
         */
         this.ReadResource = (request) => __awaiter(this, void 0, void 0, function* () {
             let { data, status } = yield this.client.Do({
@@ -77,7 +79,8 @@ class HTTPRepository {
           Create or Update a resource by id
           @async
           @param {HTTPRepositoryEntity} request - The information including endpoint, ID, query parameters, and payload for the request
-          @returns {Promise<HTTPRepositoryEntity>} - Eventually returns some indication that the write request was accepted
+          @returns {Promise<HTTPRepositoryEntity>} - Eventually returns some indication that the write request was accepted.
+          returns nothing if there was a problem executing the request
         */
         this.WriteResource = (request) => __awaiter(this, void 0, void 0, function* () {
             let { data, status } = yield this.client.Do({
