@@ -16,21 +16,21 @@ class OneLoginAppsRepository {
             let request = { data: query, url: this.endpoint };
             let result = yield this.repository.Query(request);
             let apps = result.data;
-            return apps;
+            return { data: apps };
         });
         this.FindByID = (id) => __awaiter(this, void 0, void 0, function* () {
             let request = { id, url: this.endpoint };
             let result = yield this.repository.ReadResource(request);
             if (!result)
-                throw new Error("Unable to locate resource");
-            return Object.assign({}, result.data);
+                return { data: null, error: { httpStatusCode: result.status, data: result.data } };
+            return { data: Object.assign({}, result.data) };
         });
         this.Create = (app) => __awaiter(this, void 0, void 0, function* () {
             let request = { data: app, url: this.endpoint };
             let result = yield this.repository.WriteResource(request);
             if (!result)
-                throw new Error("Unable to create resource");
-            return Object.assign({}, result.data);
+                return { data: null, error: { httpStatusCode: result.status, data: result.data } };
+            return { data: Object.assign({}, result.data) };
         });
         this.Update = (app) => __awaiter(this, void 0, void 0, function* () {
             let appID = app.id;
@@ -40,8 +40,8 @@ class OneLoginAppsRepository {
             let request = { id: appID, data: app, url: this.endpoint };
             let result = yield this.repository.WriteResource(request);
             if (!result)
-                throw new Error("Unable to update resource");
-            return Object.assign({}, result.data);
+                return { data: null, error: { httpStatusCode: result.status, data: result.data } };
+            return { data: Object.assign({}, result.data) };
         });
         this.Destroy = (id) => __awaiter(this, void 0, void 0, function* () {
             let request = { id, url: this.endpoint };

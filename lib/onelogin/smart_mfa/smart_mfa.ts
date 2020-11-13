@@ -1,5 +1,6 @@
 import { HTTPClient } from '../../http_clients/http_interface'
 import { SmartSMSRequest, SmartEmailRequest, SmartMFAResponse, OTP } from './model'
+import { OneLoginResponse } from '../interfaces'
 
 export class OneLoginSmartMFA {
   client: HTTPClient
@@ -8,7 +9,7 @@ export class OneLoginSmartMFA {
     this.client = client
   }
 
-  CheckMFARequired = async (request: SmartSMSRequest | SmartEmailRequest): Promise<SmartMFAResponse> => {
+  CheckMFARequired = async (request: SmartSMSRequest | SmartEmailRequest): Promise<OneLoginResponse<SmartMFAResponse>> => {
     let response = await this.client.Do({
       url: "api/2/smart-mfa/",
       data: request,
@@ -17,9 +18,9 @@ export class OneLoginSmartMFA {
     })
     if( response.status >= 400 ) {
       console.log("OneLogin Returned an Error", response)
-      throw new Error(`There was a problem ${response.statusText}`)
+      return { data: null, error: { httpStatusCode: response.status, data: response.data } }
     }
-    return {...response.data}
+    return {data: {...response.data}}
   }
 
   ValidateOTP = async (token: OTP): Promise<string | object> => {
@@ -32,6 +33,6 @@ export class OneLoginSmartMFA {
       console.log("OneLogin Returned an Error", response)
       throw new Error(`There was a problem ${response.statusText}`)
     }
-    return {...response.data}
+    return { ...response.data }
   }
 }

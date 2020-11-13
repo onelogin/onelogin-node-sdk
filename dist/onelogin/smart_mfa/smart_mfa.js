@@ -21,9 +21,9 @@ class OneLoginSmartMFA {
             });
             if (response.status >= 400) {
                 console.log("OneLogin Returned an Error", response);
-                throw new Error(`There was a problem ${response.statusText}`);
+                return { data: null, error: { httpStatusCode: response.status, data: response.data } };
             }
-            return Object.assign({}, response.data);
+            return { data: Object.assign({}, response.data) };
         });
         this.ValidateOTP = (token) => __awaiter(this, void 0, void 0, function* () {
             let response = yield this.client.Do({

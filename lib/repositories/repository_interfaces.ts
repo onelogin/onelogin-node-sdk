@@ -13,6 +13,7 @@ export interface RepositoryEntity<T = object> {
 */
 export interface HTTPRepositoryEntity<T = object> extends RepositoryEntity {
   url: string;
+  status?: number;
   cursor?: string;
 }
 

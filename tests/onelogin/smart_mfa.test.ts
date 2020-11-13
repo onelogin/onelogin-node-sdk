@@ -14,7 +14,7 @@ describe('With a Good Client', () => {
       phone: "15554206969",
       context: {ip: "123.123.123.123", user_agent: "chrome"}
     })
-    expect(result).to.eql({name: "stuff", id: 123})
+    expect(result.data).to.eql({name: "stuff", id: 123})
   })
   it('Verifies the OTP Token', async () => {
     let httpClient = new GoodClient()
