@@ -1,5 +1,5 @@
 {
-  "name": "onelogin-node-sdk",
+  "name": "@onelogin/onelogin-node-sdk",
   "version": "1.0.0",
   "description": "JavaScript SDK for OneLogin APIs",
   "homepage": "http://onelogin.com/",
@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/onelogin/onelogin-node-sdk.git"
+    "url": "git://github.com/onelogin/onelogin-node-sdk.git"
   },
   "bugs": {
     "url": "https://github.com/onelogin/onelogin-node-sdk/issues"
@@ -21,13 +21,16 @@
     "eslint": "^7.10.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "test": "mocha -r ts-node/register tests/**/*.test.ts",
     "coverage": "nyc -r text -e .ts -x \"tests/**/*.test.ts\" npm run test",
     "docs": "jsdoc lib"
   },
   "engines": {
     "node": ">= 0.12"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
   },
   "main": "dist/main.js",
   "typings": "dist/main.d.ts",

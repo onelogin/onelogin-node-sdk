@@ -11,6 +11,9 @@ pids
 *.seed
 *.pid.lock
 
+# Build output
+dist/
+
 # JSDoc Output
 out/
 
@@ -59,4 +62,3 @@ typings/
 
 # dotenv environment variables file
 .env
-
