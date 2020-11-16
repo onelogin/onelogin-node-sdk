@@ -39,7 +39,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@YOUR_USERNAME'
       - run: npm ci
-      - run: echo registry=https://npm.pkg.github.com/YOUR_USERNAME >> .npmrc
+      - run: echo registry=https://npm.pkg.github.com/onelogin >> .npmrc
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
