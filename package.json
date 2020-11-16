@@ -1,5 +1,5 @@
 {
-  "name": "@onelogin/onelogin-node-sdk",
+  "name": "onelogin-node-sdk",
   "version": "1.0.0",
   "description": "JavaScript SDK for OneLogin APIs",
   "homepage": "http://onelogin.com/",
