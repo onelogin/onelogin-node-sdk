@@ -109,7 +109,7 @@ export class HTTPRepository implements Repository {
     if( status < 400 ) {
       return { data: {} }
     } else {
-      return { error: `There was a problem destorying the resource: ${data.message}` }
+      return { error: `There was a problem destroying the resource: ${data.message}` }
     }
   }
 }
