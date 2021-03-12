@@ -13,8 +13,8 @@ export class OneLoginAppsRepository {
 
   Query = async (query?: object): Promise<OneLoginResponse<App[]>> => {
     let request: HTTPRepositoryEntity<App> = { data: query, url: this.endpoint }
-    let result = await this.repository.Query(request) as HTTPRepositoryEntity<App>
-    if( result.status >= 400 ) return{ data: null, error: { httpStatusCode: result.status, data: result.data } }
+    let result: RepositoryEntity<App> = await this.repository.Query(request)
+    if( result.error ) return{ data: null, error: result.error }
     let apps: App[] = result.data as App[]
     return { data: apps }
   }
@@ -22,15 +22,15 @@ export class OneLoginAppsRepository {
   FindByID = async (id: number): Promise<OneLoginResponse<App>> => {
     let request: HTTPRepositoryEntity<App> = { id, url: this.endpoint }
     let result = await this.repository.ReadResource(request) as HTTPRepositoryEntity<App>
-    if( !result.data ) return{ data: null, error: { httpStatusCode: result.status, data: result.data } }
-    return { data: { ...result.data } }
+    if( result.error ) return{ data: null, error: result.error }
+    return { data: result.data }
   }
 
   Create = async(app: App): Promise<OneLoginResponse<App>> => {
     let request: HTTPRepositoryEntity<App> = { data: app, url: this.endpoint }
     let result = await this.repository.WriteResource(request) as HTTPRepositoryEntity<App>
-    if( !result.data ) return{ data: null, error: { httpStatusCode: result.status, data: result.data } }
-    return { data: { ...result.data } }
+    if( result.error ) return{ data: null, error: result.error }
+    return { data: result.data }
   }
 
   Update = async(app: App): Promise<OneLoginResponse<App>> => {
@@ -39,14 +39,14 @@ export class OneLoginAppsRepository {
     if( !appID ) throw new Error("Resource ID must be given")
     let request: HTTPRepositoryEntity<App> = { id: appID, data: app, url: this.endpoint }
     let result = await this.repository.WriteResource(request) as HTTPRepositoryEntity<App>
-    if( !result.data ) return{ data: null, error: { httpStatusCode: result.status, data: result.data } }
-    return { data: { ...result.data } }
+    if( result.error ) return{ data: null, error: result.error }
+    return { data: result.data }
   }
 
   Destroy = async(id: number): Promise<OneLoginResponse<object>> => {
     let request: HTTPRepositoryEntity<App> = { id, url: this.endpoint }
     let result= await this.repository.DestroyResource(request) as HTTPRepositoryEntity<object>
-    if( result.status >= 400 ) return{ data: null, error: { httpStatusCode: result.status, data: result.data } }
-    return { data: { ...result.data } }
+    if( result.error ) return{ data: null, error: result.error }
+    return { data: result.data }
   }
 }

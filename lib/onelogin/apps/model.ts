@@ -32,8 +32,8 @@ export interface AppConfiguration {
 	oidc_application_type?:              number
 	token_endpoint_auth_method?:         number
 	access_token_expiration_minutes?:    number
-  redirect_uri?:                       string
-  login_url?:                          string
+  	redirect_uri?:                       string
+  	login_url?:                          string
 	provider_arn?:                       string
 	signature_algorithm?:                string
 	logout_url?:                         string
@@ -64,7 +64,7 @@ export interface AppParameter {
 	values?:                     string
 	default_values?:             string
 	param_key_name?:             string
-  skip_if_blank?:              boolean
+  	skip_if_blank?:              boolean
 	provisioned_entitlements?:   boolean
 	safe_entitlements_enabled?:  boolean
 	include_in_saml_assertion?:  boolean
