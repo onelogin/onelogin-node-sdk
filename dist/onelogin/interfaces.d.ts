@@ -1,12 +1,10 @@
 /**
-  Error
-  @describe The error envelope for communicating to the caller that something went wrong
+  OneLoginResponse
+  @describe The envelope for the response data from repository hits where OneLogin is the backing data store.
+  @field data - the body of the response (e.g. in a GET this would be the json that comes back)
+  @field error - a string indicating what happened. Usually that the resource was not retrieved or updated.
 */
-export interface Error<T = object> {
-    data: T;
-    httpStatusCode?: number;
-}
 export interface OneLoginResponse<T> {
     data: T;
-    error?: Error;
+    error?: String;
 }

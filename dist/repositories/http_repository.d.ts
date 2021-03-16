@@ -44,5 +44,9 @@ export declare class HTTPRepository implements Repository {
     */
     DestroyResource: (request: HTTPRepositoryEntity) => Promise<{
         data: {};
+        error?: undefined;
+    } | {
+        error: string;
+        data?: undefined;
     }>;
 }

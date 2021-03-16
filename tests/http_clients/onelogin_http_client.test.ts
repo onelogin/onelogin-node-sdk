@@ -72,6 +72,16 @@ let _badRequest = {
 }
 
 describe('onelogin client configuration', () => {
+  beforeEach(() => {
+    if (!nock.isActive()) {
+      nock.activate();
+    }
+  });
+  afterEach(() => {
+    nock.restore();
+    nock.cleanAll();
+  });
+
   it('configures the onelogin http client correctly', () => {
     clientConfigs.forEach(clientConfig => {
       let client = new OneLoginHTTPClient(clientConfig, new AxiosClientAdapter())
@@ -89,6 +99,15 @@ describe('onelogin client configuration', () => {
 })
 
 describe('getAccessToken', () => {
+  beforeEach(() => {
+    if (!nock.isActive()) {
+      nock.activate();
+    }
+  });
+  afterEach(() => {
+    nock.restore();
+    nock.cleanAll();
+  });
   it('gets access token', () => {
     nock('https://api.us.onelogin.com')
       .post('/auth/oauth2/v2/token')
@@ -148,6 +167,15 @@ describe('getAccessToken', () => {
 })
 
 describe('Do', () => {
+  beforeEach(() => {
+    if (!nock.isActive()) {
+      nock.activate();
+    }
+  });
+  afterEach(() => {
+    nock.restore();
+    nock.cleanAll();
+  });
   it('executes a successful request', async () => {
     nock('https://api.us.onelogin.com')
       .post('/auth/oauth2/v2/token')

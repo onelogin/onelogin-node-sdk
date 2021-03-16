@@ -41,8 +41,10 @@ class AxiosClientAdapter {
                 return Object.assign({}, response);
             }
             catch (err) {
-                console.log("An error was returned from the Remote.", err.message);
-                return Object.assign({}, err.response);
+                if (err.response) {
+                    throw new Error(err.response);
+                }
+                throw err;
             }
         });
         /** Set up request interceptors so responses and errors can get handled */

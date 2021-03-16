@@ -1,8 +1,4 @@
-import { assert } from 'chai'
 import { expect, GoodClient, BadClient } from '../main.test'
-
-import { HTTPRepository } from '../../lib/repositories/http_repository'
-import { HTTPClient, HTTPRequest, HTTPResponse } from '../../lib/http_clients/http_interface'
 import { OneLoginSmartMFA } from '../../lib/onelogin/smart_mfa/smart_mfa'
 
 describe('With a Good Client', () => {

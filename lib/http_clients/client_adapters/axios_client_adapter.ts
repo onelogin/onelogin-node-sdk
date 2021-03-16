@@ -31,8 +31,10 @@ export class AxiosClientAdapter implements HTTPClientAdapter {
       let response = await this.httpClient({ ...request }) // got lucky and HTTPRequest happens to line up with AxiosRequestConfig. might be more complex for other http libraries
       return { ...response }
     } catch(err) {
-      console.log("An error was returned from the Remote.", err.message)
-      return { ...err.response }
+      if(err.response){
+        throw new Error( err.response )
+      }
+      throw err
     }
   }
 

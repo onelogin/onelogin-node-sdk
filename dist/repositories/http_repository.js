@@ -48,11 +48,12 @@ class HTTPRepository {
                         break;
                 }
             }
+            console.log(`Exectued Query and got Response ${status} From API`);
             if (status < 400) {
                 return { data: result };
             }
             else {
-                console.log("There was a problem retrieving all the results", data.message);
+                return { error: `There was a problem retrieving all the results: ${data.message}` };
             }
         });
         /**
@@ -68,11 +69,12 @@ class HTTPRepository {
                 params: request.data,
                 method: "get",
             });
+            console.log(`Exectued Read and got Response ${status} From API`);
             if (status < 400) {
                 return { data };
             }
             else {
-                console.log("There was a problem reading the resource", data.message);
+                return { error: `There was a problem reading the resource: ${data.message}` };
             }
         });
         /**
@@ -88,11 +90,12 @@ class HTTPRepository {
                 data: request.data,
                 method: request.id ? "put" : "post",
             });
+            console.log(`Exectued Write and got Response ${status} From API`);
             if (status < 400) {
                 return { data };
             }
             else {
-                console.log("There was a problem writing the resource", data.message);
+                return { error: `There was a problem writing the resource: ${data.message}` };
             }
         });
         /**
@@ -105,11 +108,12 @@ class HTTPRepository {
                 url: `${request.url}/${request.id}`,
                 method: "delete"
             });
+            console.log(`Exectued Delete and got Response ${status} From API`);
             if (status < 400) {
                 return { data: {} };
             }
             else {
-                console.log("There was a problem destorying the resource", data.message);
+                return { error: `There was a problem destroying the resource: ${data.message}` };
             }
         });
         this.client = client;

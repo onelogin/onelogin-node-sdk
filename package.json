@@ -17,11 +17,13 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
-    "btoa": "^1.2.1"
+    "base64-js": "^1.5.1",
+    "btoa": "^1.2.1",
+    "qs": "^6.9.6"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "mocha -r ts-node/register tests/**/*.test.ts",
+    "test": "mocha -r mock-local-storage -r ts-node/register tests/**/*.test.ts",
     "coverage": "nyc -r text -e .ts -x \"tests/**/*.test.ts\" npm run test",
     "docs": "jsdoc lib"
   },
@@ -42,6 +44,7 @@
     "dotenv": "^8.2.0",
     "jsdoc": "^3.5.5",
     "mocha": "^8.2.1",
+    "mock-local-storage": "^1.1.17",
     "nock": "^13.0.4",
     "nyc": "^15.1.0",
     "ts-node": "^9.0.0",
