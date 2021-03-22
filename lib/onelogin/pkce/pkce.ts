@@ -43,12 +43,13 @@ export class PKCE {
       !localStorage.getItem(LOCALSTORE_CODE_VERIFIER_KEY) ||
       !localStorage.getItem(LOCALSTORE_AUTH_URL_KEY)
     ){
-      localStorage.clear();
+      localStorage.removeItem(LOCALSTORE_CODE_VERIFIER_KEY);
+      localStorage.removeItem(LOCALSTORE_AUTH_URL_KEY);
     }
 
     if(
-      !localStorage.getItem(LOCALSTORE_AUTH_URL_KEY) &&
-      !localStorage.getItem( LOCALSTORE_CODE_VERIFIER_KEY )
+      !localStorage.getItem(LOCALSTORE_CODE_VERIFIER_KEY) &&
+      !localStorage.getItem(LOCALSTORE_AUTH_URL_KEY)
     ){
       let codeVerifier = this._createCodeVerifier( 50 );
       let codeChallenge = await this._createCodeChallenge( codeVerifier );
@@ -62,20 +63,21 @@ export class PKCE {
       ];
 
       localStorage.setItem(LOCALSTORE_CODE_VERIFIER_KEY, codeVerifier);
-      localStorage.setItem(LOCALSTORE_AUTH_URL_KEY, `${idpURL}?${queryParams.join("&")}`);
+      localStorage.setItem(LOCALSTORE_AUTH_URL_KEY, `${idpURL}/auth?${queryParams.join("&")}`);
+
       return `${idpURL}/auth?${queryParams.join("&")}`;
     }
 
     return localStorage.getItem(LOCALSTORE_AUTH_URL_KEY);
   }
 
-  GetAccessToken = async (code: string, config?: PKCEConfig) => {
+  GetAccessTokenAsync = async (code: string, config?: PKCEConfig) => {
     if(!config && !this.configuration)
       throw new Error(MISSING_CONFIG_MESSAGE)
 
     let code_verifier = localStorage.getItem(LOCALSTORE_CODE_VERIFIER_KEY);
     let grant_type = AUTH_CODE_GRANT_TYPE;
-    let {clientID, redirectURL} = this.configuration ? this.configuration : config
+    let {idpURL, clientID, redirectURL} = this.configuration ? this.configuration : config
 
     if(!code_verifier)
       return null;
@@ -88,7 +90,7 @@ export class PKCE {
 
     try {
       let res = await this.client.Do({
-        url: `${config.idpURL}/token`,
+        url: `${idpURL}/token`,
         method: 'post',
         data: params,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -101,7 +103,7 @@ export class PKCE {
     }
   }
 
-  GetUserInfo = async (token: string, config?: PKCEConfig): Promise<string> => {
+  GetUserInfoAsync = async (token: string, config?: PKCEConfig) => {
     if(!config && !this.configuration)
       throw new Error(MISSING_CONFIG_MESSAGE)
 
@@ -114,7 +116,7 @@ export class PKCE {
     return data;
   }
 
-  RefreshAccessToken = async (refreshToken: string, config?: PKCEConfig): Promise<string> => {
+  RefreshAccessTokenAsync = async (refreshToken: string, config?: PKCEConfig) => {
     if(!config && !this.configuration)
       throw new Error(MISSING_CONFIG_MESSAGE)
 
@@ -151,7 +153,7 @@ export class PKCE {
     return randomChars.join('');
   }
 
-  private _createCodeChallenge = async (codeVerifier: string) : Promise<string> => {
+  private _createCodeChallenge = async (codeVerifier: string): Promise<string> => {
     if(!!crypto && !!crypto.subtle){
       let codeVerifierCharCodes = this._textEncodeLite(codeVerifier);
       let hashedCharCodes = await crypto.subtle.digest(CODE_CHALLENG_DIGEST_ALGO, codeVerifierCharCodes);

@@ -34,21 +34,21 @@ describe('With a Good Client', () => {
   it('Fetches an Access Token', async () => {
     let httpClient = new GoodClient({token: "token", refresh_token: "refresh"})
     let pkceClient = new PKCE(httpClient)
-    let result = await pkceClient.GetAccessToken("code", config)
+    let result = await pkceClient.GetAccessTokenAsync("code", config)
     expect(result).to.eql({token: "token", refresh_token: "refresh"})
   });
 
   it('Refrshes an Access Token', async () => {
     let httpClient = new GoodClient({token: "new_token", refresh_token: "new_refresh"})
     let pkceClient = new PKCE(httpClient)
-    let result = await pkceClient.RefreshAccessToken("refresh", config)
+    let result = await pkceClient.RefreshAccessTokenAsync("refresh", config)
     expect(result).to.eql({token: "new_token", refresh_token: "new_refresh"})
   });
 
   it('Returns user info', async () => {
     let httpClient = new GoodClient({username: "marsalus.wallace"})
     let pkceClient = new PKCE(httpClient)
-    let result = await pkceClient.GetUserInfo("token", config)
+    let result = await pkceClient.GetUserInfoAsync("token", config)
     expect(result).to.eql({username: "marsalus.wallace"})
   });
 })
@@ -70,21 +70,21 @@ describe('With a Bad Client', () => {
   it('Cant fetch an Access Token', async () => {
     let httpClient = new BadClient()
     let pkceClient = new PKCE(httpClient)
-    let result = await pkceClient.GetAccessToken("code", config)
+    let result = await pkceClient.GetAccessTokenAsync("code", config)
     expect(result).to.eql({ message: 'uh oh!' })
   });
 
   it('Cant refrsh an Access Token', async () => {
     let httpClient = new BadClient()
     let pkceClient = new PKCE(httpClient)
-    let result = await pkceClient.RefreshAccessToken("refresh", config)
+    let result = await pkceClient.RefreshAccessTokenAsync("refresh", config)
     expect(result).to.eql({ message: 'uh oh!' })
   });
 
   it('Cant return user info', async () => {
     let httpClient = new BadClient()
     let pkceClient = new PKCE(httpClient)
-    let result = await pkceClient.GetUserInfo("token", config)
+    let result = await pkceClient.GetUserInfoAsync("token", config)
     expect(result).to.eql({ message: 'uh oh!' })
   });
 })
