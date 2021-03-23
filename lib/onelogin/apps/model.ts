@@ -32,8 +32,8 @@ export interface AppConfiguration {
 	oidc_application_type?:              number
 	token_endpoint_auth_method?:         number
 	access_token_expiration_minutes?:    number
-  redirect_uri?:                       string
-  login_url?:                          string
+	redirect_uri?:                       string
+	login_url?:                          string
 	provider_arn?:                       string
 	signature_algorithm?:                string
 	logout_url?:                         string

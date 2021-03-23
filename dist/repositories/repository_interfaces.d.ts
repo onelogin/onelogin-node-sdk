@@ -5,6 +5,7 @@
 export interface RepositoryEntity<T = object> {
     id?: string | number;
     data?: T;
+    error?: String;
 }
 /**
   HTTPRepositoryEntity

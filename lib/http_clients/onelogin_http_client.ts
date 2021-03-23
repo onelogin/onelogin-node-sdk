@@ -81,11 +81,10 @@ export class OneLoginHTTPClient implements HTTPClient {
       request.headers = { 'Authorization': `Bearer ${accessToken}` }
       let resourceResponse = await this.client.Do(request)
       let { data, headers, status, statusText } = resourceResponse
-      console.log(`HTTP ${request.method} to ${request.url} complete: ${status} - ${statusText}`)
       return { data, headers, status, statusText }
     } catch( err ) {
-      console.log("Unable to carry out request.", err)
-      throw new Error ( ...err )
+      err.message = "\nUnable to carry out request " + err.message
+      throw err
     }
   }
 

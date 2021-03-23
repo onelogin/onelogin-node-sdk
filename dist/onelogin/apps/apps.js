@@ -15,22 +15,24 @@ class OneLoginAppsRepository {
         this.Query = (query) => __awaiter(this, void 0, void 0, function* () {
             let request = { data: query, url: this.endpoint };
             let result = yield this.repository.Query(request);
+            if (result.error)
+                return { data: null, error: result.error };
             let apps = result.data;
             return { data: apps };
         });
         this.FindByID = (id) => __awaiter(this, void 0, void 0, function* () {
             let request = { id, url: this.endpoint };
             let result = yield this.repository.ReadResource(request);
-            if (!result)
-                return { data: null, error: { httpStatusCode: result.status, data: result.data } };
-            return { data: Object.assign({}, result.data) };
+            if (result.error)
+                return { data: null, error: result.error };
+            return { data: result.data };
         });
         this.Create = (app) => __awaiter(this, void 0, void 0, function* () {
             let request = { data: app, url: this.endpoint };
             let result = yield this.repository.WriteResource(request);
-            if (!result)
-                return { data: null, error: { httpStatusCode: result.status, data: result.data } };
-            return { data: Object.assign({}, result.data) };
+            if (result.error)
+                return { data: null, error: result.error };
+            return { data: result.data };
         });
         this.Update = (app) => __awaiter(this, void 0, void 0, function* () {
             let appID = app.id;
@@ -39,14 +41,16 @@ class OneLoginAppsRepository {
                 throw new Error("Resource ID must be given");
             let request = { id: appID, data: app, url: this.endpoint };
             let result = yield this.repository.WriteResource(request);
-            if (!result)
-                return { data: null, error: { httpStatusCode: result.status, data: result.data } };
-            return { data: Object.assign({}, result.data) };
+            if (result.error)
+                return { data: null, error: result.error };
+            return { data: result.data };
         });
         this.Destroy = (id) => __awaiter(this, void 0, void 0, function* () {
             let request = { id, url: this.endpoint };
             let result = yield this.repository.DestroyResource(request);
-            return Object.assign({}, result.data);
+            if (result.error)
+                return { data: null, error: result.error };
+            return { data: result.data };
         });
         this.repository = repository;
         this.endpoint = "/api/2/apps";

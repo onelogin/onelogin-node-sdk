@@ -18,9 +18,9 @@ export class OneLoginSmartMFA {
     })
     if( response.status >= 400 ) {
       console.log("OneLogin Returned an Error", response)
-      return { data: null, error: { httpStatusCode: response.status, data: response.data } }
+      return { data: null, error: "OneLogin Returned an Error" }
     }
-    return {data: {...response.data}}
+    return { data: response.data }
   }
 
   ValidateOTP = async (token: OTP): Promise<string | object> => {

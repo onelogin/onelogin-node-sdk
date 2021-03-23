@@ -9,5 +9,5 @@ export declare class OneLoginAppsRepository {
     FindByID: (id: number) => Promise<OneLoginResponse<App>>;
     Create: (app: App) => Promise<OneLoginResponse<App>>;
     Update: (app: App) => Promise<OneLoginResponse<App>>;
-    Destroy: (id: number) => Promise<object>;
+    Destroy: (id: number) => Promise<OneLoginResponse<object>>;
 }

@@ -40,6 +40,7 @@ export declare type Method = 'get' | 'GET' | 'delete' | 'DELETE' | 'post' | 'POS
 */
 export interface HTTPRequest<T = any> {
     url: string;
+    bearerToken?: string;
     method?: Method;
     headers?: object;
     data?: T;
@@ -60,7 +61,7 @@ export interface HTTPResponse<T = any> {
   @describe The configuration information for establishing HTTP client connections
 */
 export interface HTTPClientConfig {
-    baseURL: string;
+    baseURL?: string;
     timeout: number;
     headers: object;
 }
