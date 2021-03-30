@@ -16,13 +16,13 @@ const CODE_VERIFIER_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvw
 
 const MISSING_CONFIG_MESSAGE = "The PKCE Client is Missing Configuration Parameters. Configure the client or pass the parameters as second argument to this function"
 
-export interface PKCEConfig {
+interface PKCEConfig {
   idpURL: string,
   redirectURL: string,
   clientID: string
 }
 
-export class PKCE {
+export default class PKCE {
   configuration: PKCEConfig
   client: HTTPClient;
 

@@ -1,6 +1,6 @@
 import { expect } from '../main.test'
 
-import { OneLoginAppsRepository } from '../../lib/onelogin/apps/apps'
+import OneLoginAppsRepository from '../../lib/onelogin/apps/apps'
 import { App } from '../../lib/onelogin/apps/model'
 import { OneLoginResponse } from '../../lib/onelogin/interfaces'
 import { Repository, RepositoryEntity, HTTPRepositoryEntity } from '../../lib/repositories/repository_interfaces'

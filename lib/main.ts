@@ -1,6 +1,7 @@
-import { OneLoginAppsRepository } from './onelogin/apps/apps'
-import { OneLoginSmartMFA } from './onelogin/smart_mfa/smart_mfa'
-import { PKCE } from './onelogin/pkce/pkce'
+import OneLoginAppsRepository  from './onelogin/apps/apps'
+import OneLoginUsersRepository  from './onelogin/users/users'
+import OneLoginSmartMFA  from './onelogin/smart_mfa/smart_mfa'
+import PKCE  from './onelogin/pkce/pkce'
 
 
 import AxiosClientAdapter from './http_clients/client_adapters/axios_client_adapter'
@@ -13,12 +14,14 @@ export class Client {
   client: HTTPClient
   resourceRepository: HTTPRepository
   appsRepository: OneLoginAppsRepository
+  usersRepository: OneLoginUsersRepository
   smartMFA: OneLoginSmartMFA
 
   constructor(config: OneLoginClientConfig){
     this.client = new OneLoginHTTPClient(config, new AxiosClientAdapter())
     this.resourceRepository = new HTTPRepository(this.client)
     this.appsRepository = new OneLoginAppsRepository(this.resourceRepository)
+    this.usersRepository = new OneLoginUsersRepository(this.resourceRepository)
     this.smartMFA = new OneLoginSmartMFA(this.client)
   }
 }

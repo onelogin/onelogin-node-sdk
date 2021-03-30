@@ -2,7 +2,7 @@ import { HTTPClient } from '../../http_clients/interface'
 import { SmartSMSRequest, SmartEmailRequest, SmartMFAResponse, OTP } from './model'
 import { OneLoginResponse } from '../interfaces'
 
-export class OneLoginSmartMFA {
+export default class OneLoginSmartMFA {
   client: HTTPClient
 
   constructor( client: HTTPClient ){

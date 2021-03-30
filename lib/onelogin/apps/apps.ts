@@ -2,7 +2,7 @@ import { Repository, RepositoryEntity, HTTPRepositoryEntity } from '../../reposi
 import { OneLoginResponse } from '../interfaces'
 import { App } from './model'
 
-export class OneLoginAppsRepository {
+export default class OneLoginAppsRepository {
   repository: Repository
   endpoint: string
 
