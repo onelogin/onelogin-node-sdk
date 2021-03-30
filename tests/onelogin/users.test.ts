@@ -1,41 +1,41 @@
 import { expect, GoodTestRepository, BadTestRepository  } from '../main.test'
-import OneLoginAppsRepository, { App } from '../../lib/onelogin/resources/apps'
+import OneLoginUsersRepository, { User } from '../../lib/onelogin/resources/users'
 import { OneLoginResponse } from '../../lib/onelogin/interface'
 
-describe('Happy Paths', () => {
+describe('Husery Paths', () => {
   let mockData = new GoodTestRepository([
-    {name: "first", connector_id: 123, id: 1},
-    {name: "second", connector_id: 575, id: 2}
+    {username: "first", email: "first@onelogin.com", id: 1},
+    {username: "second", email: "second@onelogin.com", id: 2}
   ])
-  let repo = new OneLoginAppsRepository(mockData)
+  let repo = new OneLoginUsersRepository(mockData)
 
-  it('Indexes the Apps', async () => {
+  it('Indexes the Users', async () => {
     let all = await repo.Query()
-    let searched = await repo.Query({connector_id: 123}) as OneLoginResponse<App[]>
+    let searched = await repo.Query({email: "first@onelogin.com"}) as OneLoginResponse<User[]>
     expect(all.data).to.have.deep.members([
-      {name: "first", connector_id: 123, id: 1},
-      {name: "second", connector_id: 575, id: 2}
+      {username: "first", email: "first@onelogin.com", id: 1},
+      {username: "second", email: "second@onelogin.com", id: 2}
     ])
-    expect(searched.data[0]).to.eql({name: "first", connector_id: 123, id: 1})
+    expect(searched.data[0]).to.eql({username: "first", email: "first@onelogin.com", id: 1})
     expect(all.error).to.eql(undefined)
     expect(searched.error).to.eql(undefined)
   })
-  it('Retrieves an App by ID', async () => {
+  it('Retrieves an User by ID', async () => {
     let {data, error} = await repo.FindByID(0)
-    expect(data).to.eql({name: "first", connector_id: 123, id: 1})
+    expect(data).to.eql({username: "first", email: "first@onelogin.com", id: 1})
     expect(error).to.eql(undefined)
   })
-  it('Creates an App', async () => {
-    let {data, error} = await repo.Create({name: "name", connector_id: 123})
-    expect(data).to.eql({name: "name", connector_id: 123, id: 1})
+  it('Creates an User', async () => {
+    let {data, error} = await repo.Create({username: "name", email: "name@onelogin.com"})
+    expect(data).to.eql({username: "name", email: "name@onelogin.com", id: 1})
     expect(error).to.eql(undefined)
   })
-  it('Updates an App', async () => {
-    let {data, error} = await repo.Update({id: 1, name: "updated_resource", connector_id: 123})
-    expect(data).to.eql({name: "updated_resource", connector_id: 123, id: 1})
+  it('Updates an User', async () => {
+    let {data, error} = await repo.Update({id: 1, username: "updated_resource", email: "first@onelogin.com"})
+    expect(data).to.eql({username: "updated_resource", email: "first@onelogin.com", id: 1})
     expect(error).to.eql(undefined)
   })
-  it('Destroys an App', async () => {
+  it('Destroys an User', async () => {
     let {data, error} = await repo.Destroy(1)
     expect(data).to.eql({})
     expect(error).to.eql(undefined)
@@ -44,11 +44,11 @@ describe('Happy Paths', () => {
 
 describe('Sad Paths', () => {
   let mockData = new BadTestRepository()
-  let repo = new OneLoginAppsRepository(mockData)
+  let repo = new OneLoginUsersRepository(mockData)
 
   it('Returns an null data and an error if index reports an error', async () => {
     let all = await repo.Query()
-    let searched = await repo.Query({connector_id: 123}) as OneLoginResponse<App[]>
+    let searched = await repo.Query({email: "first@onelogin.com"}) as OneLoginResponse<User[]>
     expect(all.data).to.equal(null)
     expect(searched.data).to.equal(null)
     expect(all.error).to.equal(`Its Borked`)

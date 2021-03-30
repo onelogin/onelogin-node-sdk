@@ -1,24 +1,4 @@
 /**
-  HTTPClientAdapter
-  @describe Methods that must be implemented on classes that can be used as HTTP clients
-*/
-
-export interface HTTPClientAdapter {
-  /**
-    Executes the HTTPRequest using a configured Axios Client
-    @async
-    @param {HTTPRequest} request - the HTTP Request object with payload and headers
-    @returns {Promise<HTTPResponse>} The returned data, status information, and headers from the api call
-  */
-  Do(req: HTTPRequest): Promise<HTTPResponse>
-  /**
-    Initializes and memoizes the axios http client with interceptors
-    @param {HTTPClientConfig} config - the configuration information used to initialize the axios client
-  */
-  Configure(config: HTTPClientConfig): void
-}
-
-/**
   HTTPClient
   @describe Prepares a HTTPRequest and passes it to the HTTPClient via the HTTPClientAdapter
 */
@@ -71,7 +51,7 @@ export interface HTTPResponse<T = any> {
   @describe The configuration information for establishing HTTP client connections
 */
 export interface HTTPClientConfig {
-  baseURL?: string;
   timeout: number;
-  headers: object;
+  baseURL?: string;
+  headers?: object;
 }
