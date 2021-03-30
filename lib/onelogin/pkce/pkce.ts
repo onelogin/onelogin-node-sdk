@@ -1,4 +1,4 @@
-import { HTTPClient } from '../../http_clients/http_interface';
+import { HTTPClient } from '../../http_clients/interface';
 import * as base64 from 'base64-js';
 import qs from "qs";
 

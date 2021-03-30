@@ -1,4 +1,4 @@
-import { HTTPClient } from '../../http_clients/http_interface'
+import { HTTPClient } from '../../http_clients/interface'
 import { SmartSMSRequest, SmartEmailRequest, SmartMFAResponse, OTP } from './model'
 import { OneLoginResponse } from '../interfaces'
 

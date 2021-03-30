@@ -4,7 +4,7 @@ const nock = require('nock')
 import * as crypto from 'crypto'
 
 import { BlankHTTPClient } from '../../lib/http_clients/blank_http_client'
-import { AxiosClientAdapter } from '../../lib/http_clients/client_adapters/axios_client_adapter'
+import AxiosClientAdapter from '../../lib/http_clients/client_adapters/axios_client_adapter'
 
 let timeout = 3000
 let baseURL = 'some_endpoint.com'

@@ -4,10 +4,8 @@
   @describe Manages authentication and requests to OneLogin APIs
 */
 
-import {
-  HTTPRequest, HTTPResponse, HTTPClient,
-  HTTPClientAdapter, HTTPClientConfig, Method
-} from './http_interface'
+import { HTTPRequest, HTTPResponse, HTTPClient, Method } from './interface'
+import HTTPClientAdapter from './client_adapters/interface'
 
 const SECONDS_PER_HOUR = 3600
 export type Region = | 'us' | 'US' | 'eu' | 'EU'

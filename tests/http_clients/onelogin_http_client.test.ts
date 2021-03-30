@@ -4,7 +4,7 @@ const nock = require('nock')
 import * as crypto from 'crypto'
 
 import { OneLoginHTTPClient, Region } from '../../lib/http_clients/onelogin_http_client'
-import { AxiosClientAdapter } from '../../lib/http_clients/client_adapters/axios_client_adapter'
+import AxiosClientAdapter from '../../lib/http_clients/client_adapters/axios_client_adapter'
 
 let region: Region = 'us'
 let timeout = 3000

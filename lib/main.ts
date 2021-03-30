@@ -3,11 +3,11 @@ import { OneLoginSmartMFA } from './onelogin/smart_mfa/smart_mfa'
 import { PKCE } from './onelogin/pkce/pkce'
 
 
-import { AxiosClientAdapter } from './http_clients/client_adapters/axios_client_adapter'
+import AxiosClientAdapter from './http_clients/client_adapters/axios_client_adapter'
 import { OneLoginHTTPClient, OneLoginClientConfig } from './http_clients/onelogin_http_client'
 import { BlankHTTPClient } from './http_clients/blank_http_client'
 import { HTTPRepository } from './repositories/http_repository'
-import { HTTPClient } from './http_clients/http_interface'
+import { HTTPClient } from './http_clients/interface'
 
 export class Client {
   client: HTTPClient

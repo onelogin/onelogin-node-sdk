@@ -1,4 +1,4 @@
-import { HTTPClient, HTTPRequest, HTTPResponse } from '../lib/http_clients/http_interface'
+import { HTTPClient, HTTPRequest, HTTPResponse } from '../lib/http_clients/interface'
 
 import * as chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'

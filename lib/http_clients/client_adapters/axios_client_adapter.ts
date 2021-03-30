@@ -4,12 +4,13 @@
   @describe Wraps Axios HTTP Client in an adapter that can be used with OneLoginHTTPClient
 */
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { HTTPClientAdapter, HTTPRequest, HTTPResponse, HTTPClientConfig } from '../http_interface'
+import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { HTTPRequest, HTTPResponse, HTTPClientConfig } from '../interface';
+import HTTPClientAdapter from './interface';
 
-export class AxiosClientAdapter implements HTTPClientAdapter {
+export default class AxiosClientAdapter implements HTTPClientAdapter {
 
-  private httpClient: AxiosInstance
+  private httpClient: AxiosInstance;
 
   /**
     Initializes and memoizes the axios http client with interceptors
@@ -28,11 +29,11 @@ export class AxiosClientAdapter implements HTTPClientAdapter {
   */
   Do = async (request: HTTPRequest): Promise<HTTPResponse> => {
     try {
-      let response = await this.httpClient({ ...request }) // got lucky and HTTPRequest happens to line up with AxiosRequestConfig. might be more complex for other http libraries
-      return { ...response }
+      let response = await this.httpClient({ ...request }); // got lucky and HTTPRequest happens to line up with AxiosRequestConfig. might be more complex for other http libraries
+      return { ...response };
     } catch(err) {
       if(err.response){
-        throw new Error( err.response )
+        throw new Error(err.response);
       }
       throw err
     }

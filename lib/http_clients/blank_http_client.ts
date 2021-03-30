@@ -4,10 +4,8 @@
   @describe Manages authentication and requests to APIs with no configuration
 */
 
-import {
-  HTTPRequest, HTTPResponse, HTTPClient,
-  HTTPClientAdapter, HTTPClientConfig, Method
-} from './http_interface'
+import { HTTPRequest, HTTPResponse, HTTPClient } from './interface'
+import HTTPClientAdapter from './client_adapters/interface'
 
 /**
   BlankClientConfig
