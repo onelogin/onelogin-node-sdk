@@ -1,7 +1,6 @@
 import { expect, GoodClient, BadClient } from '../main.test'
 
-import { HTTPRepository } from '../../lib/repositories/http_repository'
-import { HTTPClient, HTTPRequest, HTTPResponse } from '../../lib/http_clients/interface'
+import HTTPRepository from '../../lib/repositories/http_repository'
 
 describe('With a Good Client', () => {
   it('Retrieves the index when API returns one result', async () => {

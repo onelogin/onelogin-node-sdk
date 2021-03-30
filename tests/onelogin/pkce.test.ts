@@ -1,4 +1,4 @@
-import PKCE from '../../lib/onelogin/pkce/pkce';
+import PKCE from '../../lib/onelogin/use_cases/pkce';
 import { expect, GoodClient, BadClient } from '../main.test'
 
 const IDP_URL = "https://idp.com"

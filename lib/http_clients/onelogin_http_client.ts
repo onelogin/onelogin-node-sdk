@@ -4,7 +4,7 @@
   @describe Manages authentication and requests to OneLogin APIs
 */
 
-import { HTTPRequest, HTTPResponse, HTTPClient, Method } from './interface'
+import { HTTPRequest, HTTPResponse, HTTPClient, Method, HTTPClientConfig } from './interface'
 import HTTPClientAdapter from './client_adapters/interface'
 
 const SECONDS_PER_HOUR = 3600
@@ -14,12 +14,10 @@ export type Region = | 'us' | 'US' | 'eu' | 'EU'
   OneLoginClientConfig
   @describe The required information for establishing HTTP connections to OneLogin APIs
 */
-export interface OneLoginClientConfig {
+export interface OneLoginClientConfig extends HTTPClientConfig {
   clientID: string;
   clientSecret: string;
   region?: Region;
-  baseURL?: string;
-  timeout: number;
 }
 
 export class OneLoginHTTPClient implements HTTPClient {
@@ -71,7 +69,7 @@ export class OneLoginHTTPClient implements HTTPClient {
     Executes the HTTP Request
     @async
     @param {HTTPRequest} request - The request assembled by the using class passed to HTTP client configured for OneLogin
-    @returns {Promise<object>} - The resulting data from the HTTP lookup
+    @returns {Promise<HTTPResponse>} - The resulting data from the HTTP lookup
   */
   Do = async (request: HTTPRequest): Promise<HTTPResponse> | never => {
     try {

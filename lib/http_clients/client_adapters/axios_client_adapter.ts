@@ -33,7 +33,8 @@ export default class AxiosClientAdapter implements HTTPClientAdapter {
       return { ...response };
     } catch(err) {
       if(err.response){
-        throw new Error(err.response);
+        console.log("API Request Error: ", err.response.data.message);
+        return { ...err.response };
       }
       throw err
     }

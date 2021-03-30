@@ -1,5 +1,5 @@
 import { expect, GoodClient, BadClient } from '../main.test'
-import OneLoginSmartMFA from '../../lib/onelogin/smart_mfa/smart_mfa'
+import OneLoginSmartMFA from '../../lib/onelogin/use_cases/smart_mfa'
 
 describe('With a Good Client', () => {
   it('Checks if MFA is required', async () => {

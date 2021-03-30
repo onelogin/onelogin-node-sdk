@@ -51,7 +51,7 @@ export interface HTTPResponse<T = any> {
   @describe The configuration information for establishing HTTP client connections
 */
 export interface HTTPClientConfig {
-  baseURL?: string;
   timeout: number;
-  headers: object;
+  baseURL?: string;
+  headers?: object;
 }

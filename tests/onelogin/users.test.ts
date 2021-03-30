@@ -1,123 +1,80 @@
-import { expect } from '../main.test'
+import { expect, GoodTestRepository, BadTestRepository  } from '../main.test'
+import OneLoginUsersRepository, { User } from '../../lib/onelogin/resources/users'
+import { OneLoginResponse } from '../../lib/onelogin/interface'
 
-import OneLoginUsersRepository from '../../lib/onelogin/users/users'
-import { User } from '../../lib/onelogin/users/model'
-import { OneLoginResponse } from '../../lib/onelogin/interfaces'
-import { Repository, RepositoryEntity, HTTPRepositoryEntity } from '../../lib/repositories/repository_interfaces'
+describe('Husery Paths', () => {
+  let mockData = new GoodTestRepository([
+    {username: "first", email: "first@onelogin.com", id: 1},
+    {username: "second", email: "second@onelogin.com", id: 2}
+  ])
+  let repo = new OneLoginUsersRepository(mockData)
 
-class TestRepository {
-  Query = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
-    if( request.data && request.data.hasOwnProperty('connector_id')){
-      return { data: [ {username: "first", email: "first@onelogin.com", id: 1} ] }
-    }
-    return {
-      status: 200,
-      data: [
-        {username: "first", email: "first@onelogin.com", id: 1},
-        {username: "second", email: "second@onelogin.com", id: 2}
-      ]
-    }
-  }
-
-  ReadResource = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
-    return {data: {username: "first", email: "first@onelogin.com", id: 1}, status: 200}
-  }
-
-  WriteResource = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
-    if( request.id ) return {data: {username: "updated_username", email: "user@onelogin.com", id: 1}}
-    return {data: {username: "user", email: "user@onelogin.com", id: 1}, status: 201}
-  }
-
-  DestroyResource = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
-    return { data: {}, status: 200 }
-  }
-}
-
-class ErrorTestRepository {
-  Query = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
-    return { data: [ ], status: 500, error: "Its Borked" } // Didnt find any or an error huserened
-  }
-
-  ReadResource = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
-    return { data: null, status: 500, error: "Its Borked" } // no response or an error
-  }
-
-  WriteResource = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
-    return { data: null, status: 500, error: "Its Borked" } // no response or an error
-  }
-
-  DestroyResource = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
-    return { data: null, status: 500, error: "Its Borked" } // no response or an error
-  }
-}
-
-describe('Happy Paths', () => {
   it('Indexes the Users', async () => {
-    let usersRepo = new OneLoginUsersRepository(new TestRepository())
-    let allUsers = await usersRepo.Query()
-    let specialUser = await usersRepo.Query({email: "first@onelogin.com"}) as OneLoginResponse<User[]>
-    expect(allUsers.data).to.have.deep.members([
+    let all = await repo.Query()
+    let searched = await repo.Query({email: "first@onelogin.com"}) as OneLoginResponse<User[]>
+    expect(all.data).to.have.deep.members([
       {username: "first", email: "first@onelogin.com", id: 1},
       {username: "second", email: "second@onelogin.com", id: 2}
     ])
-    expect(specialUser.data[0]).to.eql({username: "first", email: "first@onelogin.com", id: 1})
+    expect(searched.data[0]).to.eql({username: "first", email: "first@onelogin.com", id: 1})
+    expect(all.error).to.eql(undefined)
+    expect(searched.error).to.eql(undefined)
   })
   it('Retrieves an User by ID', async () => {
-    let usersRepo = new OneLoginUsersRepository(new TestRepository())
-    let user = await usersRepo.FindByID(123)
-    expect(user.data).to.eql({username: "first", email: "first@onelogin.com", id: 1})
+    let {data, error} = await repo.FindByID(0)
+    expect(data).to.eql({username: "first", email: "first@onelogin.com", id: 1})
+    expect(error).to.eql(undefined)
   })
   it('Creates an User', async () => {
-    let usersRepo = new OneLoginUsersRepository(new TestRepository())
-    let user = await usersRepo.Create({email: "user@onelogin.com", username: "user"})
-    expect(user.data).to.eql({email: "user@onelogin.com", username: "user", id: 1})
+    let {data, error} = await repo.Create({username: "name", email: "name@onelogin.com"})
+    expect(data).to.eql({username: "name", email: "name@onelogin.com", id: 1})
+    expect(error).to.eql(undefined)
   })
   it('Updates an User', async () => {
-    let usersRepo = new OneLoginUsersRepository(new TestRepository())
-    let user = await usersRepo.Update({id: 1, username: "updated_username", email: "user@onelogin.com"})
-    expect(user.data).to.eql({username: "updated_username", email: "user@onelogin.com", id: 1})
+    let {data, error} = await repo.Update({id: 1, username: "updated_resource", email: "first@onelogin.com"})
+    expect(data).to.eql({username: "updated_resource", email: "first@onelogin.com", id: 1})
+    expect(error).to.eql(undefined)
   })
   it('Destroys an User', async () => {
-    let usersRepo = new OneLoginUsersRepository(new TestRepository())
-    let user = await usersRepo.Destroy(1)
-    expect(user.data).to.eql({})
+    let {data, error} = await repo.Destroy(1)
+    expect(data).to.eql({})
+    expect(error).to.eql(undefined)
   })
 })
 
 describe('Sad Paths', () => {
+  let mockData = new BadTestRepository()
+  let repo = new OneLoginUsersRepository(mockData)
+
   it('Returns an null data and an error if index reports an error', async () => {
-    let usersRepo = new OneLoginUsersRepository(new ErrorTestRepository())
-    let allUsers = await usersRepo.Query()
-    let specialUser = await usersRepo.Query({email: "first@onelogin.com"}) as OneLoginResponse<User[]>
-    expect(specialUser.data).to.equal(null)
-    expect(specialUser.error).to.equal(`Its Borked`)
+    let all = await repo.Query()
+    let searched = await repo.Query({email: "first@onelogin.com"}) as OneLoginResponse<User[]>
+    expect(all.data).to.equal(null)
+    expect(searched.data).to.equal(null)
+    expect(all.error).to.equal(`Its Borked`)
+    expect(searched.error).to.equal(`Its Borked`)
   })
   it('Throws an error if ReadResource fails', async () => {
-    let usersRepo = new OneLoginUsersRepository(new ErrorTestRepository())
-    let userResponse = await usersRepo.FindByID(123)
-    expect(userResponse.data).to.eql(null)
-    expect(userResponse.error).to.equal(`Its Borked`)
+    let {data, error} = await repo.FindByID(123)
+    expect(data).to.eql(null)
+    expect(error).to.equal(`Its Borked`)
   })
   it('Throws an error if Create fails', async () => {
-    let usersRepo = new OneLoginUsersRepository(new ErrorTestRepository())
-    let userResponse = await usersRepo.Create({})
-    expect(userResponse.data).to.eql(null)
-    expect(userResponse.error).to.equal(`Its Borked`)
+    let {data, error} = await repo.Create({})
+    expect(data).to.eql(null)
+    expect(error).to.equal(`Its Borked`)
   })
   it('Throws an error if no ID given on Update', async () => {
-    let usersRepo = new OneLoginUsersRepository(new ErrorTestRepository())
-    expect(usersRepo.Update({})).to.eventually.throw()
+    expect(repo.Update({})).to.eventually.throw()
   })
   it('Throws an error if Update fails', async () => {
-    let usersRepo = new OneLoginUsersRepository(new ErrorTestRepository())
-    let userResponse = await usersRepo.Update({id: 3})
-    expect(userResponse.data).to.eql(null)
-    expect(userResponse.error).to.equal(`Its Borked`)
+    let {data, error} = await repo.Update({id: 3})
+    expect(data).to.eql(null)
+    expect(error).to.equal(`Its Borked`)
   })
   it('Throws an error if Delete fails', async () => {
-    let usersRepo = new OneLoginUsersRepository(new ErrorTestRepository())
-    let userResponse = await usersRepo.Destroy(0)
-    expect(userResponse.data).to.eql(null)
-    expect(userResponse.error).to.equal(`Its Borked`)
+    let {data, error} = await repo.Destroy(0)
+    expect(data).to.eql(null)
+    expect(error).to.equal(`Its Borked`)
   })
 })

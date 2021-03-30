@@ -4,9 +4,9 @@
 */
 
 import { HTTPClient } from '../http_clients/interface'
-import { Repository, RepositoryEntity, HTTPRepositoryEntity } from './repository_interfaces'
+import { Repository, RepositoryEntity, HTTPRepositoryEntity } from './interface'
 
-export class HTTPRepository implements Repository {
+export default class HTTPRepository implements Repository {
   client: HTTPClient
 
   /**
