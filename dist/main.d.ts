@@ -1,12 +1,14 @@
-import { OneLoginAppsRepository } from './onelogin/apps/apps';
-import { OneLoginSmartMFA } from './onelogin/smart_mfa/smart_mfa';
+import OneLoginUsersRepository from './onelogin/resources/users';
+import OneLoginAppsRepository from './onelogin/resources/apps';
+import OneLoginSmartMFA from './onelogin/use_cases/smart_mfa';
+import PKCE from './onelogin/use_cases/pkce';
+import HTTPRepository from './repositories/http_repository';
 import { OneLoginClientConfig } from './http_clients/onelogin_http_client';
-import { HTTPRepository } from './repositories/http_repository';
-import { HTTPClient } from './http_clients/http_interface';
-export declare class Client {
-    client: HTTPClient;
+export default class Client {
+    pkce: PKCE;
+    smartMFA: OneLoginSmartMFA;
     resourceRepository: HTTPRepository;
     appsRepository: OneLoginAppsRepository;
-    smartMFA: OneLoginSmartMFA;
+    usersRepository: OneLoginUsersRepository;
     constructor(config: OneLoginClientConfig);
 }

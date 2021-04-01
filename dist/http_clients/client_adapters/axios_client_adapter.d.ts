@@ -3,8 +3,9 @@
   @module AxiosClientAdapter
   @describe Wraps Axios HTTP Client in an adapter that can be used with OneLoginHTTPClient
 */
-import { HTTPClientAdapter, HTTPRequest, HTTPResponse, HTTPClientConfig } from '../http_interface';
-export declare class AxiosClientAdapter implements HTTPClientAdapter {
+import { HTTPRequest, HTTPResponse, HTTPClientConfig } from '../interface';
+import HTTPClientAdapter from './interface';
+export default class AxiosClientAdapter implements HTTPClientAdapter {
     private httpClient;
     /**
       Initializes and memoizes the axios http client with interceptors

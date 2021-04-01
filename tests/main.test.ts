@@ -8,6 +8,7 @@ chai.use(chaiAsPromised)
 export const expect = chai.expect
 
 export class GoodClient implements HTTPClient {
+  baseURL = "https://test.com";
   mockResponse: object
   hits: number
   maxPasses: number
@@ -30,6 +31,7 @@ export class GoodClient implements HTTPClient {
 }
 
 export class BadClient implements HTTPClient {
+  baseURL = "https://test.com";
   Do = async (request: HTTPRequest): Promise<HTTPResponse> => {
     return {  data: {message: "uh oh!"}, status: 500, statusText: "is down", headers: {} }
   }

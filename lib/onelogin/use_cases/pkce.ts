@@ -17,14 +17,23 @@ const CODE_VERIFIER_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvw
 const MISSING_CONFIG_MESSAGE = "The PKCE Client is Missing Configuration Parameters. Configure the client or pass the parameters as second argument to this function"
 
 interface PKCEConfig {
-  idpURL: string,
   redirectURL: string,
   clientID: string
 }
 
+interface AccessToken {
+  access_token: string,
+  expires_in: number,
+  id_token: string,
+  refresh_token: string,
+  scope: string,
+  token_type: string
+}
+
 export default class PKCE {
-  configuration: PKCEConfig
-  client: HTTPClient;
+  private configuration: PKCEConfig;
+  private client: HTTPClient;
+  private accessToken: AccessToken;
 
   constructor(client: HTTPClient){
     this.client = client;
@@ -32,10 +41,11 @@ export default class PKCE {
 
   Configure = (config: PKCEConfig) => {
     this.configuration = config
+    return this
   }
 
-  CreateAuthURL = async (config?: PKCEConfig) => {
-    if(!config && !this.configuration) {
+  CreateAuthURL = async (overrideRedirectURL?: string) => {
+    if(!this.configuration) {
       throw new Error(MISSING_CONFIG_MESSAGE)
     }
 
@@ -54,8 +64,9 @@ export default class PKCE {
       let codeVerifier = this._createCodeVerifier( 50 );
       let codeChallenge = await this._createCodeChallenge( codeVerifier );
 
-      let { clientID, redirectURL, idpURL } =
-        this.configuration ? this.configuration : config
+      let { clientID, redirectURL } = this.configuration
+      if(overrideRedirectURL)
+        redirectURL = overrideRedirectURL;
 
       let queryParams = [
         `code_challenge=${codeChallenge}`, `client_id=${clientID}`, `redirect_uri=${redirectURL}`,
@@ -63,24 +74,27 @@ export default class PKCE {
       ];
 
       localStorage.setItem(LOCALSTORE_CODE_VERIFIER_KEY, codeVerifier);
-      localStorage.setItem(LOCALSTORE_AUTH_URL_KEY, `${idpURL}/auth?${queryParams.join("&")}`);
-
-      return `${idpURL}/auth?${queryParams.join("&")}`;
+      localStorage.setItem(LOCALSTORE_AUTH_URL_KEY, `${this.client.baseURL}/oidc/2/auth?${queryParams.join("&")}`);
     }
-
+    console.log("ASDF", localStorage.getItem(LOCALSTORE_AUTH_URL_KEY), overrideRedirectURL)
     return localStorage.getItem(LOCALSTORE_AUTH_URL_KEY);
   }
 
-  GetAccessTokenAsync = async (code: string, config?: PKCEConfig) => {
-    if(!config && !this.configuration)
+  GetAccessTokenAsync = async (code: string, overrideRedirectURL?: string): Promise<AccessToken> => {
+    let code_verifier = localStorage.getItem(LOCALSTORE_CODE_VERIFIER_KEY);
+
+    if(!this.configuration)
       throw new Error(MISSING_CONFIG_MESSAGE)
 
-    let code_verifier = localStorage.getItem(LOCALSTORE_CODE_VERIFIER_KEY);
-    let grant_type = AUTH_CODE_GRANT_TYPE;
-    let {idpURL, clientID, redirectURL} = this.configuration ? this.configuration : config
+    if(this.accessToken){
+      return this.accessToken;
+    }
 
-    if(!code_verifier)
-      return null;
+    let grant_type = AUTH_CODE_GRANT_TYPE;
+
+    let { clientID, redirectURL } = this.configuration
+    if(overrideRedirectURL)
+      redirectURL = overrideRedirectURL;
 
     let params = qs.stringify({
       code_verifier, code, grant_type,
@@ -90,12 +104,13 @@ export default class PKCE {
 
     try {
       let res = await this.client.Do({
-        url: `${idpURL}/token`,
+        url: `${this.client.baseURL}/oidc/2/token`,
         method: 'post',
         data: params,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });
       localStorage.removeItem(LOCALSTORE_CODE_VERIFIER_KEY);
+      this.accessToken = res.data
       return res.data;
     } catch(err) {
       err.message = "\nAccess Token error" + err.message;
@@ -103,24 +118,20 @@ export default class PKCE {
     }
   }
 
-  GetUserInfoAsync = async (token: string, config?: PKCEConfig) => {
-    if(!config && !this.configuration)
-      throw new Error(MISSING_CONFIG_MESSAGE)
-
-    let { idpURL } = this.configuration ? this.configuration : config
+  GetUserInfoAsync = async (token: string) => {
     let { data } = await this.client.Do({
-      url: `${idpURL}/me`,
+      url: `${this.client.baseURL}/oidc/2/me`,
       method: 'get',
       bearerToken: token
     });
     return data;
   }
 
-  RefreshAccessTokenAsync = async (refreshToken: string, config?: PKCEConfig) => {
-    if(!config && !this.configuration)
+  RefreshAccessTokenAsync = async (refreshToken: string) => {
+    if(!this.configuration)
       throw new Error(MISSING_CONFIG_MESSAGE)
 
-    let { idpURL, clientID } = this.configuration ? this.configuration : config
+    let { clientID } = this.configuration
 
     let data = qs.stringify({
       grant_type: REFRESH_GRANT_TYPE,
@@ -130,7 +141,7 @@ export default class PKCE {
     try {
       let res = await this.client.Do({
         data,
-        url: `${idpURL}/me`,
+        url: `${this.client.baseURL}/oidc/2/token`,
         method: 'post',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });

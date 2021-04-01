@@ -2,7 +2,7 @@ import { expect, GoodTestRepository, BadTestRepository  } from '../main.test'
 import OneLoginUsersRepository, { User } from '../../lib/onelogin/resources/users'
 import { OneLoginResponse } from '../../lib/onelogin/interface'
 
-describe('Husery Paths', () => {
+describe('Happy Paths', () => {
   let mockData = new GoodTestRepository([
     {username: "first", email: "first@onelogin.com", id: 1},
     {username: "second", email: "second@onelogin.com", id: 2}

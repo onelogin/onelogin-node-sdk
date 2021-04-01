@@ -1,23 +1,27 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Client = void 0;
-const apps_1 = require("./onelogin/apps/apps");
-const smart_mfa_1 = require("./onelogin/smart_mfa/smart_mfa");
-const pkce_1 = require("./onelogin/pkce/pkce");
-const axios_client_adapter_1 = require("./http_clients/client_adapters/axios_client_adapter");
+const users_1 = __importDefault(require("./onelogin/resources/users"));
+const apps_1 = __importDefault(require("./onelogin/resources/apps"));
+const smart_mfa_1 = __importDefault(require("./onelogin/use_cases/smart_mfa"));
+const pkce_1 = __importDefault(require("./onelogin/use_cases/pkce"));
+const axios_client_adapter_1 = __importDefault(require("./http_clients/client_adapters/axios_client_adapter"));
+const http_repository_1 = __importDefault(require("./repositories/http_repository"));
 const onelogin_http_client_1 = require("./http_clients/onelogin_http_client");
-const blank_http_client_1 = require("./http_clients/blank_http_client");
-const http_repository_1 = require("./repositories/http_repository");
 class Client {
     constructor(config) {
-        this.client = new onelogin_http_client_1.OneLoginHTTPClient(config, new axios_client_adapter_1.AxiosClientAdapter());
-        this.resourceRepository = new http_repository_1.HTTPRepository(this.client);
-        this.appsRepository = new apps_1.OneLoginAppsRepository(this.resourceRepository);
-        this.smartMFA = new smart_mfa_1.OneLoginSmartMFA(this.client);
+        // Initialize HTTP Clients
+        let oneLoginClient = new onelogin_http_client_1.OneLoginHTTPClient(config, new axios_client_adapter_1.default());
+        // CRUD Resources
+        this.resourceRepository = new http_repository_1.default(oneLoginClient);
+        this.appsRepository = new apps_1.default(this.resourceRepository);
+        this.usersRepository = new users_1.default(this.resourceRepository);
+        // Use Cases
+        this.pkce = new pkce_1.default(oneLoginClient);
+        this.smartMFA = new smart_mfa_1.default(oneLoginClient);
     }
 }
-exports.Client = Client;
-let httpClient = new blank_http_client_1.BlankHTTPClient({ timeout: 3000 }, new axios_client_adapter_1.AxiosClientAdapter());
-let PKCEClient = new pkce_1.PKCE(httpClient);
-module.exports = { Client, PKCEClient };
+exports.default = Client;
 //# sourceMappingURL=main.js.map
