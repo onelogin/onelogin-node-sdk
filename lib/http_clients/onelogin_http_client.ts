@@ -23,6 +23,8 @@ export interface OneLoginClientConfig extends HTTPClientConfig {
 export class OneLoginHTTPClient implements HTTPClient {
   baseURL: string
   accessToken: string
+  clientID: string
+  clientSecret: string
   clientCredential: string
   accessTokenExpiry: Date
   client: HTTPClientAdapter
@@ -34,22 +36,16 @@ export class OneLoginHTTPClient implements HTTPClient {
     @param {HTTPClientAdapter} httpClient - The HTTP client that will facilitate HTTP requests (e.g. axios, https, etc)
   */
   constructor(config: OneLoginClientConfig, httpClient: HTTPClientAdapter) {
-    if(!config.region && !config.baseURL)
-      throw new Error("Either region or baseURL are required")
-
-    if(!config.clientID)
-      throw new Error("clientID is required.")
-
-    if(!config.clientSecret)
-      throw new Error("clientSecret is required.")
-
+    this.clientID = config.clientID
+    this.clientSecret = config.clientSecret
     this.client = httpClient
-    let clientCredentials = `${config.clientID}:${config.clientSecret}`
-    this.clientCredential = Buffer.from(clientCredentials).toString('base64')
 
     this.baseURL = config.baseURL || `https://api.${config.region}.onelogin.com`
     this.baseURL = this.baseURL.split("://")[0] === "https" ?
       this.baseURL : `https://${this.baseURL}`
+
+    if(!config.region && !config.baseURL)
+      throw new Error("Either region or baseURL are required")
 
     this.client.Configure({
       baseURL: this.baseURL,
@@ -73,8 +69,13 @@ export class OneLoginHTTPClient implements HTTPClient {
   */
   Do = async (request: HTTPRequest): Promise<HTTPResponse> | never => {
     try {
-      let accessToken = await this.getAccessToken()
-      request.headers = { 'Authorization': `Bearer ${accessToken}` }
+      if(this.clientID && this.clientSecret) {
+        let accessToken = await this.getAccessToken()
+        request.headers = { ...request.headers, 'Authorization': `Bearer ${accessToken}` }
+      }
+      if(request.bearerToken){
+        request.headers = { ...request.headers, 'Authorization': `Bearer ${request.bearerToken}` }
+      }
       let resourceResponse = await this.client.Do(request)
       let { data, headers, status, statusText } = resourceResponse
       return { data, headers, status, statusText }
@@ -90,12 +91,15 @@ export class OneLoginHTTPClient implements HTTPClient {
     @returns {Promise<string>} The accessToken
   */
   getAccessToken = async (authPath = "auth/oauth2/v2/token"): Promise<string> => {
+    let clientCredentialString = `${this.clientID}:${this.clientSecret}`
+    let clientCredential = Buffer.from(clientCredentialString).toString('base64')
+
     // token expiry before now or no accessToken?
-    if( this.accessTokenExpiry < new Date() || !this.accessToken ) {
+    if(this.accessTokenExpiry < new Date() || !this.accessToken) {
       let url = `/${authPath}`
       let method: Method = 'POST'
       let data = { "grant_type": "client_credentials" }
-      let headers = { "Authorization": `Basic ${this.clientCredential}` }
+      let headers = { "Authorization": `Basic ${clientCredential}` }
       try {
         let bearerResponse = await this.client.Do({method, url, headers, data})
         this.accessToken = bearerResponse.data.access_token

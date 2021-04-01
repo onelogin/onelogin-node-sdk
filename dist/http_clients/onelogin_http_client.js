@@ -28,12 +28,17 @@ class OneLoginHTTPClient {
           Executes the HTTP Request
           @async
           @param {HTTPRequest} request - The request assembled by the using class passed to HTTP client configured for OneLogin
-          @returns {Promise<object>} - The resulting data from the HTTP lookup
+          @returns {Promise<HTTPResponse>} - The resulting data from the HTTP lookup
         */
         this.Do = (request) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let accessToken = yield this.getAccessToken();
-                request.headers = { 'Authorization': `Bearer ${accessToken}` };
+                if (this.clientID && this.clientSecret) {
+                    let accessToken = yield this.getAccessToken();
+                    request.headers = Object.assign(Object.assign({}, request.headers), { 'Authorization': `Bearer ${accessToken}` });
+                }
+                if (request.bearerToken) {
+                    request.headers = Object.assign(Object.assign({}, request.headers), { 'Authorization': `Bearer ${request.bearerToken}` });
+                }
                 let resourceResponse = yield this.client.Do(request);
                 let { data, headers, status, statusText } = resourceResponse;
                 return { data, headers, status, statusText };
@@ -49,12 +54,14 @@ class OneLoginHTTPClient {
           @returns {Promise<string>} The accessToken
         */
         this.getAccessToken = (authPath = "auth/oauth2/v2/token") => __awaiter(this, void 0, void 0, function* () {
+            let clientCredentialString = `${this.clientID}:${this.clientSecret}`;
+            let clientCredential = Buffer.from(clientCredentialString).toString('base64');
             // token expiry before now or no accessToken?
             if (this.accessTokenExpiry < new Date() || !this.accessToken) {
                 let url = `/${authPath}`;
                 let method = 'POST';
                 let data = { "grant_type": "client_credentials" };
-                let headers = { "Authorization": `Basic ${this.clientCredential}` };
+                let headers = { "Authorization": `Basic ${clientCredential}` };
                 try {
                     let bearerResponse = yield this.client.Do({ method, url, headers, data });
                     this.accessToken = bearerResponse.data.access_token;
@@ -68,18 +75,14 @@ class OneLoginHTTPClient {
             }
             return this.accessToken;
         });
-        if (!config.region && !config.baseURL)
-            throw new Error("Either region or baseURL are required");
-        if (!config.clientID)
-            throw new Error("clientID is required.");
-        if (!config.clientSecret)
-            throw new Error("clientSecret is required.");
+        this.clientID = config.clientID;
+        this.clientSecret = config.clientSecret;
         this.client = httpClient;
-        let clientCredentials = `${config.clientID}:${config.clientSecret}`;
-        this.clientCredential = Buffer.from(clientCredentials).toString('base64');
         this.baseURL = config.baseURL || `https://api.${config.region}.onelogin.com`;
         this.baseURL = this.baseURL.split("://")[0] === "https" ?
             this.baseURL : `https://${this.baseURL}`;
+        if (!config.region && !config.baseURL)
+            throw new Error("Either region or baseURL are required");
         this.client.Configure({
             baseURL: this.baseURL,
             timeout: config.timeout || 3000,

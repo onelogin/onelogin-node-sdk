@@ -11,7 +11,6 @@ let timeout = 3000
 let baseURL = 'api.us.onelogin.com'
 let clientID = "cl13n71D"
 let clientSecret = "cl13n7s3cr37"
-let basicCredential = "Y2wxM243MUQ6Y2wxM243czNjcjM3"
 
 let configOnlyRegion = {clientID, clientSecret, region, timeout}
 let configOnlyBaseURL = {clientID, clientSecret, baseURL, timeout}
@@ -35,11 +34,7 @@ let configMissingID = {clientID: "", clientSecret, region, timeout}
 let configMissingSecret = {clientID, clientSecret: "", region, timeout}
 let configMissingRegionAndURL = {clientID, clientSecret, baseURL: "", timeout}
 
-let invalidClientConfigs = [
-  configMissingID,
-  configMissingSecret,
-  configMissingRegionAndURL
-]
+let invalidClientConfigs = [ configMissingID, configMissingSecret ]
 
 let _tokenInfo = {
   access_token: "valid token",
@@ -86,15 +81,8 @@ describe('onelogin client configuration', () => {
     clientConfigs.forEach(clientConfig => {
       let client = new OneLoginHTTPClient(clientConfig, new AxiosClientAdapter())
       expect(client.baseURL).to.equal('https://api.us.onelogin.com')
-      expect(client.clientCredential).to.equal(basicCredential)
       expect(client.client).to.exist
     });
-  })
-  it('raises an error if client id is missing', () => {
-    invalidClientConfigs.forEach(clientConfig => {
-      expect(() => new OneLoginHTTPClient(clientConfig, new AxiosClientAdapter()) )
-        .to.throw()
-    })
   })
 })
 
@@ -162,6 +150,12 @@ describe('getAccessToken', () => {
     client.getAccessToken().then(() => {
       expect(client.accessToken).to.equal(undefined)
       expect(client.accessTokenExpiry).to.not.exist
+    })
+  })
+  it('raises an error if client id is missing', () => {
+    invalidClientConfigs.forEach(clientConfig => {
+      let client = new OneLoginHTTPClient(clientConfig, new AxiosClientAdapter())
+      expect( client.Do({ url: "/api/2/apps"}) ).to.eventually.throw()
     })
   })
 })

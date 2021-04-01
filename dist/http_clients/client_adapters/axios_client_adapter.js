@@ -17,7 +17,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AxiosClientAdapter = void 0;
 const axios_1 = __importDefault(require("axios"));
 class AxiosClientAdapter {
     constructor() {
@@ -42,7 +41,8 @@ class AxiosClientAdapter {
             }
             catch (err) {
                 if (err.response) {
-                    throw new Error(err.response);
+                    console.log("API Request Error: ", err.response.data.message);
+                    return Object.assign({}, err.response);
                 }
                 throw err;
             }
@@ -66,5 +66,5 @@ class AxiosClientAdapter {
         this._handleError = (error) => Promise.reject(error);
     }
 }
-exports.AxiosClientAdapter = AxiosClientAdapter;
+exports.default = AxiosClientAdapter;
 //# sourceMappingURL=axios_client_adapter.js.map

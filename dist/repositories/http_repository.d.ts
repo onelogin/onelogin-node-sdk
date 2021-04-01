@@ -2,9 +2,9 @@
   HTTPRepository
   @describe An implimentation of the Repository interface that utilizes an http client for persistence
 */
-import { HTTPClient } from '../http_clients/http_interface';
-import { Repository, RepositoryEntity, HTTPRepositoryEntity } from './repository_interfaces';
-export declare class HTTPRepository implements Repository {
+import { HTTPClient } from '../http_clients/interface';
+import { Repository, RepositoryEntity, HTTPRepositoryEntity } from './interface';
+export default class HTTPRepository implements Repository {
     client: HTTPClient;
     /**
       Creates a reference to the initialized HTTP client used in requests
