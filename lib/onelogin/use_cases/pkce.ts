@@ -17,14 +17,23 @@ const CODE_VERIFIER_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvw
 const MISSING_CONFIG_MESSAGE = "The PKCE Client is Missing Configuration Parameters. Configure the client or pass the parameters as second argument to this function"
 
 interface PKCEConfig {
-  idpURL: string,
   redirectURL: string,
   clientID: string
 }
 
+interface AccessToken {
+  access_token: string,
+  expires_in: number,
+  id_token: string,
+  refresh_token: string,
+  scope: string,
+  token_type: string
+}
+
 export default class PKCE {
-  configuration: PKCEConfig
-  client: HTTPClient;
+  private configuration: PKCEConfig;
+  private client: HTTPClient;
+  private accessToken: AccessToken;
 
   constructor(client: HTTPClient){
     this.client = client;
@@ -54,7 +63,7 @@ export default class PKCE {
       let codeVerifier = this._createCodeVerifier( 50 );
       let codeChallenge = await this._createCodeChallenge( codeVerifier );
 
-      let { clientID, redirectURL, idpURL } =
+      let { clientID, redirectURL } =
         this.configuration ? this.configuration : config
 
       let queryParams = [
@@ -63,24 +72,29 @@ export default class PKCE {
       ];
 
       localStorage.setItem(LOCALSTORE_CODE_VERIFIER_KEY, codeVerifier);
-      localStorage.setItem(LOCALSTORE_AUTH_URL_KEY, `${idpURL}/auth?${queryParams.join("&")}`);
+      localStorage.setItem(LOCALSTORE_AUTH_URL_KEY, `${this.client.baseURL}/oidc/2/auth?${queryParams.join("&")}`);
 
-      return `${idpURL}/auth?${queryParams.join("&")}`;
+      return `${this.client.baseURL}/oidc/2/auth?${queryParams.join("&")}`;
     }
 
     return localStorage.getItem(LOCALSTORE_AUTH_URL_KEY);
   }
 
-  GetAccessTokenAsync = async (code: string, config?: PKCEConfig) => {
+  GetAccessTokenAsync = async (code: string, config?: PKCEConfig): Promise<AccessToken> => {
+    let code_verifier = localStorage.getItem(LOCALSTORE_CODE_VERIFIER_KEY);
+
     if(!config && !this.configuration)
       throw new Error(MISSING_CONFIG_MESSAGE)
 
-    let code_verifier = localStorage.getItem(LOCALSTORE_CODE_VERIFIER_KEY);
-    let grant_type = AUTH_CODE_GRANT_TYPE;
-    let {idpURL, clientID, redirectURL} = this.configuration ? this.configuration : config
+    if(this.accessToken){
+      return this.accessToken;
+    }
 
     if(!code_verifier)
       return null;
+
+    let grant_type = AUTH_CODE_GRANT_TYPE;
+    let { clientID, redirectURL } = this.configuration ? this.configuration : config
 
     let params = qs.stringify({
       code_verifier, code, grant_type,
@@ -90,12 +104,13 @@ export default class PKCE {
 
     try {
       let res = await this.client.Do({
-        url: `${idpURL}/token`,
+        url: `${this.client.baseURL}/oidc/2/token`,
         method: 'post',
         data: params,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });
       localStorage.removeItem(LOCALSTORE_CODE_VERIFIER_KEY);
+      this.accessToken = res.data
       return res.data;
     } catch(err) {
       err.message = "\nAccess Token error" + err.message;
@@ -107,9 +122,8 @@ export default class PKCE {
     if(!config && !this.configuration)
       throw new Error(MISSING_CONFIG_MESSAGE)
 
-    let { idpURL } = this.configuration ? this.configuration : config
     let { data } = await this.client.Do({
-      url: `${idpURL}/me`,
+      url: `${this.client.baseURL}/oidc/2/me`,
       method: 'get',
       bearerToken: token
     });
@@ -120,7 +134,7 @@ export default class PKCE {
     if(!config && !this.configuration)
       throw new Error(MISSING_CONFIG_MESSAGE)
 
-    let { idpURL, clientID } = this.configuration ? this.configuration : config
+    let { clientID } = this.configuration ? this.configuration : config
 
     let data = qs.stringify({
       grant_type: REFRESH_GRANT_TYPE,
@@ -130,7 +144,7 @@ export default class PKCE {
     try {
       let res = await this.client.Do({
         data,
-        url: `${idpURL}/me`,
+        url: `${this.client.baseURL}/oidc/2/token`,
         method: 'post',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });

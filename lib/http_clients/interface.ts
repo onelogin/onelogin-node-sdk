@@ -10,6 +10,7 @@ export interface HTTPClient {
     @returns {Promise<object>} - The resulting data from the HTTP lookup
   */
   Do(request: HTTPRequest): Promise<HTTPResponse>
+  baseURL: string;
 }
 
 /**

@@ -13,7 +13,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HTTPRepository = void 0;
 class HTTPRepository {
     /**
       Creates a reference to the initialized HTTP client used in requests
@@ -119,5 +118,5 @@ class HTTPRepository {
         this.client = client;
     }
 }
-exports.HTTPRepository = HTTPRepository;
+exports.default = HTTPRepository;
 //# sourceMappingURL=http_repository.js.map

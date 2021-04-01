@@ -1,7 +1,7 @@
 import PKCE from '../../lib/onelogin/use_cases/pkce';
 import { expect, GoodClient, BadClient } from '../main.test'
 
-const IDP_URL = "https://idp.com"
+const IDP_URL = "https://test.com/oidc/2"
 const REDIRECT_URL = "https://myapp.com/login"
 const CLIENT_ID = "clientID"
 const CODE_CHALLENGE = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" // from byte array of 32 zeros
@@ -41,14 +41,14 @@ describe('With a Good Client', () => {
   it('Refrshes an Access Token', async () => {
     let httpClient = new GoodClient({token: "new_token", refresh_token: "new_refresh"})
     let pkceClient = new PKCE(httpClient)
-    let result = await pkceClient.RefreshAccessTokenAsync("refresh", config)
+    let result = await pkceClient.RefreshAccessTokenAsync("refresh_token", config)
     expect(result).to.eql({token: "new_token", refresh_token: "new_refresh"})
   });
 
   it('Returns user info', async () => {
     let httpClient = new GoodClient({username: "marsalus.wallace"})
     let pkceClient = new PKCE(httpClient)
-    let result = await pkceClient.GetUserInfoAsync("token", config)
+    let result = await pkceClient.GetUserInfoAsync("access_token", config)
     expect(result).to.eql({username: "marsalus.wallace"})
   });
 })
