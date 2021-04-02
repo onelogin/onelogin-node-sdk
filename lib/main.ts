@@ -11,21 +11,21 @@ import { OneLoginHTTPClient, OneLoginClientConfig } from './http_clients/onelogi
 export default class Client {
   pkce: PKCE
   smartMFA: OneLoginSmartMFA
-  resourceRepository: HTTPRepository
-  appsRepository: OneLoginAppsRepository
-  usersRepository: OneLoginUsersRepository
+  apps: OneLoginAppsRepository
+  users: OneLoginUsersRepository
 
   constructor(config: OneLoginClientConfig){
     // Initialize HTTP Clients
-    let oneLoginClient = new OneLoginHTTPClient(config, new AxiosClientAdapter())
+    let httpClientAdapter = new AxiosClientAdapter();
+    let oneLoginClient = new OneLoginHTTPClient(config, httpClientAdapter);
 
     // CRUD Resources
-    this.resourceRepository = new HTTPRepository(oneLoginClient)
-    this.appsRepository = new OneLoginAppsRepository(this.resourceRepository)
-    this.usersRepository = new OneLoginUsersRepository(this.resourceRepository)
+    let repository = new HTTPRepository(oneLoginClient);
+    this.apps = new OneLoginAppsRepository(repository);
+    this.users = new OneLoginUsersRepository(repository);
 
     // Use Cases
-    this.pkce = new PKCE(oneLoginClient)
-    this.smartMFA = new OneLoginSmartMFA(oneLoginClient)
+    this.pkce = new PKCE(oneLoginClient);
+    this.smartMFA = new OneLoginSmartMFA(oneLoginClient);
   }
 }
