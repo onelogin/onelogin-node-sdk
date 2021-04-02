@@ -1,14 +1,12 @@
 # OneLogin Node.js SDK
 
-[![Build Status](https://travis-ci.org/BobDickinson/onelogin.svg?branch=master)](https://travis-ci.org/BobDickinson/onelogin)
-[![Coverage Status](https://coveralls.io/repos/github/BobDickinson/onelogin/badge.svg?branch=master)](https://coveralls.io/github/BobDickinson/onelogin?branch=master)
-[![Known Vulnerabilities](https://snyk.io/test/github/BobDickinson/onelogin/badge.svg)](https://snyk.io/test/github/BobDickinson/onelogin)
+This SDK will let you execute all the API methods, version/2, described at https://developers.onelogin.com/api-docs/2/getting-started/dev-overview.
 
-This SDK will let you execute all the API methods, version/1, described at https://developers.onelogin.com/api-docs/1/getting-started/dev-overview.
+The SDK also covers common use cases with OneLogin including PKCE and Smart MFA integration with React, Angular and Vue.
 
 ## Development Status
 
-This module is under development and incomplete at this time.
+This module is under development and accepting PRs from the community.
 
 ## Getting started
 
@@ -16,56 +14,187 @@ You'll need a OneLogin account and a set of API credentials before you get start
 
 If you don't have an account you can [sign up for a free developer account here](https://www.onelogin.com/developer-signup).
 
+From the admin panel of your OneLogin account, select Developers > API Credentials and click New Credential to create an API credential.
+
 | Value         | Description |
 | ------------- | ----------- |
-| client_id     | Required: A valid OneLogin API client_id |
-| client_secret | Required: A valid OneLogin API client_secret |
-| region        | Optional: 'us' or 'eu'. Defaults to 'us' |
+| client_id     | Required unless using for frontend (see PKCE): A valid OneLogin API client_id |
+| client_secret | Required unless using for frontend (see PKCE): A valid OneLogin API client_secret |
+| region        | Optional if not using baseURL: 'us' or 'eu'. |
+| baseURL       | Optional if not using a region: Should look like `https://api.<region>.onelogin.com` |
 
-    var oneLogin = require('onelogin')(client_id, client_secret, region);
+## CRUD Resources
 
-    // Now you can make requests 
-    oneLogin.getUsers(function(err, users) {
-        console.log("Users: ", users);
-    });
+Currently this SDK supports the following resources:
 
-## Callbacks versus Promises / Async
+| Resource | Description | Docs |
+| -------- | ----------- | ---- |
+| Apps     | The OneLogin App Resource (e.g. an OIDC or SAML application) | https://developers.onelogin.com/api-docs/2/apps/overview |
+| Users    | Representation of a User in OneLogin | https://developers.onelogin.com/api-docs/2/users/overview |
 
-All OneLogin module methods take as their last parameter a [standard Node.js error-first callback](http://fredkschott.com/post/2014/03/understanding-error-first-callbacks-in-node-js/).
+```
+import Client from "@onelogin/sdk";
 
-To get access to these methods, do:
+const onelogin = new Client({
+  clientID: abc-123-def-456,
+  clientSecret: 654-fed-321-cba,
+  region: "us"
+});
 
-    var oneLogin = require('onelogin')(client_id, client_secret, region);
+let newApp = onelogin.apps.Create({
+  name: "new app",
+  connector_id: 123
+})                                                       // creates a new SAML app
 
-And call them like this:
+newApp.name= "updated app"
+onelogin.apps.Update(newApp)                             // updates the app in OneLogin
 
-    oneLogin.getUser(req.params.id, function(err, user) {
-        if (err) {
-            // handle err
-        } else {
-            console.log("User:", user);
-        }
-    });
+let apps = onelogin.apps.Query()                         // list all apps
+let samlApps = onelogin.apps.Query({connector_id: 123})  // list SAML apps (connector_id = 123)
+let awsApp = onelogin.apps.FindByID(newApp.ID)           // aws app with id = 123
+onelogin.apps.Destroy(newApp.ID)                         // destroys the app in OneLogin
 
-The OneLogin module also supplies those same API methods in an asynchronous (promisified) form: instead of taking a callback parameter, each method returns a promise.  With these methods, you may handle the returned promise explicity, or if you are using a version of Node.js that supports async/await, you may await them.
+```
 
-To get the async version of OneLogin, do:
+## Use Cases
 
-    var oneLogin = require('onelogin')(client_id, client_secret, region).async();
+### PKCE (OAuth Login) For SPA (React, Vue, Angular) and Mobile Apps
 
-Then you may use these async methods with explicit promise handling like this:
+This SDK supports integrating OneLogin as the IdP for PKCE https://developers.onelogin.com/blog/pkce-dust-react-app
 
-    oneLogin.getUser(req.params.id).then(user => {
-        console.log("User:", user);     
-    })
-    .catch(function(err){
-        // handle err
-    });
+PKCE is a useful auth flow for apps that don't have a secure means for storing client secret and prevents auth_code intercept attacks https://tools.ietf.org/html/rfc7636
 
-And if you have access to async/await, you can do:
+For this flow, you'll need to create a OIDC App in OneLogin and configure it to use PKCE in the SSO setting by setting the Token Endpoint value to None (PKCE)
 
-    try {
-        console.log("User:", await oneLogin.getUser(req.params.id));     
-    } catch (err) {
-        // handle err
+Then, note down the Client ID for the app (different from the OneLogin API credential Client ID)
+
+Finally under Configuration, specify one or more redirect urls to be allowed. http://localhost:3000 is also allowed for local development.
+
+```
+import Client from "@onelogin/sdk";
+
+const onelogin = new Client({region: "us"}); // client id and secret are not required here
+
+let pkceClient = onelogin.pkce.Configure({
+  redirectURL: "http://localhost:3000",
+  clientID: oidc-123-client-3456
+});
+
+let loginLink = document.getElementById("loginLink")         // some <a> tag
+pkceClient.CreateAuthURL().then(url => loginLink.href = url) // establish link for user to click to go to login page
+
+let accessToken = ""
+let urlParams = new URLSearchParams(location.search);
+let code = urlParams['code']; // code returned after successful login
+pkceClient.GetAccessTokenAsync(code).then(token => accessToken = token)
+
+let me = null
+pkceClient.GetUserInfoAsync(accessToken).then(user => me = user)
+
+```
+
+### Smart MFA for Deno / NodeJS Backend
+
+This SDK comes with the methods required to support the Smart MFA scenario. This scenario checks a User's behavior analytics with Vigilance A.I. to determine if an additional factor such as Email or SMS is required.
+
+Generally one of 2 things should happen:
+
+1. User is checked against Vigilance and no action required
+2. User is checked but requires additional factor. In this case you'll get a MFA token in the response of the `CheckMFARequired` function to validate later.
+  * Finally as shown in `/otp` we combine the MFA token with the supplied OTP collected from the client and use that to determine if a user has rightful access
+
+```
+const onelogin = new Client({
+  clientID: abc-123-def-456,
+  clientSecret: 654-fed-321-cba,
+  region: "us"
+});
+
+// implement these routes
+router.post('/signup', signupRoute)
+router.post('/login', loginRoute)
+router.post('/otp', otpRoute)
+
+signupRoute = async (req: Request, res: Response) => {
+  try {
+    let existingUser = this.userDB.Read(req.body.email)
+    if( existingUser ) {
+      return res.status(400).json({
+        error: `User with id ${req.body.email} exists!`
+      })
     }
+
+    let { email: user_identifier, phone, password } = req.body
+    let context = {
+      user_agent: req.headers["user-agent"],
+      ip: req.connection.remoteAddress
+    }
+
+    let { data, error } = await onelogin.smartMFA.CheckMFARequired({
+      user_identifier, phone, context
+    })
+
+    if( error ) return res.status(error.httpStatusCode).json(error.data)
+
+    this.userDB.Upsert({
+      phone,
+      password,
+      id: user_identifier,
+      email: user_identifier
+    })
+
+    console.log(`Completed Risk Assessment for ${user_identifier}`)
+    return res.status(200).json(data.mfa)
+
+  } catch( err ) {
+    console.log("An unknown error occurred", err)
+    return res.status(500).send(err.message)
+  }
+}
+
+loginRoute = async (req: Request, res: Response) => {
+  try {
+    let user = this.userDB.Read(req.body.email)
+    if( !user ) {
+      return res.status(400).json({
+        error: `User with id ${req.body.email} not found!`
+      })
+    }
+
+    if( !user.validated(req.body.password) ) {
+      return res.status(400).json({ error: `Wrong password` })
+    }
+
+    let { email: user_identifier, phone } = user
+    let context = {
+      user_agent: req.headers["user-agent"],
+      ip: req.connection.remoteAddress
+    }
+
+    let { data, error } = await onelogin.smartMFA.CheckMFARequired({
+      user_identifier, phone, context
+    })
+
+    if( error ) return res.status(error.httpStatusCode).json(error.data)
+    console.log(`Completed Risk Assessment for ${user_identifier}`)
+    return res.status(200).json(data.mfa)
+
+  } catch( err ) {
+    console.log("An unknown error occurred", err)
+    return res.status(500).send(err.message)
+  }
+}
+
+otpRoute = async (req: Request, res: Response) => {
+  try {
+    let data = await onelogin.smartMFA.ValidateOTP( { ...req.body } )
+    console.log("OTP Validation Done!")
+    return res.status(200).json(data)
+
+  } catch( err ) {
+    console.log("An unknown error occurred", err)
+    return res.status(500).send(err.message)
+  }
+}
+
+```

@@ -76,7 +76,6 @@ export default class PKCE {
       localStorage.setItem(LOCALSTORE_CODE_VERIFIER_KEY, codeVerifier);
       localStorage.setItem(LOCALSTORE_AUTH_URL_KEY, `${this.client.baseURL}/oidc/2/auth?${queryParams.join("&")}`);
     }
-    console.log("ASDF", localStorage.getItem(LOCALSTORE_AUTH_URL_KEY), overrideRedirectURL)
     return localStorage.getItem(LOCALSTORE_AUTH_URL_KEY);
   }
 
