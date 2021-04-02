@@ -26,12 +26,14 @@ describe('Happy Paths', () => {
     expect(error).to.eql(undefined)
   })
   it('Creates an App', async () => {
-    let {data, error} = await repo.Create({name: "name", connector_id: 123})
+    let app: App = {name: "name", connector_id: 123}
+    let {data, error} = await repo.Create(app)
     expect(data).to.eql({name: "name", connector_id: 123, id: 1})
     expect(error).to.eql(undefined)
   })
   it('Updates an App', async () => {
-    let {data, error} = await repo.Update({id: 1, name: "updated_resource", connector_id: 123})
+    let app: App = {id: 1, name: "updated_resource", connector_id: 123}
+    let {data, error} = await repo.Update(app)
     expect(data).to.eql({name: "updated_resource", connector_id: 123, id: 1})
     expect(error).to.eql(undefined)
   })
@@ -65,7 +67,8 @@ describe('Sad Paths', () => {
     expect(error).to.equal(`Its Borked`)
   })
   it('Throws an error if no ID given on Update', async () => {
-    expect(repo.Update({})).to.eventually.throw()
+    let app: App = {name: "name", connector_id: 123}
+    expect(repo.Update(app)).to.eventually.throw()
   })
   it('Throws an error if Update fails', async () => {
     let {data, error} = await repo.Update({id: 3})
