@@ -12,7 +12,7 @@ pids
 *.pid.lock
 
 # Build output
-dist/
+# dist/ TODO - Add a build system (e.g. webpack grunt gulp etc...)
 
 # JSDoc Output
 out/
