@@ -13,11 +13,12 @@ const onelogin_http_client_1 = require("./http_clients/onelogin_http_client");
 class Client {
     constructor(config) {
         // Initialize HTTP Clients
-        let oneLoginClient = new onelogin_http_client_1.OneLoginHTTPClient(config, new axios_client_adapter_1.default());
+        let httpClientAdapter = new axios_client_adapter_1.default();
+        let oneLoginClient = new onelogin_http_client_1.OneLoginHTTPClient(config, httpClientAdapter);
         // CRUD Resources
-        this.resourceRepository = new http_repository_1.default(oneLoginClient);
-        this.appsRepository = new apps_1.default(this.resourceRepository);
-        this.usersRepository = new users_1.default(this.resourceRepository);
+        let repository = new http_repository_1.default(oneLoginClient);
+        this.apps = new apps_1.default(repository);
+        this.users = new users_1.default(repository);
         // Use Cases
         this.pkce = new pkce_1.default(oneLoginClient);
         this.smartMFA = new smart_mfa_1.default(oneLoginClient);
