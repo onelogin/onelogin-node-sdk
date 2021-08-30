@@ -103,11 +103,12 @@ class PKCE {
                     this.accessToken = res.data;
                     return res.data;
                 }
-                // throw new Error("epic fail")
+                throw new Error(`Got ${res.status} from OneLogin`);
             }
             catch (err) {
-                console.log("asdf", err.message);
-                err.message = "\nAccess Token error" + err.message;
+                if (!err.message) {
+                    err.message = "\nAccess Token error" + err.message;
+                }
                 throw err;
             }
         });
@@ -135,10 +136,15 @@ class PKCE {
                     method: 'post',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 });
-                return res.data;
+                if (res.status < 400) {
+                    return res.data;
+                }
+                throw new Error(`Got ${res.status} from OneLogin`);
             }
             catch (err) {
-                err.message = "\nRefresh Token error" + err.message;
+                if (!err.message) {
+                    err.message = "\nAccess Token error" + err.message;
+                }
                 throw err;
             }
         });
