@@ -46,7 +46,6 @@ describe('When the API Client is broken', () => {
     let httpClient = new BadClient()
     let repo = new HTTPRepository(httpClient)
     let result = await repo.Query({url: "/good_stuff"})
-    console.log(result)
     expect(result.data).to.equal(undefined)
     expect(result).to.eql({ error: 'There was a problem retrieving all the results: uh oh!' })
   })

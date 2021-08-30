@@ -114,7 +114,7 @@ export default class PKCE {
         this.accessToken = res.data;
         return res.data;
       }
-      throw new Error(`Got ${res.status} from OneLogin`)
+      throw new Error(`Got ${res.status} from OneLogin`);
     } catch(err) {
       if(!err.message){
         err.message = "\nAccess Token error" + err.message;
@@ -150,9 +150,14 @@ export default class PKCE {
         method: 'post',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });
-      return res.data;
+      if(res.status < 400){
+        return res.data;
+      }
+      throw new Error(`Got ${res.status} from OneLogin`)
     } catch(err) {
-      err.message = "\nRefresh Token error" + err.message;
+      if(!err.message){
+        err.message = "\nAccess Token error" + err.message;
+      }
       throw err;
     }
   }
