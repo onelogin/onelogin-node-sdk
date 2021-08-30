@@ -81,15 +81,13 @@ describe('With a Bad Client', () => {
   it('Cant fetch an Access Token', async () => {
     let httpClient = new BadClient()
     let pkceClient = new PKCE(httpClient).Configure(config)
-    let result = await pkceClient.GetAccessTokenAsync("code")
-    expect(result).to.eql({ message: 'uh oh!' })
+    expect(pkceClient.GetAccessTokenAsync("code")).to.eventually.throw()
   });
 
-  it('Cant refrsh an Access Token', async () => {
+  it('Cant refresh an Access Token', async () => {
     let httpClient = new BadClient()
     let pkceClient = new PKCE(httpClient).Configure(config)
-    let result = await pkceClient.RefreshAccessTokenAsync("refresh")
-    expect(result).to.eql({ message: 'uh oh!' })
+    expect(pkceClient.RefreshAccessTokenAsync("refresh")).to.eventually.throw()
   });
 
   it('Cant return user info', async () => {
