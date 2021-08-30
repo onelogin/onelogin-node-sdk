@@ -97,11 +97,16 @@ class PKCE {
                     data: params,
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 });
-                localStorage.removeItem(LOCALSTORE_CODE_VERIFIER_KEY);
-                this.accessToken = res.data;
-                return res.data;
+                if (res.status < 400) {
+                    localStorage.removeItem(LOCALSTORE_CODE_VERIFIER_KEY);
+                    localStorage.removeItem(LOCALSTORE_AUTH_URL_KEY);
+                    this.accessToken = res.data;
+                    return res.data;
+                }
+                // throw new Error("epic fail")
             }
             catch (err) {
+                console.log("asdf", err.message);
                 err.message = "\nAccess Token error" + err.message;
                 throw err;
             }
