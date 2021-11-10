@@ -11,6 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 class OneLoginUsersRepository {
     constructor(repository) {
+        this.List = () => __awaiter(this, void 0, void 0, function* () {
+            let request = { url: this.endpoint };
+            let result = yield this.repository.List(request);
+            if (result.error)
+                return { data: null, error: result.error };
+            return { data: result.data };
+        });
         this.Query = (query) => __awaiter(this, void 0, void 0, function* () {
             let request = { data: query, url: this.endpoint };
             let result = yield this.repository.Query(request);
@@ -47,6 +54,14 @@ class OneLoginUsersRepository {
         this.Destroy = (id) => __awaiter(this, void 0, void 0, function* () {
             let request = { id, url: this.endpoint };
             let result = yield this.repository.DestroyResource(request);
+            if (result.error)
+                return { data: null, error: result.error };
+            return { data: result.data };
+        });
+        this.ListUserApps = (id) => __awaiter(this, void 0, void 0, function* () {
+            let endpoint = `${this.endpoint}/${id}/apps`;
+            let request = { url: endpoint };
+            let result = yield this.repository.List(request);
             if (result.error)
                 return { data: null, error: result.error };
             return { data: result.data };

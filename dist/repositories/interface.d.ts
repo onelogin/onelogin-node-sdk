@@ -49,4 +49,5 @@ export interface Repository {
       @returns {Promise<RepositoryEntity>} - The results of the deletion
     */
     DestroyResource(request: RepositoryEntity): Promise<RepositoryEntity>;
+    List(request: RepositoryEntity): Promise<RepositoryEntity>;
 }

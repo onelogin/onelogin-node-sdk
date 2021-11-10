@@ -1,14 +1,17 @@
 import { Repository } from '../../repositories/interface';
 import { OneLoginResponse } from '..//interface';
+import { App } from './apps';
 export default class OneLoginUsersRepository {
     repository: Repository;
     endpoint: string;
     constructor(repository: Repository);
+    List: () => Promise<OneLoginResponse<User>>;
     Query: (query?: object) => Promise<OneLoginResponse<User[]>>;
     FindByID: (id: number) => Promise<OneLoginResponse<User>>;
     Create: (user: User) => Promise<OneLoginResponse<User>>;
     Update: (user: User) => Promise<OneLoginResponse<User>>;
     Destroy: (id: number) => Promise<OneLoginResponse<object>>;
+    ListUserApps: (id: number) => Promise<OneLoginResponse<App>>;
 }
 export interface User {
     username?: string;

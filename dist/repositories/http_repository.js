@@ -115,6 +115,18 @@ class HTTPRepository {
                 return { error: `There was a problem destroying the resource: ${data.message}` };
             }
         });
+        this.List = (request) => __awaiter(this, void 0, void 0, function* () {
+            let { data, status } = yield this.client.Do({
+                url: request.url,
+                method: "get",
+            });
+            if (status < 400) {
+                return { data };
+            }
+            else {
+                return { error: `There was a problem reading the resource: ${data.message}` };
+            }
+        });
         this.client = client;
     }
 }
