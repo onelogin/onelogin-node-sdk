@@ -1,5 +1,6 @@
 import { Repository, RepositoryEntity, HTTPRepositoryEntity } from '../../repositories/interface'
 import { OneLoginResponse } from '../interface'
+import { User } from './users'
 
 export default class OneLoginAppsRepository {
   repository: Repository
@@ -45,6 +46,14 @@ export default class OneLoginAppsRepository {
   Destroy = async(id: number): Promise<OneLoginResponse<object>> => {
     let request: HTTPRepositoryEntity<App> = { id, url: this.endpoint }
     let result= await this.repository.DestroyResource(request) as HTTPRepositoryEntity<object>
+    if( result.error ) return{ data: null, error: result.error }
+    return { data: result.data }
+  }
+
+  ListUsers = async (id: number): Promise<OneLoginResponse<User>> => {
+    let endpoint = `${this.endpoint}/${id}/users`;
+    let request: HTTPRepositoryEntity<App> = {url: endpoint}
+    let result = await this.repository.List(request) as HTTPRepositoryEntity<User>
     if( result.error ) return{ data: null, error: result.error }
     return { data: result.data }
   }

@@ -51,6 +51,14 @@ class OneLoginAppsRepository {
                 return { data: null, error: result.error };
             return { data: result.data };
         });
+        this.ListUsers = (id) => __awaiter(this, void 0, void 0, function* () {
+            let endpoint = `${this.endpoint}/${id}/users`;
+            let request = { url: endpoint };
+            let result = yield this.repository.List(request);
+            if (result.error)
+                return { data: null, error: result.error };
+            return { data: result.data };
+        });
         this.repository = repository;
         this.endpoint = "/api/2/apps";
     }
