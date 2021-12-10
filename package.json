@@ -1,6 +1,6 @@
 {
   "name": "@onelogin/sdk",
-  "version": "2.1.1",
+  "version": "2.1.0",
   "description": "JavaScript SDK for OneLogin APIs",
   "homepage": "http://onelogin.com/",
   "contributors": [

@@ -99,4 +99,5 @@ export interface User {
 	manager_user_id?:        number
 	external_id?:            number
 	id?:                     number
+  custom_attributes?:      object;
 }
