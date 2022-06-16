@@ -49,4 +49,11 @@ export default class HTTPRepository implements Repository {
         error: string;
         data?: undefined;
     }>;
+    List: (request: HTTPRepositoryEntity) => Promise<{
+        data: any;
+        error?: undefined;
+    } | {
+        error: string;
+        data?: undefined;
+    }>;
 }

@@ -1,5 +1,6 @@
 import { Repository, RepositoryEntity, HTTPRepositoryEntity } from '../../repositories/interface'
 import { OneLoginResponse } from '..//interface'
+import { App } from './apps'
 
 export default class OneLoginUsersRepository {
   repository: Repository
@@ -9,7 +10,12 @@ export default class OneLoginUsersRepository {
     this.repository = repository
     this.endpoint = "/api/2/users"
   }
-
+  List = async (): Promise<OneLoginResponse<User>> => {
+    let request: HTTPRepositoryEntity<App> = {url: this.endpoint}
+    let result = await this.repository.List(request) as HTTPRepositoryEntity<App>
+    if( result.error ) return{ data: null, error: result.error }
+    return { data: result.data }
+  }
   Query = async (query?: object): Promise<OneLoginResponse<User[]>> => {
     let request: HTTPRepositoryEntity<User> = { data: query, url: this.endpoint }
     let result: RepositoryEntity<User> = await this.repository.Query(request)
@@ -45,6 +51,13 @@ export default class OneLoginUsersRepository {
   Destroy = async(id: number): Promise<OneLoginResponse<object>> => {
     let request: HTTPRepositoryEntity<User> = { id, url: this.endpoint }
     let result= await this.repository.DestroyResource(request) as HTTPRepositoryEntity<object>
+    if( result.error ) return{ data: null, error: result.error }
+    return { data: result.data }
+  }
+  ListUserApps = async (id: number): Promise<OneLoginResponse<App>> => {
+    let endpoint = `${this.endpoint}/${id}/apps`;
+    let request: HTTPRepositoryEntity<App> = {url: endpoint}
+    let result = await this.repository.List(request) as HTTPRepositoryEntity<App>
     if( result.error ) return{ data: null, error: result.error }
     return { data: result.data }
   }
@@ -86,4 +99,5 @@ export interface User {
 	manager_user_id?:        number
 	external_id?:            number
 	id?:                     number
+  custom_attributes?:      object;
 }

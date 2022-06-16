@@ -112,4 +112,16 @@ export default class HTTPRepository implements Repository {
       return { error: `There was a problem destroying the resource: ${data.message}` }
     }
   }
+  List = async (request: HTTPRepositoryEntity) => {
+    let {data, status} =  await this.client.Do({
+      url: request.url,
+      method: "get",
+    })
+    if( status < 400 ) {
+      return { data }
+    } else {
+      return { error: `There was a problem reading the resource: ${data.message}` }
+    }
+  }
+  
 }

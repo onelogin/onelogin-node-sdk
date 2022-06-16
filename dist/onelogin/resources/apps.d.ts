@@ -1,5 +1,6 @@
 import { Repository } from '../../repositories/interface';
 import { OneLoginResponse } from '../interface';
+import { User } from './users';
 export default class OneLoginAppsRepository {
     repository: Repository;
     endpoint: string;
@@ -9,6 +10,7 @@ export default class OneLoginAppsRepository {
     Create: (app: App) => Promise<OneLoginResponse<App>>;
     Update: (app: App) => Promise<OneLoginResponse<App>>;
     Destroy: (id: number) => Promise<OneLoginResponse<object>>;
+    ListUsers: (id: number) => Promise<OneLoginResponse<User>>;
 }
 export interface App {
     connector_id?: number;
