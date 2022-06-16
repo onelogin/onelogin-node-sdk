@@ -44,6 +44,10 @@ export class GoodTestRepository {
     this.mockData = mockData
   }
 
+  List = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
+    return request.data ? { data: [ this.mockData[0] ] } : { data: this.mockData }
+  }
+
   Query = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
     return request.data ? { data: [ this.mockData[0] ] } : { data: this.mockData }
   }
@@ -62,6 +66,10 @@ export class GoodTestRepository {
 }
 
 export class BadTestRepository {
+  List = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
+    return { data: [], error: "Its Borked" } // Didnt find any or an error happened
+  }
+
   Query = async (request: RepositoryEntity): Promise<RepositoryEntity | HTTPRepositoryEntity> => {
     return { data: [], error: "Its Borked" } // Didnt find any or an error happened
   }
