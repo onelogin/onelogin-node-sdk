@@ -9,6 +9,14 @@ describe('Happy Paths', () => {
   ])
   let repo = new OneLoginUsersRepository(mockData)
 
+  it('Lists the Users', async () => {
+    let all = await repo.List()
+    expect(all.data).to.have.deep.members([
+      {username: "first", email: "first@onelogin.com", id: 1},
+      {username: "second", email: "second@onelogin.com", id: 2}
+    ])
+    expect(all.error).to.eql(undefined)
+  })
   it('Indexes the Users', async () => {
     let all = await repo.Query()
     let searched = await repo.Query({email: "first@onelogin.com"}) as OneLoginResponse<User[]>
