@@ -2,6 +2,7 @@ import { HTTPClient } from '../../http_clients/interface';
 interface PKCEConfig {
     redirectURL: string;
     clientID: string;
+    scopes?: Array<string>;
 }
 interface AccessToken {
     access_token: string;

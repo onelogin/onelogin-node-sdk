@@ -35,7 +35,6 @@ const base64 = __importStar(require("base64-js"));
 const qs_1 = __importDefault(require("qs"));
 const LOCALSTORE_AUTH_URL_KEY = "auth-url";
 const LOCALSTORE_CODE_VERIFIER_KEY = "code-verifier";
-const QUERYPARAM_SCOPE = "scope=openid";
 const QUERYPARAM_RESPONSE_TYPE = "response_type=code";
 const QUERYPARAM_CODE_CHALLENGE_METHOD = "code_challenge_method=S256";
 const REFRESH_GRANT_TYPE = "refresh_token";
@@ -62,12 +61,12 @@ class PKCE {
                 !localStorage.getItem(LOCALSTORE_AUTH_URL_KEY)) {
                 let codeVerifier = this._createCodeVerifier(50);
                 let codeChallenge = yield this._createCodeChallenge(codeVerifier);
-                let { clientID, redirectURL } = this.configuration;
+                let { clientID, redirectURL, scopes } = this.configuration;
                 if (overrideRedirectURL)
                     redirectURL = overrideRedirectURL;
                 let queryParams = [
                     `code_challenge=${codeChallenge}`, `client_id=${clientID}`, `redirect_uri=${redirectURL}`,
-                    QUERYPARAM_CODE_CHALLENGE_METHOD, QUERYPARAM_RESPONSE_TYPE, QUERYPARAM_SCOPE
+                    QUERYPARAM_CODE_CHALLENGE_METHOD, QUERYPARAM_RESPONSE_TYPE, `scope=openid${scopes ? ` ${scopes.join(" ")}` : ''}`
                 ];
                 localStorage.setItem(LOCALSTORE_CODE_VERIFIER_KEY, codeVerifier);
                 localStorage.setItem(LOCALSTORE_AUTH_URL_KEY, `${this.client.baseURL}/oidc/2/auth?${queryParams.join("&")}`);
