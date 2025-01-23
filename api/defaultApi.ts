@@ -9160,7 +9160,7 @@ export class DefaultApi {
   public async removeRoleAdmins(
     authorization: string,
     roleId: number,
-    removeRoleUsersRequest: RemoveRoleUsersRequest,
+    userIds: number[], // Directly expect an array of user IDs
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
     const localVarPath =
@@ -9169,41 +9169,38 @@ export class DefaultApi {
         "{" + "role_id" + "}",
         encodeURIComponent(String(roleId))
       );
+
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
       this._defaultHeaders
     );
     const produces = ["application/json"];
-    // give precedence to 'application/json'
+    // Give precedence to 'application/json'
     if (produces.indexOf("application/json") >= 0) {
       localVarHeaderParams.Accept = "application/json";
     } else {
       localVarHeaderParams.Accept = produces.join(",");
     }
-    let localVarFormParams: any = {};
 
-    // verify required parameter 'authorization' is not null or undefined
+    // Verify required parameter 'authorization' is not null or undefined
     if (authorization === null || authorization === undefined) {
       throw new Error(
         "Required parameter authorization was null or undefined when calling removeRoleAdmins."
       );
     }
 
-    // verify required parameter 'roleId' is not null or undefined
+    // Verify required parameter 'roleId' is not null or undefined
     if (roleId === null || roleId === undefined) {
       throw new Error(
         "Required parameter roleId was null or undefined when calling removeRoleAdmins."
       );
     }
 
-    // verify required parameter 'removeRoleUsersRequest' is not null or undefined
-    if (
-      removeRoleUsersRequest === null ||
-      removeRoleUsersRequest === undefined
-    ) {
+    // Verify required parameter 'userIds' is not null or undefined
+    if (userIds === null || userIds === undefined) {
       throw new Error(
-        "Required parameter removeRoleUsersRequest was null or undefined when calling removeRoleAdmins."
+        "Required parameter userIds was null or undefined when calling removeRoleAdmins."
       );
     }
 
@@ -9213,8 +9210,6 @@ export class DefaultApi {
     );
     (<any>Object).assign(localVarHeaderParams, options.headers);
 
-    let localVarUseFormData = false;
-
     let localVarRequestOptions: localVarRequest.Options = {
       method: "DELETE",
       qs: localVarQueryParameters,
@@ -9222,10 +9217,7 @@ export class DefaultApi {
       uri: localVarPath,
       useQuerystring: this._useQuerystring,
       json: true,
-      body: ObjectSerializer.serialize(
-        removeRoleUsersRequest,
-        "RemoveRoleUsersRequest"
-      ),
+      body: userIds, // Pass the array directly as the request body
     };
 
     let authenticationPromise = Promise.resolve();
@@ -9241,13 +9233,6 @@ export class DefaultApi {
     }
 
     return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
       return new Promise<{ response: http.IncomingMessage; body?: any }>(
         (resolve, reject) => {
           localVarRequest(localVarRequestOptions, (error, response, body) => {
@@ -9269,6 +9254,7 @@ export class DefaultApi {
       );
     });
   }
+
   /**
    *
    * @param authorization
@@ -9278,7 +9264,7 @@ export class DefaultApi {
   public async removeRoleUsers(
     authorization: string,
     roleId: number,
-    removeRoleUsersRequest: RemoveRoleUsersRequest,
+    userIds: Array<number>, // Updated to directly accept an array of user IDs
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
     const localVarPath =
@@ -9287,11 +9273,13 @@ export class DefaultApi {
         "{" + "role_id" + "}",
         encodeURIComponent(String(roleId))
       );
+
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
       this._defaultHeaders
     );
+
     const produces = ["application/json"];
     // give precedence to 'application/json'
     if (produces.indexOf("application/json") >= 0) {
@@ -9299,30 +9287,22 @@ export class DefaultApi {
     } else {
       localVarHeaderParams.Accept = produces.join(",");
     }
-    let localVarFormParams: any = {};
 
-    // verify required parameter 'authorization' is not null or undefined
+    // Verify required parameter 'authorization' is not null or undefined
     if (authorization === null || authorization === undefined) {
       throw new Error(
         "Required parameter authorization was null or undefined when calling removeRoleUsers."
       );
     }
 
-    // verify required parameter 'roleId' is not null or undefined
+    // Verify required parameter 'roleId' is not null or undefined
     if (roleId === null || roleId === undefined) {
       throw new Error(
         "Required parameter roleId was null or undefined when calling removeRoleUsers."
       );
     }
-
-    // verify required parameter 'removeRoleUsersRequest' is not null or undefined
-    if (
-      removeRoleUsersRequest === null ||
-      removeRoleUsersRequest === undefined
-    ) {
-      throw new Error(
-        "Required parameter removeRoleUsersRequest was null or undefined when calling removeRoleUsers."
-      );
+    if (!userIds || !Array.isArray(userIds)) {
+      throw new Error("User IDs must be a valid array.");
     }
 
     localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
@@ -9331,19 +9311,13 @@ export class DefaultApi {
     );
     (<any>Object).assign(localVarHeaderParams, options.headers);
 
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
+    const localVarRequestOptions: localVarRequest.Options = {
       method: "DELETE",
       qs: localVarQueryParameters,
       headers: localVarHeaderParams,
       uri: localVarPath,
-      useQuerystring: this._useQuerystring,
       json: true,
-      body: ObjectSerializer.serialize(
-        removeRoleUsersRequest,
-        "RemoveRoleUsersRequest"
-      ),
+      body: userIds, // Pass the array of user IDs directly as the request body
     };
 
     let authenticationPromise = Promise.resolve();
@@ -9359,13 +9333,6 @@ export class DefaultApi {
     }
 
     return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
       return new Promise<{ response: http.IncomingMessage; body?: any }>(
         (resolve, reject) => {
           localVarRequest(localVarRequestOptions, (error, response, body) => {
@@ -9387,6 +9354,7 @@ export class DefaultApi {
       );
     });
   }
+
   /**
    *
    * @param authorization
