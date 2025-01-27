@@ -6322,7 +6322,7 @@ export class DefaultApi {
   }> {
     const localVarPath =
       this.basePath +
-      "/api/2/apps/{app_id}/rules/actions/{actuion_value}/values"
+      "/api/2/apps/{app_id}/rules/actions/{action_value}/values"
         .replace("{" + "app_id" + "}", encodeURIComponent(String(appId)))
         .replace(
           "{" + "action_value" + "}",
@@ -8537,8 +8537,8 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: Array<Rule> }> {
     const localVarPath =
       this.basePath +
-      "/api/2/apps/{app_id}/rules".replace(
-        "{" + "app_id" + "}",
+      "/api/2/apps/{appId}/rules".replace(
+        "{" + "appId" + "}",
         encodeURIComponent(String(appId))
       );
     let localVarQueryParameters: any = {};
