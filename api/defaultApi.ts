@@ -70,6 +70,7 @@ import { Rule } from "../model/rule";
 import { RuleId } from "../model/ruleId";
 import { Schema } from "../model/schema";
 import { Schema1 } from "../model/schema1";
+import { Schema3 } from "../model/listAppsSchema";
 import { SetRoleApps200ResponseInner } from "../model/setRoleApps200ResponseInner";
 import { Status1 } from "../model/status1";
 import { Status2 } from "../model/status2";
@@ -85,6 +86,7 @@ import { VerifyFactorSaml200Response } from "../model/verifyFactorSaml200Respons
 import { VerifyFactorSamlRequest } from "../model/verifyFactorSamlRequest";
 import { VerifyFactorVoice200ResponseInner } from "../model/verifyFactorVoice200ResponseInner";
 
+
 import {
   ObjectSerializer,
   Authentication,
@@ -93,6 +95,7 @@ import {
 } from "../model/models";
 
 import { HttpError, RequestFile } from "./apis";
+
 
 let defaultBasePath = "https://onelogininc.onelogin.com";
 
@@ -3998,7 +4001,7 @@ export class DefaultApi {
                 response.statusCode >= 200 &&
                 response.statusCode <= 299
               ) {
-                body = ObjectSerializer.deserialize(body, "Schema");
+                body = ObjectSerializer.deserialize(body, "GetAppSchema");
                 resolve({ response: response, body: body });
               } else {
                 reject(new HttpError(response, body, response.statusCode));
@@ -6681,7 +6684,7 @@ export class DefaultApi {
     connectorId?: number,
     authMethod?: AuthMethod,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: Array<Schema> }> {
+  ): Promise<{ response: http.IncomingMessage; body: Array<Schema3> }> {
     const localVarPath = this.basePath + "/api/2/apps";
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
@@ -6785,7 +6788,7 @@ export class DefaultApi {
       }
       return new Promise<{
         response: http.IncomingMessage;
-        body: Array<Schema>;
+        body: Array<Schema3>;
       }>((resolve, reject) => {
         localVarRequest(localVarRequestOptions, (error, response, body) => {
           if (error) {
@@ -6796,7 +6799,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(body, "Array<Schema>");
+              body = ObjectSerializer.deserialize(body, "Array<Schema3>");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
