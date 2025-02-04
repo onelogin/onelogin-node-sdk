@@ -25,14 +25,7 @@ export class Action {
     * A regular expression to extract a value. Applies to provisionable, multi-selects, and string actions.
     */
     'expression'?: string;
-    /**
-    * A hash containing scriptlet code that returns a value.
-    */
-    'scriplet'?: string;
-    /**
-    * A template to construct a value. Applies to default, string, and list actions.
-    */
-    'macro'?: string;
+
 
     static discriminator: string | undefined = undefined;
 
@@ -52,16 +45,7 @@ export class Action {
             "baseName": "expression",
             "type": "string"
         },
-        {
-            "name": "scriplet",
-            "baseName": "scriplet",
-            "type": "string"
-        },
-        {
-            "name": "macro",
-            "baseName": "macro",
-            "type": "string"
-        }    ];
+    ];
 
     static getAttributeTypeMap() {
         return Action.attributeTypeMap;
