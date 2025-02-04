@@ -17,6 +17,7 @@ export class SchemaProvisioning {
     * Indicates if provisioning is enabled for this app.
     */
     'enabled'?: boolean;
+    'status'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -25,7 +26,12 @@ export class SchemaProvisioning {
             "name": "enabled",
             "baseName": "enabled",
             "type": "boolean"
-        }    ];
+        },
+        {
+            "name": "status",
+            "baseName": "status",
+            "type": "string"
+        } ];
 
     static getAttributeTypeMap() {
         return SchemaProvisioning.attributeTypeMap;
