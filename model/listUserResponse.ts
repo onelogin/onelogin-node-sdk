@@ -12,7 +12,7 @@
 
 import { RequestFile } from "./models";
 
-export class User {
+export class listUserResponse {
   "id"?: number;
   /**
    * A username for the user.
@@ -31,51 +31,19 @@ export class User {
    */
   "lastname"?: string;
   /**
-   * The user\'s job title.
-   */
-  "title"?: string;
-  /**
-   * The user\'s department.
-   */
-  "department"?: string;
-  /**
-   * The user\'s company.
-   */
-  "company"?: string;
-  /**
-   * Free text related to the user.
-   */
-  "comment"?: string;
-  /**
    * The ID of the Group in OneLogin that the user is assigned to.
    */
   "groupId"?: number;
-  /**
-   * A list of OneLogin Role IDs of the user
-   */
-  "roleIds"?: Array<number>;
-  /**
-   * The E.164 format phone number for a user.
-   */
-  "phone"?: string;
-  "state"?: User.StateEnum;
-  "status"?: User.StatusEnum;
   /**
    * The ID of the OneLogin Directory of the user.
    */
   "directoryId"?: number;
   /**
-   * The ID of the OneLogin Trusted IDP of the user.
+   * The E.164 format phone number for a user.
    */
-  "trustedIdpId"?: number;
-  /**
-   * The ID of the user\'s manager in Active Directory.
-   */
-  "managerAdId"?: string;
-  /**
-   * The OneLogin User ID for the user\'s manager.
-   */
-  "managerUserId"?: string;
+  "phone"?: string;
+  "state"?: listUserResponse.StateEnum;
+  "status"?: listUserResponse.StatusEnum;
   /**
    * The user\'s Active Directory username.
    */
@@ -84,10 +52,6 @@ export class User {
    * The user\'s directory membership.
    */
   "memberOf"?: string;
-  /**
-   * The principle name of the user.
-   */
-  "userprincipalname"?: string;
   /**
    * The distinguished name of the user.
    */
@@ -100,9 +64,7 @@ export class User {
   "lastLogin"?: string;
   "invitationSentAt"?: string;
   "updatedAt"?: string;
-  "preferredLocaleCode"?: string;
   "createdAt"?: string;
-  "customAttributes"?: object;
   "invalidLoginAttempts"?: number;
   "lockedUntil"?: string;
   "passwordChangedAt"?: string;
@@ -140,34 +102,9 @@ export class User {
       type: "string",
     },
     {
-      name: "title",
-      baseName: "title",
-      type: "string",
-    },
-    {
-      name: "department",
-      baseName: "department",
-      type: "string",
-    },
-    {
-      name: "company",
-      baseName: "company",
-      type: "string",
-    },
-    {
-      name: "comment",
-      baseName: "comment",
-      type: "string",
-    },
-    {
       name: "groupId",
       baseName: "group_id",
       type: "number",
-    },
-    {
-      name: "roleIds",
-      baseName: "role_ids",
-      type: "Array<number>",
     },
     {
       name: "phone",
@@ -190,21 +127,6 @@ export class User {
       type: "number",
     },
     {
-      name: "trustedIdpId",
-      baseName: "trusted_idp_id",
-      type: "number",
-    },
-    {
-      name: "managerAdId",
-      baseName: "manager_ad_id",
-      type: "string",
-    },
-    {
-      name: "managerUserId",
-      baseName: "manager_user_id",
-      type: "string",
-    },
-    {
       name: "samaccountName",
       baseName: "samaccount_name",
       type: "string",
@@ -212,11 +134,6 @@ export class User {
     {
       name: "memberOf",
       baseName: "member_of",
-      type: "string",
-    },
-    {
-      name: "userprincipalname",
-      baseName: "userprincipalname",
       type: "string",
     },
     {
@@ -250,19 +167,9 @@ export class User {
       type: "string",
     },
     {
-      name: "preferredLocaleCode",
-      baseName: "preferred_locale_code",
-      type: "string",
-    },
-    {
       name: "createdAt",
       baseName: "created_at",
       type: "string",
-    },
-    {
-      name: "customAttributes",
-      baseName: "custom_attributes",
-      type: "object",
     },
     {
       name: "invalidLoginAttempts",
@@ -282,11 +189,11 @@ export class User {
   ];
 
   static getAttributeTypeMap() {
-    return User.attributeTypeMap;
+    return listUserResponse.attributeTypeMap;
   }
 }
 
-export namespace User {
+export namespace listUserResponse {
   export enum StateEnum {
     NUMBER_0 = <any>0,
     NUMBER_1 = <any>1,

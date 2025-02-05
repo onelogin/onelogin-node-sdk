@@ -86,7 +86,6 @@ import { VerifyFactorSaml200Response } from "../model/verifyFactorSaml200Respons
 import { VerifyFactorSamlRequest } from "../model/verifyFactorSamlRequest";
 import { VerifyFactorVoice200ResponseInner } from "../model/verifyFactorVoice200ResponseInner";
 
-
 import {
   ObjectSerializer,
   Authentication,
@@ -95,7 +94,8 @@ import {
 } from "../model/models";
 
 import { HttpError, RequestFile } from "./apis";
-
+import { RoleAppResponse } from "../model/RoleAppResponse";
+import { listUserResponse } from "../model/listUserResponse";
 
 let defaultBasePath = "https://onelogininc.onelogin.com";
 
@@ -5470,7 +5470,7 @@ export class DefaultApi {
     cursor?: string,
     assigned?: boolean,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: Array<Schema> }> {
+  ): Promise<{ response: http.IncomingMessage; body: Array<RoleAppResponse> }> {
     const localVarPath =
       this.basePath +
       "/api/2/roles/{role_id}/apps".replace(
@@ -5572,7 +5572,7 @@ export class DefaultApi {
       }
       return new Promise<{
         response: http.IncomingMessage;
-        body: Array<Schema>;
+        body: Array<RoleAppResponse>;
       }>((resolve, reject) => {
         localVarRequest(localVarRequestOptions, (error, response, body) => {
           if (error) {
@@ -5583,7 +5583,10 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(body, "Array<Schema>");
+              body = ObjectSerializer.deserialize(
+                body,
+                "Array<RoleAppResponse>"
+              );
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -8810,7 +8813,10 @@ export class DefaultApi {
     customAttributesAttributeName?: string,
     fields?: string,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: Array<User> }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: Array<listUserResponse>;
+  }> {
     const localVarPath = this.basePath + "/api/2/users";
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
@@ -9008,26 +9014,30 @@ export class DefaultApi {
           localVarRequestOptions.form = localVarFormParams;
         }
       }
-      return new Promise<{ response: http.IncomingMessage; body: Array<User> }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: Array<listUserResponse>;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(
+                body,
+                "Array<listUserResponse>"
+              );
+              resolve({ response: response, body: body });
             } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "Array<User>");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
+              reject(new HttpError(response, body, response.statusCode));
             }
-          });
-        }
-      );
+          }
+        });
+      });
     });
   }
   /**

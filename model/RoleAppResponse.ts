@@ -10,15 +10,19 @@
  * Do not edit the class manually.
  */
 
-import { ListAuthorizationServers200ResponseInnerConfiguration } from "./listAuthorizationServers200ResponseInnerConfiguration";
-import { RequestFile } from "./models";
-
-export class ListAuthorizationServers200ResponseInner {
+export class RoleAppResponse {
+  /**
+   * Apps unique ID in OneLogin.
+   */
   "id"?: number;
+  /**
+   * App name.
+   */
   "name"?: string;
-  "configuration"?: ListAuthorizationServers200ResponseInnerConfiguration;
-  "description"?: string;
-  "onelogin"?: boolean;
+  /**
+   * A link to the apps icon url.
+   */
+  "iconUrl"?: string;
 
   static discriminator: string | undefined = undefined;
 
@@ -38,23 +42,13 @@ export class ListAuthorizationServers200ResponseInner {
       type: "string",
     },
     {
-      name: "onelogin",
-      baseName: "onelogin",
-      type: "boolean",
-    },
-    {
-      name: "configuration",
-      baseName: "configuration",
-      type: "ListAuthorizationServers200ResponseInnerConfiguration",
-    },
-    {
-      name: "description",
-      baseName: "description",
+      name: "iconUrl",
+      baseName: "icon_url",
       type: "string",
     },
   ];
 
   static getAttributeTypeMap() {
-    return ListAuthorizationServers200ResponseInner.attributeTypeMap;
+    return RoleAppResponse.attributeTypeMap;
   }
 }
