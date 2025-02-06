@@ -1683,7 +1683,7 @@ export class DefaultApi {
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{
     response: http.IncomingMessage;
-    body: number;
+    body: CreateRoles201ResponseInner;
   }> {
     const localVarPath = this.basePath + "/api/2/roles";
     let localVarQueryParameters: any = {};
@@ -1745,7 +1745,7 @@ export class DefaultApi {
     return interceptorPromise.then(() => {
       return new Promise<{
         response: http.IncomingMessage;
-        body: number;
+        body: CreateRoles201ResponseInner;
       }>((resolve, reject) => {
         localVarRequest(localVarRequestOptions, (error, response, body) => {
           if (error) {
@@ -1756,7 +1756,10 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(body, "number");
+              body = ObjectSerializer.deserialize(
+                body,
+                "CreateRoles201ResponseInner"
+              );
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
