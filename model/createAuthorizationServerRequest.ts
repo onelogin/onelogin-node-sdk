@@ -16,10 +16,7 @@ import { RequestFile } from "./models";
 export class CreateAuthorizationServerRequest {
   "name"?: string;
   "description"?: string;
-  "resource"?: string;
-  "audiences"?: Array<string>;
-  "access_token_expiration_minutes"?: number;
-  "refresh_token_expiration_minutes"?: number;
+  "configuration"?: AuthServerConfiguration;
 
   static discriminator: string | undefined = undefined;
 
@@ -39,24 +36,9 @@ export class CreateAuthorizationServerRequest {
       type: "string",
     },
     {
-      name: "resource",
-      baseName: "resource",
-      type: "string",
-    },
-    {
-      name: "audiences",
-      baseName: "audiences",
-      type: "Array<string>",
-    },
-    {
-      name: "access_token_expiration_minutes",
-      baseName: "access_token_expiration_minutes",
-      type: "number",
-    },
-    {
-      name: "refresh_token_expiration_minutes",
-      baseName: "refresh_token_expiration_minutes",
-      type: "number",
+      name: "configuration",
+      baseName: "configuration",
+      type: "AuthServerConfiguration",
     },
   ];
 

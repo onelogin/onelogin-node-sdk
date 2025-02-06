@@ -1190,7 +1190,7 @@ export class DefaultApi {
     authorization: string,
     createAuthorizationServerRequest: CreateAuthorizationServerRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: { id: string } }> {
+  ): Promise<{ response: http.IncomingMessage; body: Id }> {
     const localVarPath = this.basePath + "/api/2/api_authorizations";
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
@@ -1204,6 +1204,7 @@ export class DefaultApi {
     } else {
       localVarHeaderParams.Accept = produces.join(",");
     }
+    let localVarFormParams: any = {};
 
     // verify required parameter 'authorization' is not null or undefined
     if (authorization === null || authorization === undefined) {
@@ -1228,7 +1229,9 @@ export class DefaultApi {
     );
     (<any>Object).assign(localVarHeaderParams, options.headers);
 
-    const localVarRequestOptions: localVarRequest.Options = {
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
       method: "POST",
       qs: localVarQueryParameters,
       headers: localVarHeaderParams,
@@ -1237,7 +1240,7 @@ export class DefaultApi {
       json: true,
       body: ObjectSerializer.serialize(
         createAuthorizationServerRequest,
-        "object"
+        "CreateAuthorizationServerRequest"
       ),
     };
 
@@ -1254,27 +1257,33 @@ export class DefaultApi {
     }
 
     return interceptorPromise.then(() => {
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: { id: string };
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(body, "object");
-              resolve({ response: response, body: body });
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{ response: http.IncomingMessage; body: Id }>(
+        (resolve, reject) => {
+          localVarRequest(localVarRequestOptions, (error, response, body) => {
+            if (error) {
+              reject(error);
             } else {
-              reject(new HttpError(response, body, response.statusCode));
+              if (
+                response.statusCode &&
+                response.statusCode >= 200 &&
+                response.statusCode <= 299
+              ) {
+                body = ObjectSerializer.deserialize(body, "Id");
+                resolve({ response: response, body: body });
+              } else {
+                reject(new HttpError(response, body, response.statusCode));
+              }
             }
-          }
-        });
-      });
+          });
+        }
+      );
     });
   }
 
