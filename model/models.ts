@@ -174,6 +174,7 @@ import { Rule } from './rule';
 import { RuleId } from './ruleId';
 import { Schema } from './schema';
 import { Schema1 } from './schema1';
+import { Schema3 } from './listAppsSchema';
 import { Schema1AddedBy } from './schema1AddedBy';
 import { SchemaProvisioning } from './schemaProvisioning';
 import { Session } from './session';
@@ -295,6 +296,7 @@ let typeMap: {[index: string]: any} = {
     "RuleId": RuleId,
     "Schema": Schema,
     "Schema1": Schema1,
+    "Schema3": Schema3,
     "Schema1AddedBy": Schema1AddedBy,
     "SchemaProvisioning": SchemaProvisioning,
     "Session": Session,

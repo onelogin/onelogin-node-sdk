@@ -12,11 +12,15 @@
 
 import { RequestFile } from "./models";
 
-export class GetClientApps200ResponseInnerScopesInner {
-  "description"?: string;
-  "value"?: string;
-  "id"?: number;
-  "inherited"?: boolean;
+export class MappingAction {
+  /**
+   * The action to apply
+   */
+  "action"?: string;
+  /**
+   * Only applicable to provisioned and set_* actions. Items in the array will be a plain text string or valid value for the selected action.
+   */
+  "value"?: Array<string>;
 
   static discriminator: string | undefined = undefined;
 
@@ -26,28 +30,18 @@ export class GetClientApps200ResponseInnerScopesInner {
     type: string;
   }> = [
     {
-      name: "description",
-      baseName: "description",
+      name: "action",
+      baseName: "action",
       type: "string",
     },
     {
       name: "value",
       baseName: "value",
-      type: "string",
-    },
-    {
-      name: "id",
-      baseName: "id",
-      type: "number",
-    },
-    {
-      name: "inherited",
-      baseName: "inherited",
-      type: "boolean",
+      type: "Array<string>",
     },
   ];
 
   static getAttributeTypeMap() {
-    return GetClientApps200ResponseInnerScopesInner.attributeTypeMap;
+    return MappingAction.attributeTypeMap;
   }
 }
