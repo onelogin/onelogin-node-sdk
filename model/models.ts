@@ -195,6 +195,16 @@ import { VerifyFactorRequest } from './verifyFactorRequest';
 import { VerifyFactorSaml200Response } from './verifyFactorSaml200Response';
 import { VerifyFactorSamlRequest } from './verifyFactorSamlRequest';
 import { VerifyFactorVoice200ResponseInner } from './verifyFactorVoice200ResponseInner';
+import { Groups } from './groups';
+import { GroupData } from './groupData';
+import { Pagination } from './pagination';
+import { Data1 } from './data1';
+import { EventTypes } from './eventTypes';
+import { Events } from './events';
+import { Event } from './events1';
+import { Brands } from './brands';
+import { Group } from './group';
+import { Types } from './types';
 
 /* tslint:disable:no-unused-variable */
 let primitives = [
@@ -317,6 +327,16 @@ let typeMap: {[index: string]: any} = {
     "VerifyFactorSaml200Response": VerifyFactorSaml200Response,
     "VerifyFactorSamlRequest": VerifyFactorSamlRequest,
     "VerifyFactorVoice200ResponseInner": VerifyFactorVoice200ResponseInner,
+    "Groups": Groups,
+    "Group": Group,
+    "GroupData": GroupData,
+    "Pagination": Pagination,
+    "Data1": Data1,
+    "Events": Events,
+    "Event": Event,
+    "EventTypes": EventTypes,
+    "Types": Types,
+    "Brands": Brands,
 }
 
 export class ObjectSerializer {
