@@ -202,7 +202,6 @@ import { Data1 } from './data1';
 import { EventTypes } from './eventTypes';
 import { Events } from './events';
 import { Event } from './events1';
-import { Brands } from './brands';
 import { Group } from './group';
 import { Types } from './types';
 
@@ -336,7 +335,6 @@ let typeMap: {[index: string]: any} = {
     "Event": Event,
     "EventTypes": EventTypes,
     "Types": Types,
-    "Brands": Brands,
 }
 
 export class ObjectSerializer {
