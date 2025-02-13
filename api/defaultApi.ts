@@ -1,5 +1,3 @@
-
-
 import localVarRequest from "request";
 import http from "http";
 
@@ -91,10 +89,10 @@ import { EventTypes } from "../model/eventTypes";
 import { Events } from "../model/events";
 import { Event } from "../model/events1";
 import { Group } from "../model/group";
-
+import { GenerateInviteLinkResponse } from "../model/generateInviteLinkResponse";
+import { GenerateSendInviteLinkRequest } from "../model/generateSendInviteLinkRequest";
 
 let defaultBasePath = "https://onelogininc.onelogin.com";
-
 
 export enum DefaultApiApiKeys {}
 
@@ -11728,15 +11726,13 @@ export class DefaultApi {
 
   public async getGroups(
     authorization: string,
-    id ?: number,
+    id?: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{
     response: http.IncomingMessage;
     body: Groups;
   }> {
-    const localVarPath =
-      this.basePath +
-      "/api/1/groups";
+    const localVarPath = this.basePath + "/api/1/groups";
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -11808,10 +11804,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Groups"
-              );
+              body = ObjectSerializer.deserialize(body, "Groups");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -11835,7 +11828,7 @@ export class DefaultApi {
       "/api/1/groups/{id}".replace(
         "{" + "id" + "}",
         encodeURIComponent(String(id))
-      );;
+      );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -11863,8 +11856,6 @@ export class DefaultApi {
         "Required parameter id was null or undefined when calling getGroupById."
       );
     }
-
-   
 
     localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
       authorization,
@@ -11916,10 +11907,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Group"
-              );
+              body = ObjectSerializer.deserialize(body, "Group");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -11937,9 +11925,7 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: EventTypes;
   }> {
-    const localVarPath =
-      this.basePath +
-      "/api/1/events/types";
+    const localVarPath = this.basePath + "/api/1/events/types";
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -11960,7 +11946,6 @@ export class DefaultApi {
         "Required parameter authorization was null or undefined when calling getEventsTypes."
       );
     }
-
 
     localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
       authorization,
@@ -12012,10 +11997,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "EventTypes"
-              );
+              body = ObjectSerializer.deserialize(body, "EventTypes");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -12028,10 +12010,10 @@ export class DefaultApi {
 
   public async getEvents(
     authorization: string,
-    clientId ?: number,
+    clientId?: number,
     createdAt?: string,
     directoryId?: number,
-    eventTypeId?: number [],
+    eventTypeId?: number[],
     resolution?: string,
     since?: string,
     until?: string,
@@ -12041,9 +12023,7 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: Events;
   }> {
-    const localVarPath =
-      this.basePath +
-      "/api/1/events";
+    const localVarPath = this.basePath + "/api/1/events";
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -12086,12 +12066,10 @@ export class DefaultApi {
       );
     }
 
-
     if (eventTypeId !== undefined) {
       const eventTypeIds = eventTypeId.join(",");
       localVarQueryParameters["event_type_id"] = eventTypeIds;
     }
-
 
     if (resolution !== undefined) {
       localVarQueryParameters["resolution"] = ObjectSerializer.serialize(
@@ -12099,7 +12077,6 @@ export class DefaultApi {
         "string"
       );
     }
-
 
     if (since !== undefined) {
       localVarQueryParameters["since"] = ObjectSerializer.serialize(
@@ -12115,14 +12092,12 @@ export class DefaultApi {
       );
     }
 
-
     if (userId !== undefined) {
       localVarQueryParameters["user_id"] = ObjectSerializer.serialize(
         userId,
         "number"
       );
     }
-
 
     localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
       authorization,
@@ -12174,10 +12149,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Events"
-              );
+              body = ObjectSerializer.deserialize(body, "Events");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -12224,9 +12196,11 @@ export class DefaultApi {
     }
 
     if (eventId !== undefined) {
-      localVarQueryParameters["event_id"] = ObjectSerializer.serialize(eventId,"number");
+      localVarQueryParameters["event_id"] = ObjectSerializer.serialize(
+        eventId,
+        "number"
+      );
     }
-
 
     localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
       authorization,
@@ -12278,7 +12252,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(body,"Event");
+              body = ObjectSerializer.deserialize(body, "Event");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -12289,5 +12263,200 @@ export class DefaultApi {
     });
   }
 
-  
+  public async generateInviteLink(
+    authorization: string,
+    email: GenerateSendInviteLinkRequest,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: GenerateInviteLinkResponse;
+  }> {
+    const localVarPath = this.basePath + "/api/1/invites/get_invite_link";
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling generateInviteLink."
+      );
+    }
+
+    // verify required parameter 'email' is not null or undefined
+    if (email === null || email === undefined) {
+      throw new Error(
+        "Required parameter email was null or undefined when calling generateInviteLink."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "POST",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+      body: ObjectSerializer.serialize(email, "GenerateSendInviteLinkRequest"),
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: GenerateInviteLinkResponse;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(
+                body,
+                "GenerateInviteLinkResponse"
+              );
+              resolve({ response: response, body: body });
+            } else {
+              reject(new HttpError(response, body, response.statusCode));
+            }
+          }
+        });
+      });
+    });
+  }
+
+  public async sendInviteLink(
+    authorization: string,
+    email: GenerateSendInviteLinkRequest,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{ response: http.IncomingMessage; body: Status2 }> {
+    const localVarPath = this.basePath + "/api/1/invites/send_invite_link";
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling sendInviteLink."
+      );
+    }
+
+    // verify required parameter 'email' is not null or undefined
+    if (email === null || email === undefined) {
+      throw new Error(
+        "Required parameter email was null or undefined when calling sendInviteLink."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "POST",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+      body: ObjectSerializer.serialize(email, "GenerateSendInviteLinkRequest"),
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{ response: http.IncomingMessage; body: Status2 }>(
+        (resolve, reject) => {
+          localVarRequest(localVarRequestOptions, (error, response, body) => {
+            if (error) {
+              reject(error);
+            } else {
+              if (
+                response.statusCode &&
+                response.statusCode >= 200 &&
+                response.statusCode <= 299
+              ) {
+                body = ObjectSerializer.deserialize(body, "Status2");
+                resolve({ response: response, body: body });
+              } else {
+                reject(new HttpError(response, body, response.statusCode));
+              }
+            }
+          });
+        }
+      );
+    });
+  }
 }

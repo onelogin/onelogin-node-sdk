@@ -1,5 +1,7 @@
 import { Status2Status } from "./status2Status";
-export class Status2 {
+
+export class GenerateInviteLinkResponse {
+  "data": Array<string>;
   "status"?: Status2Status;
 
   static discriminator: string | undefined = undefined;
@@ -10,6 +12,11 @@ export class Status2 {
     type: string;
   }> = [
     {
+      name: "data",
+      baseName: "data",
+      type: "Array<string>",
+    },
+    {
       name: "status",
       baseName: "status",
       type: "Status2Status",
@@ -17,6 +24,6 @@ export class Status2 {
   ];
 
   static getAttributeTypeMap() {
-    return Status2.attributeTypeMap;
+    return GenerateInviteLinkResponse.attributeTypeMap;
   }
 }
