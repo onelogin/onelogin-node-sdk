@@ -77,7 +77,7 @@ import { AccountBrand1 } from "../model/accountBrand1";
 import { AccountBrand } from "../model/accountBrand";
 import { Brand } from "../model/brand";
 import { Brands } from "../model/brands";
-import {LookupCustomMessage} from "../model/lookupCustomMessage";
+import { LookupCustomMessage } from "../model/lookupCustomMessage";
 
 import {
   ObjectSerializer,
@@ -104,12 +104,13 @@ import { StatusMessage } from "../model/statusMessage";
 import { AssignedUsersResponse } from "../model/assignedUserResponse";
 import { AssignUsersRequest } from "../model/assignedUserRequest";
 import { MessageTemplate } from "../model/MessageTemplate";
-import {MessageTemplateSchema} from "../model/messageTemplateSchema";
+import { MessageTemplateSchema } from "../model/messageTemplateSchema";
 import { MessageTemplateType } from "../model/MessageTemplateType";
 import { MessageTemplateSchema1 } from "../model/messageTemplateSchema1";
 import { MessageTemplateSchema2 } from "../model/messageTemplateSchema2";
 import { CustomMessageSchema } from "../model/customMessageSchema";
-
+import { CustomAttributeResponse } from "../model/customAttributeResponse";
+import { CreateCustomAttributeRequest } from "../model/createCustomAttributeRequest";
 
 let defaultBasePath = "https://onelogininc.onelogin.com";
 
@@ -13625,9 +13626,7 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: Array<Brands>;
   }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/branding/brands";
+    const localVarPath = this.basePath + "/api/2/branding/brands";
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -13699,10 +13698,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Array<Brands>"
-              );
+              body = ObjectSerializer.deserialize(body, "Array<Brands>");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -13785,29 +13781,30 @@ export class DefaultApi {
           localVarRequestOptions.form = localVarFormParams;
         }
       }
-      return new Promise<{ response: http.IncomingMessage; body: AccountBrand1 }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: AccountBrand1;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(body, "AccountBrand1");
+              resolve({ response: response, body: body });
             } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "AccountBrand1");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
+              reject(new HttpError(response, body, response.statusCode));
             }
-          });
-        }
-      );
+          }
+        });
+      });
     });
   }
-  
+
   public async getAccountBrand(
     authorization: string,
     brandId: number,
@@ -13844,7 +13841,10 @@ export class DefaultApi {
     }
 
     if (brandId !== undefined) {
-      localVarQueryParameters["brand_id"] = ObjectSerializer.serialize(brandId,"number");
+      localVarQueryParameters["brand_id"] = ObjectSerializer.serialize(
+        brandId,
+        "number"
+      );
     }
 
     localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
@@ -13897,10 +13897,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Brand"
-              );
+              body = ObjectSerializer.deserialize(body, "Brand");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -13909,7 +13906,7 @@ export class DefaultApi {
         });
       });
     });
-  } 
+  }
 
   public async updateAccountBrand(
     authorization: string,
@@ -13996,26 +13993,27 @@ export class DefaultApi {
           localVarRequestOptions.form = localVarFormParams;
         }
       }
-      return new Promise<{ response: http.IncomingMessage; body: AccountBrand1 }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: AccountBrand1;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(body, "AccountBrand1");
+              resolve({ response: response, body: body });
             } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "AccountBrand1");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
+              reject(new HttpError(response, body, response.statusCode));
             }
-          });
-        }
-      );
+          }
+        });
+      });
     });
   }
 
@@ -14025,7 +14023,8 @@ export class DefaultApi {
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
     const localVarPath =
-      this.basePath +"/api/2/branding/brands/{brand_id}".replace(
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}".replace(
         "{" + "brand_id" + "}",
         encodeURIComponent(String(brandId))
       );
@@ -14119,13 +14118,15 @@ export class DefaultApi {
   public async createMessageTemplate(
     authorization: string,
     brandId: number,
-    messageTemplateSchema:MessageTemplateSchema,
+    messageTemplateSchema: MessageTemplateSchema,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplate }> {
-    const localVarPath = this.basePath + "/api/2/branding/brands/{brand_id}/templates".replace(
-      "{" + "brand_id" + "}",
-      encodeURIComponent(String(brandId))
-    );
+    const localVarPath =
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}/templates".replace(
+        "{" + "brand_id" + "}",
+        encodeURIComponent(String(brandId))
+      );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -14176,7 +14177,10 @@ export class DefaultApi {
       uri: localVarPath,
       useQuerystring: this._useQuerystring,
       json: true,
-      body: ObjectSerializer.serialize(messageTemplateSchema, "MessageTemplateSchema"),
+      body: ObjectSerializer.serialize(
+        messageTemplateSchema,
+        "MessageTemplateSchema"
+      ),
     };
 
     let authenticationPromise = Promise.resolve();
@@ -14199,26 +14203,27 @@ export class DefaultApi {
           localVarRequestOptions.form = localVarFormParams;
         }
       }
-      return new Promise<{ response: http.IncomingMessage; body: MessageTemplate }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: MessageTemplate;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(body, "MessageTemplate");
+              resolve({ response: response, body: body });
             } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "MessageTemplate");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
+              reject(new HttpError(response, body, response.statusCode));
             }
-          });
-        }
-      );
+          }
+        });
+      });
     });
   }
 
@@ -14230,10 +14235,12 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: MessageTemplate;
   }> {
-    const localVarPath = this.basePath + "/api/2/branding/brands/{brand_id}/templates".replace(
-      "{" + "brand_id" + "}",
-      encodeURIComponent(String(brandId))
-    );
+    const localVarPath =
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}/templates".replace(
+        "{" + "brand_id" + "}",
+        encodeURIComponent(String(brandId))
+      );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -14305,10 +14312,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "MessageTemplate"
-              );
+              body = ObjectSerializer.deserialize(body, "MessageTemplate");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -14328,13 +14332,14 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: MessageTemplate;
   }> {
-    const localVarPath = this.basePath + "/api/2/branding/brands/{brand_id}/templates/{template_id}".replace(
-      "{" + "brand_id" + "}",
-      encodeURIComponent(String(brandId))
-    ).replace(
-      "{" + "template_id" + "}",
-      encodeURIComponent(String(templateId))
-    );
+    const localVarPath =
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}/templates/{template_id}"
+        .replace("{" + "brand_id" + "}", encodeURIComponent(String(brandId)))
+        .replace(
+          "{" + "template_id" + "}",
+          encodeURIComponent(String(templateId))
+        );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -14406,10 +14411,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "MessageTemplate"
-              );
+              body = ObjectSerializer.deserialize(body, "MessageTemplate");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -14429,13 +14431,14 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: MessageTemplateType;
   }> {
-    const localVarPath = this.basePath + "/api/2/branding/brands/{brand_id}/templates/{template_type}".replace(
-      "{" + "brand_id" + "}",
-      encodeURIComponent(String(brandId))
-    ).replace(
-      "{" + "template_type" + "}",
-      encodeURIComponent(String(templateType))
-    );;
+    const localVarPath =
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}/templates/{template_type}"
+        .replace("{" + "brand_id" + "}", encodeURIComponent(String(brandId)))
+        .replace(
+          "{" + "template_type" + "}",
+          encodeURIComponent(String(templateType))
+        );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -14507,10 +14510,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "MessageTemplateType"
-              );
+              body = ObjectSerializer.deserialize(body, "MessageTemplateType");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -14531,16 +14531,15 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: MessageTemplate;
   }> {
-    const localVarPath = this.basePath + "/api/2/branding/brands/{brand_id}/templates/{template_type}/{locale}".replace(
-      "{" + "brand_id" + "}",
-      encodeURIComponent(String(brandId))
-    ).replace(
-      "{" + "template_type" + "}",
-      encodeURIComponent(String(templateType))
-    ).replace(
-      "{" + "locale" + "}",
-      encodeURIComponent(String(locale))
-    );
+    const localVarPath =
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}/templates/{template_type}/{locale}"
+        .replace("{" + "brand_id" + "}", encodeURIComponent(String(brandId)))
+        .replace(
+          "{" + "template_type" + "}",
+          encodeURIComponent(String(templateType))
+        )
+        .replace("{" + "locale" + "}", encodeURIComponent(String(locale)));
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -14612,10 +14611,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "MessageTemplate"
-              );
+              body = ObjectSerializer.deserialize(body, "MessageTemplate");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -14634,10 +14630,12 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: MessageTemplate;
   }> {
-    const localVarPath = this.basePath + "/api/2/branding/brands/master/templates/{template_type}".replace(
-      "{" + "template_type" + "}",
-      encodeURIComponent(String(templateType))
-    );
+    const localVarPath =
+      this.basePath +
+      "/api/2/branding/brands/master/templates/{template_type}".replace(
+        "{" + "template_type" + "}",
+        encodeURIComponent(String(templateType))
+      );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -14709,10 +14707,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "MessageTemplate"
-              );
+              body = ObjectSerializer.deserialize(body, "MessageTemplate");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -14732,13 +14727,14 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: MessageTemplate;
   }> {
-    const localVarPath = this.basePath + "/api/2/branding/brands/master/templates/{template_type}/{locale}".replace(
-      "{" + "template_type" + "}",
-      encodeURIComponent(String(templateType))
-    ).replace(
-      "{" + "locale" + "}",
-      encodeURIComponent(String(locale))
-    );
+    const localVarPath =
+      this.basePath +
+      "/api/2/branding/brands/master/templates/{template_type}/{locale}"
+        .replace(
+          "{" + "template_type" + "}",
+          encodeURIComponent(String(templateType))
+        )
+        .replace("{" + "locale" + "}", encodeURIComponent(String(locale)));
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -14810,10 +14806,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "MessageTemplate"
-              );
+              body = ObjectSerializer.deserialize(body, "MessageTemplate");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -14828,18 +14821,17 @@ export class DefaultApi {
     authorization: string,
     brandId: number,
     templateId: number,
-    messageTemplateSchema1 : MessageTemplateSchema1,
+    messageTemplateSchema1: MessageTemplateSchema1,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplate }> {
     const localVarPath =
       this.basePath +
-      "/api/2/branding/brands/{brand_id}/templates/{template_id}".replace(
-      "{" + "brand_id" + "}",
-      encodeURIComponent(String(brandId))
-    ).replace(
-      "{" + "template_id" + "}",
-      encodeURIComponent(String(templateId))
-    );
+      "/api/2/branding/brands/{brand_id}/templates/{template_id}"
+        .replace("{" + "brand_id" + "}", encodeURIComponent(String(brandId)))
+        .replace(
+          "{" + "template_id" + "}",
+          encodeURIComponent(String(templateId))
+        );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -14869,7 +14861,10 @@ export class DefaultApi {
     }
 
     // verify required parameter 'AccountBrand' is not null or undefined
-    if (messageTemplateSchema1 === null || messageTemplateSchema1 === undefined) {
+    if (
+      messageTemplateSchema1 === null ||
+      messageTemplateSchema1 === undefined
+    ) {
       throw new Error(
         "Required parameter MessageTemplateSchema1 was null or undefined when calling updateMessageTemplate."
       );
@@ -14890,7 +14885,10 @@ export class DefaultApi {
       uri: localVarPath,
       useQuerystring: this._useQuerystring,
       json: true,
-      body: ObjectSerializer.serialize(messageTemplateSchema1, "MessageTemplateSchema1"),
+      body: ObjectSerializer.serialize(
+        messageTemplateSchema1,
+        "MessageTemplateSchema1"
+      ),
     };
 
     let authenticationPromise = Promise.resolve();
@@ -14913,47 +14911,47 @@ export class DefaultApi {
           localVarRequestOptions.form = localVarFormParams;
         }
       }
-      return new Promise<{ response: http.IncomingMessage; body: MessageTemplate }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: MessageTemplate;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(body, "MessageTemplate");
+              resolve({ response: response, body: body });
             } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "MessageTemplate");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
+              reject(new HttpError(response, body, response.statusCode));
             }
-          });
-        }
-      );
+          }
+        });
+      });
     });
   }
-  
+
   public async updateMessageTemplateByTypeAndLocale(
     authorization: string,
     brandId: number,
     templateType: string,
     locale: string,
-    messageTemplateSchema2 : MessageTemplateSchema2,
+    messageTemplateSchema2: MessageTemplateSchema2,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplate }> {
-    const localVarPath =this.basePath + "/api/2/branding/brands/{brand_id}/templates/{template_type}/{locale}".replace(
-      "{" + "brand_id" + "}",
-      encodeURIComponent(String(brandId))
-    ).replace(
-      "{" + "template_type" + "}",
-      encodeURIComponent(String(templateType))
-    ).replace(
-      "{" + "locale" + "}",
-      encodeURIComponent(String(locale))
-    );
+    const localVarPath =
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}/templates/{template_type}/{locale}"
+        .replace("{" + "brand_id" + "}", encodeURIComponent(String(brandId)))
+        .replace(
+          "{" + "template_type" + "}",
+          encodeURIComponent(String(templateType))
+        )
+        .replace("{" + "locale" + "}", encodeURIComponent(String(locale)));
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -14983,7 +14981,10 @@ export class DefaultApi {
     }
 
     // verify required parameter 'AccountBrand' is not null or undefined
-    if (messageTemplateSchema2 === null || messageTemplateSchema2 === undefined) {
+    if (
+      messageTemplateSchema2 === null ||
+      messageTemplateSchema2 === undefined
+    ) {
       throw new Error(
         "Required parameter MessageTemplateSchema2 was null or undefined when calling updateMessageTemplate."
       );
@@ -15004,7 +15005,10 @@ export class DefaultApi {
       uri: localVarPath,
       useQuerystring: this._useQuerystring,
       json: true,
-      body: ObjectSerializer.serialize(messageTemplateSchema2, "MessageTemplateSchema2"),
+      body: ObjectSerializer.serialize(
+        messageTemplateSchema2,
+        "MessageTemplateSchema2"
+      ),
     };
 
     let authenticationPromise = Promise.resolve();
@@ -15027,26 +15031,27 @@ export class DefaultApi {
           localVarRequestOptions.form = localVarFormParams;
         }
       }
-      return new Promise<{ response: http.IncomingMessage; body: MessageTemplate }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: MessageTemplate;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(body, "MessageTemplate");
+              resolve({ response: response, body: body });
             } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "MessageTemplate");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
+              reject(new HttpError(response, body, response.statusCode));
             }
-          });
-        }
-      );
+          }
+        });
+      });
     });
   }
 
@@ -15057,14 +15062,13 @@ export class DefaultApi {
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
     const localVarPath =
-    this.basePath +
-    "/api/2/branding/brands/{brand_id}/templates/{template_id}".replace(
-    "{" + "brand_id" + "}",
-    encodeURIComponent(String(brandId))
-  ).replace(
-    "{" + "template_id" + "}",
-    encodeURIComponent(String(templateId))
-  );
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}/templates/{template_id}"
+        .replace("{" + "brand_id" + "}", encodeURIComponent(String(brandId)))
+        .replace(
+          "{" + "template_id" + "}",
+          encodeURIComponent(String(templateId))
+        );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -15093,8 +15097,8 @@ export class DefaultApi {
       );
     }
 
-     // verify required parameter 'appId' is not null or undefined
-     if (templateId === null || templateId === undefined) {
+    // verify required parameter 'appId' is not null or undefined
+    if (templateId === null || templateId === undefined) {
       throw new Error(
         "Required parameter templateId was null or undefined when calling deleteMessageTemplate."
       );
@@ -15161,7 +15165,7 @@ export class DefaultApi {
 
   public async listLanguages(
     authorization: string,
-    brandId : number,
+    brandId: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{
     response: http.IncomingMessage;
@@ -15193,9 +15197,9 @@ export class DefaultApi {
         "Required parameter authorization was null or undefined when calling listAccountBrands."
       );
     }
-    
-     // verify required parameter 'brandId' is not null or undefined
-     if (brandId === null || brandId === undefined) {
+
+    // verify required parameter 'brandId' is not null or undefined
+    if (brandId === null || brandId === undefined) {
       throw new Error(
         "Required parameter brandId was null or undefined when calling deleteMessageTemplate."
       );
@@ -15251,10 +15255,7 @@ export class DefaultApi {
               response.statusCode >= 200 &&
               response.statusCode <= 299
             ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Array<object>"
-              );
+              body = ObjectSerializer.deserialize(body, "Array<object>");
               resolve({ response: response, body: body });
             } else {
               reject(new HttpError(response, body, response.statusCode));
@@ -15291,7 +15292,6 @@ export class DefaultApi {
         "Required parameter authorization was null or undefined when calling LookupCustomMessage."
       );
     }
-
 
     // verify required parameter 'schema' is not null or undefined
     if (lookupR === null || lookupR === undefined) {
@@ -15367,10 +15367,12 @@ export class DefaultApi {
     lookupR?: LookupCustomMessage,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: Array<object> }> {
-    const localVarPath = this.basePath + "/api/2/branding/brands/{brand_id}/custom_error_messages".replace(
-      "{" + "brand_id" + "}",
-      encodeURIComponent(String(brandId))
-    );
+    const localVarPath =
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}/custom_error_messages".replace(
+        "{" + "brand_id" + "}",
+        encodeURIComponent(String(brandId))
+      );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -15430,41 +15432,42 @@ export class DefaultApi {
           localVarRequestOptions.form = localVarFormParams;
         }
       }
-      return new Promise<{ response: http.IncomingMessage; body: Array<object> }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: Array<object>;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(body, "Array<object>");
+              resolve({ response: response, body: body });
             } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "Array<object>");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
+              reject(new HttpError(response, body, response.statusCode));
             }
-          });
-        }
-      );
+          }
+        });
+      });
     });
   }
 
   public async updateCustomMessage(
     authorization: string,
     brandId: number,
-    customMessageSchema : CustomMessageSchema,
+    customMessageSchema: CustomMessageSchema,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: object }> {
     const localVarPath =
       this.basePath +
       "/api/2/branding/brands/{brand_id}/custom_error_messages".replace(
-      "{" + "brand_id" + "}",
-      encodeURIComponent(String(brandId))
-    );
+        "{" + "brand_id" + "}",
+        encodeURIComponent(String(brandId))
+      );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -15515,7 +15518,10 @@ export class DefaultApi {
       uri: localVarPath,
       useQuerystring: this._useQuerystring,
       json: true,
-      body: ObjectSerializer.serialize(customMessageSchema, "CustomMessageSchema"),
+      body: ObjectSerializer.serialize(
+        customMessageSchema,
+        "CustomMessageSchema"
+      ),
     };
 
     let authenticationPromise = Promise.resolve();
@@ -15568,14 +15574,13 @@ export class DefaultApi {
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
     const localVarPath =
-    this.basePath +
-    "/api/2/branding/brands/{brand_id}/custom_error_messages/{message_id}".replace(
-    "{" + "brand_id" + "}",
-    encodeURIComponent(String(brandId))
-  ).replace(
-    "{" + "message_id" + "}",
-    encodeURIComponent(String(messageId))
-  );
+      this.basePath +
+      "/api/2/branding/brands/{brand_id}/custom_error_messages/{message_id}"
+        .replace("{" + "brand_id" + "}", encodeURIComponent(String(brandId)))
+        .replace(
+          "{" + "message_id" + "}",
+          encodeURIComponent(String(messageId))
+        );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
@@ -15604,8 +15609,8 @@ export class DefaultApi {
       );
     }
 
-     // verify required parameter 'appId' is not null or undefined
-     if (messageId === null || messageId === undefined) {
+    // verify required parameter 'appId' is not null or undefined
+    if (messageId === null || messageId === undefined) {
       throw new Error(
         "Required parameter templateId was null or undefined when calling deleteMessageTemplate."
       );
@@ -15670,4 +15675,517 @@ export class DefaultApi {
     });
   }
 
+  public async createCustomAttribute(
+    authorization: string,
+    req: CreateCustomAttributeRequest,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: CustomAttributeResponse;
+  }> {
+    const localVarPath = this.basePath + "/api/2/users/custom_attributes";
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling createCustomAttribute."
+      );
+    }
+
+    if (req === null || req === undefined) {
+      throw new Error(
+        "Required parameter req was null or undefined when calling createCustomAttribute."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "POST",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+      body: ObjectSerializer.serialize(req, "CreateCustomAttributeRequest"),
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: CustomAttributeResponse;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(
+                body,
+                "CustomAttributeResponse"
+              );
+              resolve({ response: response, body: body });
+            } else {
+              reject(new HttpError(response, body, response.statusCode));
+            }
+          }
+        });
+      });
+    });
+  }
+
+  public async listCustomAttribute(
+    authorization: string,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: Array<CustomAttributeResponse>;
+  }> {
+    const localVarPath = this.basePath + "/api/2/users/custom_attributes";
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling listCustomAttribute."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "GET",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: Array<CustomAttributeResponse>;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(
+                body,
+                "Array<CustomAttributeResponse>"
+              );
+              resolve({ response: response, body: body });
+            } else {
+              reject(new HttpError(response, body, response.statusCode));
+            }
+          }
+        });
+      });
+    });
+  }
+
+  public async getCustomAttribute(
+    authorization: string,
+    customId: number,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: CustomAttributeResponse;
+  }> {
+    const localVarPath =
+      this.basePath +
+      "/api/2/users/custom_attributes/{custom_id}".replace(
+        "{" + "custom_id" + "}",
+        encodeURIComponent(String(customId))
+      );
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling getCustomAttribute."
+      );
+    }
+
+    // verify required parameter 'customId' is not null or undefined
+    if (customId === null || customId === undefined) {
+      throw new Error(
+        "Required parameter customId was null or undefined when calling getCustomAttribute."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "GET",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: CustomAttributeResponse;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(
+                body,
+                "CustomAttributeResponse"
+              );
+              resolve({ response: response, body: body });
+            } else {
+              reject(new HttpError(response, body, response.statusCode));
+            }
+          }
+        });
+      });
+    });
+  }
+
+  public async updateCustomAttribute(
+    authorization: string,
+    customId: string,
+    req: CreateCustomAttributeRequest,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: CustomAttributeResponse;
+  }> {
+    const localVarPath =
+      this.basePath +
+      "/api/2/users/custom_attributes/{custom_id}".replace(
+        "{" + "custom_id" + "}",
+        encodeURIComponent(String(customId))
+      );
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling updateCustomAttribute."
+      );
+    }
+
+    if (req === null || req === undefined) {
+      throw new Error(
+        "Required parameter req was null or undefined when calling updateCustomAttribute."
+      );
+    }
+
+    // verify required parameter 'customId' is not null or undefined
+    if (customId === null || customId === undefined) {
+      throw new Error(
+        "Required parameter customId was null or undefined when calling updateCustomAttribute."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "PUT",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+      body: ObjectSerializer.serialize(req, "CreateCustomAttributeRequest"),
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: CustomAttributeResponse;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(
+                body,
+                "CustomAttributeResponse"
+              );
+              resolve({ response: response, body: body });
+            } else {
+              reject(new HttpError(response, body, response.statusCode));
+            }
+          }
+        });
+      });
+    });
+  }
+
+  public async deleteCustomAttribute(
+    authorization: string,
+    customId: number,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{ response: http.IncomingMessage; body: any }> {
+    const localVarPath =
+      this.basePath +
+      "/api/2/users/custom_attributes/{custom_id}".replace(
+        "{" + "custom_id" + "}",
+        encodeURIComponent(String(customId))
+      );
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling deleteCustomAttribute."
+      );
+    }
+
+    // verify required parameter 'customId' is not null or undefined
+    if (customId === null || customId === undefined) {
+      throw new Error(
+        "Required parameter customId was null or undefined when calling deleteCustomAttribute."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "DELETE",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: any;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(body, "any");
+              resolve({ response: response, body: body });
+            } else {
+              reject(new HttpError(response, body, response.statusCode));
+            }
+          }
+        });
+      });
+    });
+  }
 }
