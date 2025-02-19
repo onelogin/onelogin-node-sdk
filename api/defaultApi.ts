@@ -16188,4 +16188,122 @@ export class DefaultApi {
       });
     });
   }
+
+  public async verifyingFactor(
+    authorization: string,
+    userId: number,
+    verifyFactorRequest: VerifyFactorRequest,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: VerifyFactorVoice200ResponseInner;
+  }> {
+    const localVarPath =
+      this.basePath +
+      "/api/2/mfa/users/{user_id}/verifications/".replace(
+        "{" + "user_id" + "}",
+        encodeURIComponent(String(userId))
+      );
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling verifyingFactor."
+      );
+    }
+
+    // verify required parameter 'userId' is not null or undefined
+    if (userId === null || userId === undefined) {
+      throw new Error(
+        "Required parameter userId was null or undefined when calling verifyingFactor."
+      );
+    }
+
+    // verify required parameter 'verifyFactorRequest' is not null or undefined
+    if (verifyFactorRequest === null || verifyFactorRequest === undefined) {
+      throw new Error(
+        "Required parameter verifyFactorRequest was null or undefined when calling verifyingFactor."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "POST",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+      body: ObjectSerializer.serialize(
+        verifyFactorRequest,
+        "VerifyFactorRequest"
+      ),
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: VerifyFactorVoice200ResponseInner;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(
+                body,
+                "VerifyFactorVoice200ResponseInner"
+              );
+              resolve({ response: response, body: body });
+            } else {
+              reject(new HttpError(response, body, response.statusCode));
+            }
+          }
+        });
+      });
+    });
+  }
 }
