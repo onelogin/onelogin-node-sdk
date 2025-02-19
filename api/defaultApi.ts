@@ -3614,13 +3614,19 @@ export class DefaultApi {
    */
   public async generateMfaToken(
     authorization: string,
+    userId: number,
     generateMfaTokenRequest: GenerateMfaTokenRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{
     response: http.IncomingMessage;
     body: GenerateMfaToken200Response;
   }> {
-    const localVarPath = this.basePath + "/api/2/mfa/users/{user_id}/mfa_token";
+    const localVarPath =
+      this.basePath +
+      "/api/1/users/{user_id}/mfa_token".replace(
+        "{" + "user_id" + "}",
+        encodeURIComponent(String(userId))
+      );
     let localVarQueryParameters: any = {};
     let localVarHeaderParams: any = (<any>Object).assign(
       {},
