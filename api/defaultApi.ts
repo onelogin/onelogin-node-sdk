@@ -111,6 +111,11 @@ import { MessageTemplateSchema2 } from "../model/messageTemplateSchema2";
 import { CustomMessageSchema } from "../model/customMessageSchema";
 import { CustomAttributeResponse } from "../model/customAttributeResponse";
 import { CreateCustomAttributeRequest } from "../model/createCustomAttributeRequest";
+import { GenerateSessionLoginTokenRequest } from "../model/generateSessionLoginTokenRequest";
+import { LoginSessionToken } from "../model/loginSessionToken";
+import { VerifyFactorLoginPagesRequest } from "../model/verifyFactorLoginPagesRequest";
+import { VerifyFactorLoginPagesResponse } from "../model/verifyFactorLoginPagesResponse";
+
 
 let defaultBasePath = "https://onelogininc.onelogin.com";
 
@@ -16312,4 +16317,414 @@ export class DefaultApi {
       });
     });
   }
+  public async getAppsToEmbed(
+    authorization: string,
+    token : string,
+    email: string,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: any;
+  }> {
+    const localVarPath =
+      this.basePath +
+      "/client/apps/embed2";
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling getAppsToEmbed."
+      );
+    }
+
+     // verify required parameter 'token' is not null or undefined
+     if (token === null || token === undefined) {
+      throw new Error(
+        "Required parameter token was null or undefined when calling getAppsToEmbed."
+      );
+    }
+
+     // verify required parameter 'email' is not null or undefined
+     if (email === null || email === undefined) {
+      throw new Error(
+        "Required parameter email was null or undefined when calling getAppsToEmbed."
+      );
+    }
+
+    if (token !== undefined) {
+      localVarQueryParameters["token"] = ObjectSerializer.serialize(
+        token,
+        "string"
+      );
+    }
+
+    if (email !== undefined) {
+      localVarQueryParameters["email"] = ObjectSerializer.serialize(
+        email,
+        "string"
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "GET",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{
+        response: http.IncomingMessage;
+        body: any;
+      }>((resolve, reject) => {
+        localVarRequest(localVarRequestOptions, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (
+              response.statusCode &&
+              response.statusCode >= 200 &&
+              response.statusCode <= 299
+            ) {
+              body = ObjectSerializer.deserialize(
+                body,
+                "any"
+              );
+              resolve({ response: response, body: body });
+            } else {
+              reject(new HttpError(response, body, response.statusCode));
+            }
+          }
+        });
+      });
+    });
+  }
+
+  public async createSessionLoginToken(
+    authorization: string,
+    generateSessionLoginTokenRequest:GenerateSessionLoginTokenRequest,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{ response: http.IncomingMessage; body: LoginSessionToken }> {
+    const localVarPath = this.basePath + "/api/1/login/auth";
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling createSessionLoginToken."
+      );
+    }
+
+    // verify required parameter 'schema' is not null or undefined
+    if (generateSessionLoginTokenRequest === null || generateSessionLoginTokenRequest === undefined) {
+      throw new Error(
+        "Required parameter generateSessionLoginTokenRequest was null or undefined when calling createSessionLoginToken."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "POST",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+      body: ObjectSerializer.serialize(generateSessionLoginTokenRequest, "GenerateSessionLoginTokenRequest"),
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{ response: http.IncomingMessage; body: LoginSessionToken }>(
+        (resolve, reject) => {
+          localVarRequest(localVarRequestOptions, (error, response, body) => {
+            if (error) {
+              reject(error);
+            } else {
+              if (
+                response.statusCode &&
+                response.statusCode >= 200 &&
+                response.statusCode <= 299
+              ) {
+                body = ObjectSerializer.deserialize(body, "LoginSessionToken");
+                resolve({ response: response, body: body });
+              } else {
+                reject(new HttpError(response, body, response.statusCode));
+              }
+            }
+          });
+        }
+      );
+    });
+  }
+
+  public async verifyFactorLoginPages(
+    authorization: string,
+    verifyFactorLoginPagesRequest:VerifyFactorLoginPagesRequest,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{ response: http.IncomingMessage; body: VerifyFactorLoginPagesResponse }> {
+    const localVarPath = this.basePath + "/api/1/login/verify_factor";
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling verifyFactorLoginPages."
+      );
+    }
+
+    // verify required parameter 'schema' is not null or undefined
+    if (verifyFactorLoginPagesRequest === null || verifyFactorLoginPagesRequest === undefined) {
+      throw new Error(
+        "Required parameter verifyFactorLoginPagesRequest was null or undefined when calling verifyFactorLoginPages."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "POST",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+      body: ObjectSerializer.serialize(verifyFactorLoginPagesRequest, "VerifyFactorLoginPagesRequest"),
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{ response: http.IncomingMessage; body: VerifyFactorLoginPagesResponse }>(
+        (resolve, reject) => {
+          localVarRequest(localVarRequestOptions, (error, response, body) => {
+            if (error) {
+              reject(error);
+            } else {
+              if (
+                response.statusCode &&
+                response.statusCode >= 200 &&
+                response.statusCode <= 299
+              ) {
+                body = ObjectSerializer.deserialize(body, "VerifyFactorLoginPagesResponse");
+                resolve({ response: response, body: body });
+              } else {
+                reject(new HttpError(response, body, response.statusCode));
+              }
+            }
+          });
+        }
+      );
+    });
+  }
+
+  public async createSession(
+    authorization: string,
+    data:any,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{ response: http.IncomingMessage; body: any }> {
+    const localVarPath = this.basePath + "/session_via_api_token";
+    let localVarQueryParameters: any = {};
+    let localVarHeaderParams: any = (<any>Object).assign(
+      {},
+      this._defaultHeaders
+    );
+    const produces = ["application/json"];
+    // give precedence to 'application/json'
+    if (produces.indexOf("application/json") >= 0) {
+      localVarHeaderParams.Accept = "application/json";
+    } else {
+      localVarHeaderParams.Accept = produces.join(",");
+    }
+    let localVarFormParams: any = {};
+
+    // verify required parameter 'authorization' is not null or undefined
+    if (authorization === null || authorization === undefined) {
+      throw new Error(
+        "Required parameter authorization was null or undefined when calling createSession."
+      );
+    }
+
+    // verify required parameter 'schema' is not null or undefined
+    if (data === null || data === undefined) {
+      throw new Error(
+        "Required parameter data was null or undefined when calling createSession."
+      );
+    }
+
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
+    (<any>Object).assign(localVarHeaderParams, options.headers);
+
+    let localVarUseFormData = false;
+
+    let localVarRequestOptions: localVarRequest.Options = {
+      method: "POST",
+      qs: localVarQueryParameters,
+      headers: localVarHeaderParams,
+      uri: localVarPath,
+      useQuerystring: this._useQuerystring,
+      json: true,
+      body: ObjectSerializer.serialize(data, "any"),
+    };
+
+    let authenticationPromise = Promise.resolve();
+    authenticationPromise = authenticationPromise.then(() =>
+      this.authentications.default.applyToRequest(localVarRequestOptions)
+    );
+
+    let interceptorPromise = authenticationPromise;
+    for (const interceptor of this.interceptors) {
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
+    }
+
+    return interceptorPromise.then(() => {
+      if (Object.keys(localVarFormParams).length) {
+        if (localVarUseFormData) {
+          (<any>localVarRequestOptions).formData = localVarFormParams;
+        } else {
+          localVarRequestOptions.form = localVarFormParams;
+        }
+      }
+      return new Promise<{ response: http.IncomingMessage; body: any }>(
+        (resolve, reject) => {
+          localVarRequest(localVarRequestOptions, (error, response, body) => {
+            if (error) {
+              reject(error);
+            } else {
+              if (
+                response.statusCode &&
+                response.statusCode >= 200 &&
+                response.statusCode <= 299
+              ) {
+                body = ObjectSerializer.deserialize(body, "any");
+                resolve({ response: response, body: body });
+              } else {
+                reject(new HttpError(response, body, response.statusCode));
+              }
+            }
+          });
+        }
+      );
+    });
+  }
+  
 }
