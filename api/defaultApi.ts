@@ -116,7 +116,6 @@ import { LoginSessionToken } from "../model/loginSessionToken";
 import { VerifyFactorLoginPagesRequest } from "../model/verifyFactorLoginPagesRequest";
 import { VerifyFactorLoginPagesResponse } from "../model/verifyFactorLoginPagesResponse";
 
-
 let defaultBasePath = "https://onelogininc.onelogin.com";
 
 export enum DefaultApiApiKeys {}
@@ -190,15 +189,25 @@ export class DefaultApi {
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: T }> {
     const localVarPath = this.basePath + path;
-    let localVarHeaderParams: any = { ...this._defaultHeaders, ...options.headers };
+    let localVarHeaderParams: any = {
+      ...this._defaultHeaders,
+      ...options.headers,
+    };
     const produces = ["application/json"];
-    localVarHeaderParams.Accept = produces.includes("application/json") ? "application/json" : produces.join(",");
+    localVarHeaderParams.Accept = produces.includes("application/json")
+      ? "application/json"
+      : produces.join(",");
 
     if (!authorization) {
-      throw new Error(`Required parameter authorization was null or undefined when calling ${path}.`);
+      throw new Error(
+        `Required parameter authorization was null or undefined when calling ${path}.`
+      );
     }
 
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(authorization, "string");
+    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+      authorization,
+      "string"
+    );
 
     let localVarRequestOptions: localVarRequest.Options = {
       method,
@@ -207,7 +216,9 @@ export class DefaultApi {
       uri: localVarPath,
       useQuerystring: this._useQuerystring,
       json: true,
-      body: body ? ObjectSerializer.serialize(body, body.constructor.name) : undefined,
+      body: body
+        ? ObjectSerializer.serialize(body, body?.constructor?.name)
+        : undefined,
     };
 
     let authenticationPromise = Promise.resolve();
@@ -217,24 +228,35 @@ export class DefaultApi {
 
     let interceptorPromise = authenticationPromise;
     for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() => interceptor(localVarRequestOptions));
+      interceptorPromise = interceptorPromise.then(() =>
+        interceptor(localVarRequestOptions)
+      );
     }
 
     return interceptorPromise.then(() => {
-      return new Promise<{ response: http.IncomingMessage; body: T }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-              body = ObjectSerializer.deserialize(body, body.constructor.name);
-              resolve({ response, body });
+      return new Promise<{ response: http.IncomingMessage; body: T }>(
+        (resolve, reject) => {
+          localVarRequest(localVarRequestOptions, (error, response, body) => {
+            if (error) {
+              reject(error);
             } else {
-              reject(new HttpError(response, body, response.statusCode));
+              if (
+                response.statusCode &&
+                response.statusCode >= 200 &&
+                response.statusCode <= 299
+              ) {
+                body = ObjectSerializer.deserialize(
+                  body,
+                  body?.constructor?.name
+                );
+                resolve({ response, body });
+              } else {
+                reject(new HttpError(response, body, response.statusCode));
+              }
             }
-          }
-        });
-      });
+          });
+        }
+      );
     });
   }
 
@@ -365,113 +387,16 @@ export class DefaultApi {
     addAccessTokenClaimRequest: AddAccessTokenClaimRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: Id }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/claims".replace(
-        "{" + "id" + "}",
-        encodeURIComponent(String(id))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling addAccessTokenClaim."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling addAccessTokenClaim."
-      );
-    }
-
-    // verify required parameter 'addAccessTokenClaimRequest' is not null or undefined
-    if (
-      addAccessTokenClaimRequest === null ||
-      addAccessTokenClaimRequest === undefined
-    ) {
-      throw new Error(
-        "Required parameter addAccessTokenClaimRequest was null or undefined when calling addAccessTokenClaim."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Id>(
+      "POST",
+      `/api/2/api_authorizations/${encodeURIComponent(id)}/claims`,
       authorization,
-      "string"
+      addAccessTokenClaimRequest,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "POST",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(
-        addAccessTokenClaimRequest,
-        "AddAccessTokenClaimRequest"
-      ),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: Id }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "Id");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -484,110 +409,16 @@ export class DefaultApi {
     addClientAppRequest: AddClientAppRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: ClientApp }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/clients".replace(
-        "{" + "id" + "}",
-        encodeURIComponent(String(id))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling addClientApp."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling addClientApp."
-      );
-    }
-
-    // verify required parameter 'addClientAppRequest' is not null or undefined
-    if (addClientAppRequest === null || addClientAppRequest === undefined) {
-      throw new Error(
-        "Required parameter addClientAppRequest was null or undefined when calling addClientApp."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<ClientApp>(
+      "POST",
+      `/api/2/api_authorizations/${encodeURIComponent(id)}/clients`,
       authorization,
-      "string"
+      ObjectSerializer.serialize(addClientAppRequest, "AddClientAppRequest"),
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "POST",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(
-        addClientAppRequest,
-        "AddClientAppRequest"
-      ),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: ClientApp }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "ClientApp");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -840,107 +671,16 @@ export class DefaultApi {
     addScopeRequest: AddScopeRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: Id }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/scopes".replace(
-        "{" + "id" + "}",
-        encodeURIComponent(String(id))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling addScope."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling addScope."
-      );
-    }
-
-    // verify required parameter 'addScopeRequest' is not null or undefined
-    if (addScopeRequest === null || addScopeRequest === undefined) {
-      throw new Error(
-        "Required parameter addScopeRequest was null or undefined when calling addScope."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Id>(
+      "POST",
+      `/api/2/api_authorizations/${encodeURIComponent(id)}/scopes`,
       authorization,
-      "string"
+      addScopeRequest,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "POST",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(addScopeRequest, "AddScopeRequest"),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: Id }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "Id");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -1264,100 +1004,14 @@ export class DefaultApi {
     createAuthorizationServerRequest: CreateAuthorizationServerRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: Id }> {
-    const localVarPath = this.basePath + "/api/2/api_authorizations";
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling createAuthorizationServer."
-      );
-    }
-
-    // verify required parameter 'createAuthorizationServerRequest' is not null or undefined
-    if (
-      createAuthorizationServerRequest === null ||
-      createAuthorizationServerRequest === undefined
-    ) {
-      throw new Error(
-        "Required parameter createAuthorizationServerRequest was null or undefined when calling createAuthorizationServer."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Id>(
+      "POST",
+      "/api/2/api_authorizations",
       authorization,
-      "string"
+      createAuthorizationServerRequest,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "POST",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(
-        createAuthorizationServerRequest,
-        "CreateAuthorizationServerRequest"
-      ),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: Id }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "Id");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
 
   /**
@@ -1969,109 +1623,21 @@ export class DefaultApi {
     validatePolicy?: boolean,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: User }> {
-    const localVarPath = this.basePath + "/api/2/users";
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling createUser."
-      );
-    }
-
-    // verify required parameter 'user' is not null or undefined
-    if (user === null || user === undefined) {
-      throw new Error(
-        "Required parameter user was null or undefined when calling createUser."
-      );
-    }
-
-    if (mappings !== undefined) {
-      localVarQueryParameters["mappings"] = ObjectSerializer.serialize(
-        mappings,
-        "'async' | 'sync' | 'disabled'"
-      );
-    }
-
-    if (validatePolicy !== undefined) {
-      localVarQueryParameters["validate_policy"] = ObjectSerializer.serialize(
-        validatePolicy,
-        "boolean"
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<User>(
+      "POST",
+      "/api/2/users",
       authorization,
-      "string"
+      user,
+      {
+        ...(mappings !== undefined && { mappings }),
+        ...(validatePolicy !== undefined && {
+          validate_policy: validatePolicy,
+        }),
+      },
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "POST",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(user, "User"),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: User }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "User");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -2084,104 +1650,18 @@ export class DefaultApi {
     claimId: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/claims/{claim_id}"
-        .replace("{" + "id" + "}", encodeURIComponent(String(id)))
-        .replace("{" + "claim_id" + "}", encodeURIComponent(String(claimId)));
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling deleteAccessTokenClaim."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling deleteAccessTokenClaim."
-      );
-    }
-
-    // verify required parameter 'claimId' is not null or undefined
-    if (claimId === null || claimId === undefined) {
-      throw new Error(
-        "Required parameter claimId was null or undefined when calling deleteAccessTokenClaim."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<any>(
+      "DELETE",
+      `/api/2/api_authorizations/${encodeURIComponent(
+        id
+      )}/claims/${encodeURIComponent(claimId)}`,
       authorization,
-      "string"
+      undefined,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "DELETE",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body?: any }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -2407,98 +1887,16 @@ export class DefaultApi {
     id: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}".replace(
-        "{" + "id" + "}",
-        encodeURIComponent(String(id))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling deleteAuthorizationServer."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling deleteAuthorizationServer."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<any>(
+      "DELETE",
+      `/api/2/api_authorizations/${encodeURIComponent(id)}`,
       authorization,
-      "string"
+      undefined,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "DELETE",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body?: any }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -3235,104 +2633,18 @@ export class DefaultApi {
     scopeId: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/scopes/{scope_id}"
-        .replace("{" + "id" + "}", encodeURIComponent(String(id)))
-        .replace("{" + "scope_id" + "}", encodeURIComponent(String(scopeId)));
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling deleteScope."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling deleteScope."
-      );
-    }
-
-    // verify required parameter 'scopeId' is not null or undefined
-    if (scopeId === null || scopeId === undefined) {
-      throw new Error(
-        "Required parameter scopeId was null or undefined when calling deleteScope."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<void>(
+      "DELETE",
+      `/api/2/api_authorizations/${encodeURIComponent(
+        id
+      )}/scopes/${encodeURIComponent(scopeId)}`,
       authorization,
-      "string"
+      undefined,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "DELETE",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body?: any }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -3342,99 +2654,17 @@ export class DefaultApi {
     authorization: string,
     userId: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body?: any }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/users/{user_id}".replace(
-        "{" + "user_id" + "}",
-        encodeURIComponent(String(userId))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling deleteUser."
-      );
-    }
-
-    // verify required parameter 'userId' is not null or undefined
-    if (userId === null || userId === undefined) {
-      throw new Error(
-        "Required parameter userId was null or undefined when calling deleteUser."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+  ): Promise<{ response: http.IncomingMessage; body: any }> {
+    return this.request<any>(
+      "DELETE",
+      `/api/2/users/${encodeURIComponent(String(userId))}`,
       authorization,
-      "string"
+      undefined,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "DELETE",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body?: any }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -4116,103 +3346,16 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: GetAuthorizationServer200Response;
   }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}".replace(
-        "{" + "id" + "}",
-        encodeURIComponent(String(id))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling getAuthorizationServer."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling getAuthorizationServer."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<GetAuthorizationServer200Response>(
+      "GET",
+      `/api/2/api_authorizations/${encodeURIComponent(id)}`,
       authorization,
-      "string"
+      null,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "GET",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: GetAuthorizationServer200Response;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "GetAuthorizationServer200Response"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
+
   /**
    *
    * @param authorization
@@ -4336,103 +3479,16 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: Array<GetClientApps200ResponseInner>;
   }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/clients".replace(
-        "{" + "id" + "}",
-        encodeURIComponent(String(id))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling getClientApps."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling getClientApps."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Array<GetClientApps200ResponseInner>>(
+      "GET",
+      `/api/2/api_authorizations/${encodeURIComponent(id)}/clients`,
       authorization,
-      "string"
+      undefined,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "GET",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: Array<GetClientApps200ResponseInner>;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Array<GetClientApps200ResponseInner>"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
+
   /**
    *
    * @param authorization
@@ -6069,99 +5125,16 @@ export class DefaultApi {
     userId: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: User }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/users/{user_id}".replace(
-        "{" + "user_id" + "}",
-        encodeURIComponent(String(userId))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling getUser."
-      );
-    }
-
-    // verify required parameter 'userId' is not null or undefined
-    if (userId === null || userId === undefined) {
-      throw new Error(
-        "Required parameter userId was null or undefined when calling getUser."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<User>(
+      "GET",
+      `/api/2/users/${encodeURIComponent(String(userId))}`,
       authorization,
-      "string"
+      null,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "GET",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: User }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "User");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -6177,110 +5150,18 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: Array<GetUserApps200ResponseInner>;
   }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/users/{user_id}/apps".replace(
-        "{" + "user_id" + "}",
-        encodeURIComponent(String(userId))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling getUserApps."
-      );
-    }
-
-    // verify required parameter 'userId' is not null or undefined
-    if (userId === null || userId === undefined) {
-      throw new Error(
-        "Required parameter userId was null or undefined when calling getUserApps."
-      );
-    }
-
-    if (ignoreVisibility !== undefined) {
-      localVarQueryParameters["ignore_visibility"] = ObjectSerializer.serialize(
-        ignoreVisibility,
-        "boolean"
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Array<GetUserApps200ResponseInner>>(
+      "GET",
+      `/api/2/users/${encodeURIComponent(String(userId))}/apps`,
       authorization,
-      "string"
+      null,
+      ignoreVisibility !== undefined
+        ? { ignore_visibility: ignoreVisibility }
+        : {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "GET",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: Array<GetUserApps200ResponseInner>;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Array<GetUserApps200ResponseInner>"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
+
   /**
    *
    * @param authorization
@@ -6294,103 +5175,16 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: Array<ListAccessTokenClaims200ResponseInner>;
   }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/claims".replace(
-        "{" + "id" + "}",
-        encodeURIComponent(String(id))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling listAccessTokenClaims."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling listAccessTokenClaims."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Array<ListAccessTokenClaims200ResponseInner>>(
+      "GET",
+      `/api/2/api_authorizations/${encodeURIComponent(id)}/claims`,
       authorization,
-      "string"
+      undefined,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "GET",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: Array<ListAccessTokenClaims200ResponseInner>;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Array<ListAccessTokenClaims200ResponseInner>"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
+
   /**
    *
    * @param authorization
@@ -6914,91 +5708,16 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: Array<ListAuthorizationServers200ResponseInner>;
   }> {
-    const localVarPath = this.basePath + "/api/2/api_authorizations";
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling listAuthorizationServers."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Array<ListAuthorizationServers200ResponseInner>>(
+      "GET",
+      "/api/2/api_authorizations",
       authorization,
-      "string"
+      null,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "GET",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: Array<ListAuthorizationServers200ResponseInner>;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Array<ListAuthorizationServers200ResponseInner>"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
+
   /**
    *
    * @param authorization
@@ -8760,103 +7479,16 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: Array<ListScopes200ResponseInner>;
   }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/scopes".replace(
-        "{" + "id" + "}",
-        encodeURIComponent(String(id))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling listScopes."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling listScopes."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Array<ListScopes200ResponseInner>>(
+      "GET",
+      `/api/2/api_authorizations/${encodeURIComponent(id)}/scopes`,
       authorization,
-      "string"
+      undefined,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "GET",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: Array<ListScopes200ResponseInner>;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Array<ListScopes200ResponseInner>"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
+
   /**
    *
    * @param authorization
@@ -8908,229 +7540,44 @@ export class DefaultApi {
     response: http.IncomingMessage;
     body: Array<listUserResponse>;
   }> {
-    const localVarPath = this.basePath + "/api/2/users";
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
+    const queryParams: Record<string, any> = {};
 
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling listUsers."
-      );
-    }
+    if (limit !== undefined) queryParams["limit"] = limit;
+    if (page !== undefined) queryParams["page"] = page;
+    if (cursor !== undefined) queryParams["cursor"] = cursor;
+    if (createdSince !== undefined) queryParams["created_since"] = createdSince;
+    if (createdUntil !== undefined) queryParams["created_until"] = createdUntil;
+    if (updatedSince !== undefined) queryParams["updated_since"] = updatedSince;
+    if (updatedUntil !== undefined) queryParams["updated_until"] = updatedUntil;
+    if (lastLoginSince !== undefined)
+      queryParams["last_login_since"] = lastLoginSince;
+    if (lastLoginUntil !== undefined)
+      queryParams["last_login_until"] = lastLoginUntil;
+    if (firstname !== undefined) queryParams["firstname"] = firstname;
+    if (lastname !== undefined) queryParams["lastname"] = lastname;
+    if (email !== undefined) queryParams["email"] = email;
+    if (username !== undefined) queryParams["username"] = username;
+    if (samaccountname !== undefined)
+      queryParams["samaccountname"] = samaccountname;
+    if (directoryId !== undefined) queryParams["directory_id"] = directoryId;
+    if (externalId !== undefined) queryParams["external_id"] = externalId;
+    if (appId !== undefined) queryParams["app_id"] = appId;
+    if (userIds !== undefined) queryParams["user_ids"] = userIds;
+    if (customAttributesAttributeName !== undefined)
+      queryParams["custom_attributes.{attribute_name}"] =
+        customAttributesAttributeName;
+    if (fields !== undefined) queryParams["fields"] = fields;
 
-    if (limit !== undefined) {
-      localVarQueryParameters["limit"] = ObjectSerializer.serialize(
-        limit,
-        "number"
-      );
-    }
-
-    if (page !== undefined) {
-      localVarQueryParameters["page"] = ObjectSerializer.serialize(
-        page,
-        "number"
-      );
-    }
-
-    if (cursor !== undefined) {
-      localVarQueryParameters["cursor"] = ObjectSerializer.serialize(
-        cursor,
-        "string"
-      );
-    }
-
-    if (createdSince !== undefined) {
-      localVarQueryParameters["created_since"] = ObjectSerializer.serialize(
-        createdSince,
-        "string"
-      );
-    }
-
-    if (createdUntil !== undefined) {
-      localVarQueryParameters["created_until"] = ObjectSerializer.serialize(
-        createdUntil,
-        "string"
-      );
-    }
-
-    if (updatedSince !== undefined) {
-      localVarQueryParameters["updated_since"] = ObjectSerializer.serialize(
-        updatedSince,
-        "string"
-      );
-    }
-
-    if (updatedUntil !== undefined) {
-      localVarQueryParameters["updated_until"] = ObjectSerializer.serialize(
-        updatedUntil,
-        "string"
-      );
-    }
-
-    if (lastLoginSince !== undefined) {
-      localVarQueryParameters["last_login_since"] = ObjectSerializer.serialize(
-        lastLoginSince,
-        "string"
-      );
-    }
-
-    if (lastLoginUntil !== undefined) {
-      localVarQueryParameters["last_login_until"] = ObjectSerializer.serialize(
-        lastLoginUntil,
-        "string"
-      );
-    }
-
-    if (firstname !== undefined) {
-      localVarQueryParameters["firstname"] = ObjectSerializer.serialize(
-        firstname,
-        "string"
-      );
-    }
-
-    if (lastname !== undefined) {
-      localVarQueryParameters["lastname"] = ObjectSerializer.serialize(
-        lastname,
-        "string"
-      );
-    }
-
-    if (email !== undefined) {
-      localVarQueryParameters["email"] = ObjectSerializer.serialize(
-        email,
-        "string"
-      );
-    }
-
-    if (username !== undefined) {
-      localVarQueryParameters["username"] = ObjectSerializer.serialize(
-        username,
-        "string"
-      );
-    }
-
-    if (samaccountname !== undefined) {
-      localVarQueryParameters["samaccountname"] = ObjectSerializer.serialize(
-        samaccountname,
-        "string"
-      );
-    }
-
-    if (directoryId !== undefined) {
-      localVarQueryParameters["directory_id"] = ObjectSerializer.serialize(
-        directoryId,
-        "string"
-      );
-    }
-
-    if (externalId !== undefined) {
-      localVarQueryParameters["external_id"] = ObjectSerializer.serialize(
-        externalId,
-        "string"
-      );
-    }
-
-    if (appId !== undefined) {
-      localVarQueryParameters["app_id"] = ObjectSerializer.serialize(
-        appId,
-        "string"
-      );
-    }
-
-    if (userIds !== undefined) {
-      localVarQueryParameters["user_ids"] = ObjectSerializer.serialize(
-        userIds,
-        "string"
-      );
-    }
-
-    if (customAttributesAttributeName !== undefined) {
-      localVarQueryParameters["custom_attributes.{attribute_name}"] =
-        ObjectSerializer.serialize(customAttributesAttributeName, "string");
-    }
-
-    if (fields !== undefined) {
-      localVarQueryParameters["fields"] = ObjectSerializer.serialize(
-        fields,
-        "string"
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Array<listUserResponse>>(
+      "GET",
+      "/api/2/users",
       authorization,
-      "string"
+      undefined,
+      queryParams,
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "GET",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: Array<listUserResponse>;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "Array<listUserResponse>"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
+
   /**
    *
    * @param authorization
@@ -9143,107 +7590,18 @@ export class DefaultApi {
     clientAppId: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/clients/{client_app_id}"
-        .replace("{" + "id" + "}", encodeURIComponent(String(id)))
-        .replace(
-          "{" + "client_app_id" + "}",
-          encodeURIComponent(String(clientAppId))
-        );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling removeClientApp."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling removeClientApp."
-      );
-    }
-
-    // verify required parameter 'clientAppId' is not null or undefined
-    if (clientAppId === null || clientAppId === undefined) {
-      throw new Error(
-        "Required parameter clientAppId was null or undefined when calling removeClientApp."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<void>(
+      "DELETE",
+      `/api/2/api_authorizations/${encodeURIComponent(
+        id
+      )}/clients/${encodeURIComponent(clientAppId)}`,
       authorization,
-      "string"
+      undefined,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "DELETE",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body?: any }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -9775,119 +8133,18 @@ export class DefaultApi {
     addAccessTokenClaimRequest: AddAccessTokenClaimRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: Id }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/claims/{claim_id}"
-        .replace("{" + "id" + "}", encodeURIComponent(String(id)))
-        .replace("{" + "claim_id" + "}", encodeURIComponent(String(claimId)));
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling updateAccessTokenClaim."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling updateAccessTokenClaim."
-      );
-    }
-
-    // verify required parameter 'claimId' is not null or undefined
-    if (claimId === null || claimId === undefined) {
-      throw new Error(
-        "Required parameter claimId was null or undefined when calling updateAccessTokenClaim."
-      );
-    }
-
-    // verify required parameter 'addAccessTokenClaimRequest' is not null or undefined
-    if (
-      addAccessTokenClaimRequest === null ||
-      addAccessTokenClaimRequest === undefined
-    ) {
-      throw new Error(
-        "Required parameter addAccessTokenClaimRequest was null or undefined when calling updateAccessTokenClaim."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Id>(
+      "PUT",
+      `/api/2/api_authorizations/${encodeURIComponent(
+        id
+      )}/claims/${encodeURIComponent(claimId)}`,
       authorization,
-      "string"
+      addAccessTokenClaimRequest,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "PUT",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(
-        addAccessTokenClaimRequest,
-        "AddAccessTokenClaimRequest"
-      ),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: Id }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "Id");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -10013,113 +8270,16 @@ export class DefaultApi {
     createAuthorizationServerRequest: CreateAuthorizationServerRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: Id }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}".replace(
-        "{" + "id" + "}",
-        encodeURIComponent(String(id))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling updateAuthorizationServer."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling updateAuthorizationServer."
-      );
-    }
-
-    // verify required parameter 'createAuthorizationServerRequest' is not null or undefined
-    if (
-      createAuthorizationServerRequest === null ||
-      createAuthorizationServerRequest === undefined
-    ) {
-      throw new Error(
-        "Required parameter createAuthorizationServerRequest was null or undefined when calling updateAuthorizationServer."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Id>(
+      "PUT",
+      `/api/2/api_authorizations/${encodeURIComponent(id)}`,
       authorization,
-      "string"
+      createAuthorizationServerRequest,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "PUT",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(
-        createAuthorizationServerRequest,
-        "CreateAuthorizationServerRequest"
-      ),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: Id }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "Id");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -10134,122 +8294,21 @@ export class DefaultApi {
     updateClientAppRequest: UpdateClientAppRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: ClientApp }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/clients/{client_app_id}"
-        .replace("{" + "id" + "}", encodeURIComponent(String(id)))
-        .replace(
-          "{" + "client_app_id" + "}",
-          encodeURIComponent(String(clientAppId))
-        );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling updateClientApp."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling updateClientApp."
-      );
-    }
-
-    // verify required parameter 'clientAppId' is not null or undefined
-    if (clientAppId === null || clientAppId === undefined) {
-      throw new Error(
-        "Required parameter clientAppId was null or undefined when calling updateClientApp."
-      );
-    }
-
-    // verify required parameter 'updateClientAppRequest' is not null or undefined
-    if (
-      updateClientAppRequest === null ||
-      updateClientAppRequest === undefined
-    ) {
-      throw new Error(
-        "Required parameter updateClientAppRequest was null or undefined when calling updateClientApp."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<ClientApp>(
+      "PUT",
+      `/api/2/api_authorizations/${encodeURIComponent(
+        id
+      )}/clients/${encodeURIComponent(clientAppId)}`,
       authorization,
-      "string"
-    );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "PUT",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(
+      ObjectSerializer.serialize(
         updateClientAppRequest,
         "UpdateClientAppRequest"
       ),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
+      {},
+      options
     );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: ClientApp }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "ClientApp");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -10960,113 +9019,18 @@ export class DefaultApi {
     addScopeRequest: AddScopeRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: Id }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/api_authorizations/{id}/scopes/{scope_id}"
-        .replace("{" + "id" + "}", encodeURIComponent(String(id)))
-        .replace("{" + "scope_id" + "}", encodeURIComponent(String(scopeId)));
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling updateScope."
-      );
-    }
-
-    // verify required parameter 'id' is not null or undefined
-    if (id === null || id === undefined) {
-      throw new Error(
-        "Required parameter id was null or undefined when calling updateScope."
-      );
-    }
-
-    // verify required parameter 'scopeId' is not null or undefined
-    if (scopeId === null || scopeId === undefined) {
-      throw new Error(
-        "Required parameter scopeId was null or undefined when calling updateScope."
-      );
-    }
-
-    // verify required parameter 'addScopeRequest' is not null or undefined
-    if (addScopeRequest === null || addScopeRequest === undefined) {
-      throw new Error(
-        "Required parameter addScopeRequest was null or undefined when calling updateScope."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<Id>(
+      "PUT",
+      `/api/2/api_authorizations/${encodeURIComponent(
+        id
+      )}/scopes/${encodeURIComponent(scopeId)}`,
       authorization,
-      "string"
+      addScopeRequest,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "PUT",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(addScopeRequest, "AddScopeRequest"),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: Id }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "Id");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -11083,121 +9047,21 @@ export class DefaultApi {
     validatePolicy?: boolean,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: User }> {
-    const localVarPath =
-      this.basePath +
-      "/api/2/users/{user_id}".replace(
-        "{" + "user_id" + "}",
-        encodeURIComponent(String(userId))
-      );
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling updateUser."
-      );
-    }
-
-    // verify required parameter 'userId' is not null or undefined
-    if (userId === null || userId === undefined) {
-      throw new Error(
-        "Required parameter userId was null or undefined when calling updateUser."
-      );
-    }
-
-    // verify required parameter 'user' is not null or undefined
-    if (user === null || user === undefined) {
-      throw new Error(
-        "Required parameter user was null or undefined when calling updateUser."
-      );
-    }
-
-    if (mappings !== undefined) {
-      localVarQueryParameters["mappings"] = ObjectSerializer.serialize(
-        mappings,
-        "'async' | 'sync' | 'disabled'"
-      );
-    }
-
-    if (validatePolicy !== undefined) {
-      localVarQueryParameters["validate_policy"] = ObjectSerializer.serialize(
-        validatePolicy,
-        "boolean"
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+    return this.request<User>(
+      "PUT",
+      `/api/2/users/${encodeURIComponent(String(userId))}`,
       authorization,
-      "string"
+      user,
+      {
+        ...(mappings !== undefined && { mappings }),
+        ...(validatePolicy !== undefined && {
+          validate_policy: validatePolicy,
+        }),
+      },
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "PUT",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(user, "User"),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{ response: http.IncomingMessage; body: User }>(
-        (resolve, reject) => {
-          localVarRequest(localVarRequestOptions, (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              if (
-                response.statusCode &&
-                response.statusCode >= 200 &&
-                response.statusCode <= 299
-              ) {
-                body = ObjectSerializer.deserialize(body, "User");
-                resolve({ response: response, body: body });
-              } else {
-                reject(new HttpError(response, body, response.statusCode));
-              }
-            }
-          });
-        }
-      );
-    });
   }
+
   /**
    *
    * @param authorization
@@ -11873,13 +9737,15 @@ export class DefaultApi {
     const queryParameters: any = {};
     if (clientId !== undefined) queryParameters["client_id"] = clientId;
     if (createdAt !== undefined) queryParameters["created_at"] = createdAt;
-    if (directoryId !== undefined) queryParameters["directory_id"] = directoryId;
-    if (eventTypeId !== undefined) queryParameters["event_type_id"] = eventTypeId.join(",");
+    if (directoryId !== undefined)
+      queryParameters["directory_id"] = directoryId;
+    if (eventTypeId !== undefined)
+      queryParameters["event_type_id"] = eventTypeId.join(",");
     if (resolution !== undefined) queryParameters["resolution"] = resolution;
     if (since !== undefined) queryParameters["since"] = since;
     if (until !== undefined) queryParameters["until"] = until;
     if (userId !== undefined) queryParameters["user_id"] = userId;
-  
+
     return this.request<Events>(
       "GET",
       "/api/1/events",
@@ -11909,7 +9775,10 @@ export class DefaultApi {
     authorization: string,
     email: GenerateSendInviteLinkRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: GenerateInviteLinkResponse }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: GenerateInviteLinkResponse;
+  }> {
     return this.request<GenerateInviteLinkResponse>(
       "POST",
       "/api/1/invites/get_invite_link",
@@ -11938,7 +9807,10 @@ export class DefaultApi {
   public async listPrivileges(
     authorization: string,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body?: Array<ListPrivilegeResponse> }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body?: Array<ListPrivilegeResponse>;
+  }> {
     return this.request<Array<ListPrivilegeResponse>>(
       "GET",
       "/api/1/privileges",
@@ -11984,7 +9856,10 @@ export class DefaultApi {
     authorization: string,
     privilegeId: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body?: listPrivilegeArrayResponse }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body?: listPrivilegeArrayResponse;
+  }> {
     return this.request<listPrivilegeArrayResponse>(
       "GET",
       `/api/1/privileges/${encodeURIComponent(String(privilegeId))}`,
@@ -12049,7 +9924,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
     return this.request<any>(
       "DELETE",
-      `/api/1/privileges/${encodeURIComponent(String(privilegeId))}/roles/${encodeURIComponent(String(roleId))}`,
+      `/api/1/privileges/${encodeURIComponent(
+        String(privilegeId)
+      )}/roles/${encodeURIComponent(String(roleId))}`,
       authorization,
       undefined,
       {},
@@ -12096,7 +9973,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
     return this.request<any>(
       "DELETE",
-      `/api/1/privileges/${encodeURIComponent(String(privilegeId))}/users/${encodeURIComponent(String(userId))}`,
+      `/api/1/privileges/${encodeURIComponent(
+        String(privilegeId)
+      )}/users/${encodeURIComponent(String(userId))}`,
       authorization,
       undefined,
       {},
@@ -12218,7 +10097,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplate }> {
     return this.request<MessageTemplate>(
       "GET",
-      `/api/2/branding/brands/${encodeURIComponent(brandId)}/templates/${encodeURIComponent(templateId)}`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        brandId
+      )}/templates/${encodeURIComponent(templateId)}`,
       authorization,
       undefined,
       {},
@@ -12234,7 +10115,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplateType }> {
     return this.request<MessageTemplateType>(
       "GET",
-      `/api/2/branding/brands/${encodeURIComponent(brandId)}/templates/${encodeURIComponent(templateType)}`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        brandId
+      )}/templates/${encodeURIComponent(templateType)}`,
       authorization,
       undefined,
       {},
@@ -12251,7 +10134,11 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplate }> {
     return this.request<MessageTemplate>(
       "GET",
-      `/api/2/branding/brands/${encodeURIComponent(brandId)}/templates/${encodeURIComponent(templateType)}/${encodeURIComponent(locale)}`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        brandId
+      )}/templates/${encodeURIComponent(templateType)}/${encodeURIComponent(
+        locale
+      )}`,
       authorization,
       undefined,
       {},
@@ -12266,7 +10153,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplate }> {
     return this.request<MessageTemplate>(
       "GET",
-      `/api/2/branding/brands/master/templates/${encodeURIComponent(templateType)}`,
+      `/api/2/branding/brands/master/templates/${encodeURIComponent(
+        templateType
+      )}`,
       authorization,
       undefined,
       {},
@@ -12282,7 +10171,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplate }> {
     return this.request<MessageTemplate>(
       "GET",
-      `/api/2/branding/brands/master/templates/${encodeURIComponent(templateType)}/${encodeURIComponent(locale)}`,
+      `/api/2/branding/brands/master/templates/${encodeURIComponent(
+        templateType
+      )}/${encodeURIComponent(locale)}`,
       authorization,
       undefined,
       {},
@@ -12299,7 +10190,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplate }> {
     return this.request<MessageTemplate>(
       "PUT",
-      `/api/2/branding/brands/${encodeURIComponent(brandId)}/templates/${encodeURIComponent(templateId)}`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        brandId
+      )}/templates/${encodeURIComponent(templateId)}`,
       authorization,
       messageTemplateSchema1,
       {},
@@ -12317,7 +10210,11 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: MessageTemplate }> {
     return this.request<MessageTemplate>(
       "PUT",
-      `/api/2/branding/brands/${encodeURIComponent(brandId)}/templates/${encodeURIComponent(templateType)}/${encodeURIComponent(locale)}`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        brandId
+      )}/templates/${encodeURIComponent(templateType)}/${encodeURIComponent(
+        locale
+      )}`,
       authorization,
       messageTemplateSchema2,
       {},
@@ -12333,7 +10230,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
     return this.request<any>(
       "DELETE",
-      `/api/2/branding/brands/${encodeURIComponent(brandId)}/templates/${encodeURIComponent(templateId)}`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        brandId
+      )}/templates/${encodeURIComponent(templateId)}`,
       authorization,
       undefined,
       {},
@@ -12348,7 +10247,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: Array<object> }> {
     return this.request<Array<object>>(
       "GET",
-      `/api/2/branding/brands/${encodeURIComponent(brandId)}/custom_error_messages/languages`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        brandId
+      )}/custom_error_messages/languages`,
       authorization,
       undefined,
       {},
@@ -12379,7 +10280,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: Array<object> }> {
     return this.request<Array<object>>(
       "POST",
-      `/api/2/branding/brands/${encodeURIComponent(brandId)}/custom_error_messages`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        brandId
+      )}/custom_error_messages`,
       authorization,
       lookupR,
       {},
@@ -12395,7 +10298,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body: object }> {
     return this.request<object>(
       "PUT",
-      `/api/2/branding/brands/${encodeURIComponent(String(brandId))}/custom_error_messages`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        String(brandId)
+      )}/custom_error_messages`,
       authorization,
       customMessageSchema,
       {},
@@ -12411,7 +10316,9 @@ export class DefaultApi {
   ): Promise<{ response: http.IncomingMessage; body?: any }> {
     return this.request<any>(
       "DELETE",
-      `/api/2/branding/brands/${encodeURIComponent(String(brandId))}/custom_error_messages/${encodeURIComponent(String(messageId))}`,
+      `/api/2/branding/brands/${encodeURIComponent(
+        String(brandId)
+      )}/custom_error_messages/${encodeURIComponent(String(messageId))}`,
       authorization,
       undefined,
       {},
@@ -12423,7 +10330,10 @@ export class DefaultApi {
     authorization: string,
     req: CreateCustomAttributeRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: CustomAttributeResponse }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: CustomAttributeResponse;
+  }> {
     return this.request<CustomAttributeResponse>(
       "POST",
       "/api/2/users/custom_attributes",
@@ -12437,7 +10347,10 @@ export class DefaultApi {
   public async listCustomAttribute(
     authorization: string,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: Array<CustomAttributeResponse> }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: Array<CustomAttributeResponse>;
+  }> {
     return this.request<Array<CustomAttributeResponse>>(
       "GET",
       "/api/2/users/custom_attributes",
@@ -12452,7 +10365,10 @@ export class DefaultApi {
     authorization: string,
     customId: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: CustomAttributeResponse }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: CustomAttributeResponse;
+  }> {
     return this.request<CustomAttributeResponse>(
       "GET",
       `/api/2/users/custom_attributes/${encodeURIComponent(String(customId))}`,
@@ -12468,7 +10384,10 @@ export class DefaultApi {
     customId: string,
     req: CreateCustomAttributeRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: CustomAttributeResponse }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: CustomAttributeResponse;
+  }> {
     return this.request<CustomAttributeResponse>(
       "PUT",
       `/api/2/users/custom_attributes/${encodeURIComponent(String(customId))}`,
@@ -12499,7 +10418,10 @@ export class DefaultApi {
     userId: number,
     verifyFactorRequest: VerifyFactorRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: VerifyFactorVoice200ResponseInner }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: VerifyFactorVoice200ResponseInner;
+  }> {
     return this.request<VerifyFactorVoice200ResponseInner>(
       "POST",
       `/api/2/mfa/users/${encodeURIComponent(String(userId))}/verifications/`,
@@ -12515,8 +10437,18 @@ export class DefaultApi {
     email: string,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: any }> {
-    const queryParameters = { token: ObjectSerializer.serialize(token, "string"), email: ObjectSerializer.serialize(email, "string") };
-    return this.request<any>("GET", "/client/apps/embed2", authorization, undefined, queryParameters, options);
+    const queryParameters = {
+      token: ObjectSerializer.serialize(token, "string"),
+      email: ObjectSerializer.serialize(email, "string"),
+    };
+    return this.request<any>(
+      "GET",
+      "/client/apps/embed2",
+      authorization,
+      undefined,
+      queryParameters,
+      options
+    );
   }
 
   public async createSessionLoginToken(
@@ -12524,22 +10456,46 @@ export class DefaultApi {
     generateSessionLoginTokenRequest: GenerateSessionLoginTokenRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: LoginSessionToken }> {
-    return this.request<LoginSessionToken>("POST", "/api/1/login/auth", authorization, generateSessionLoginTokenRequest, {}, options);
+    return this.request<LoginSessionToken>(
+      "POST",
+      "/api/1/login/auth",
+      authorization,
+      generateSessionLoginTokenRequest,
+      {},
+      options
+    );
   }
 
   public async verifyFactorLoginPages(
     authorization: string,
     verifyFactorLoginPagesRequest: VerifyFactorLoginPagesRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: VerifyFactorLoginPagesResponse }> {
-    return this.request<VerifyFactorLoginPagesResponse>("POST", "/api/1/login/verify_factor", authorization, verifyFactorLoginPagesRequest, {}, options);
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: VerifyFactorLoginPagesResponse;
+  }> {
+    return this.request<VerifyFactorLoginPagesResponse>(
+      "POST",
+      "/api/1/login/verify_factor",
+      authorization,
+      verifyFactorLoginPagesRequest,
+      {},
+      options
+    );
   }
   public async createSession(
     authorization: string,
     data: any,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: any }> {
-    return this.request<any>("POST", "/session_via_api_token", authorization, data, {}, options);
+    return this.request<any>(
+      "POST",
+      "/session_via_api_token",
+      authorization,
+      data,
+      {},
+      options
+    );
   }
 
   public async runReport(
@@ -12547,16 +10503,29 @@ export class DefaultApi {
     id: number,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: object }> {
-    return this.request<object>("POST", `/api/2/reports/${encodeURIComponent(String(id))}/run`, authorization, undefined, {}, options);
+    return this.request<object>(
+      "POST",
+      `/api/2/reports/${encodeURIComponent(String(id))}/run`,
+      authorization,
+      undefined,
+      {},
+      options
+    );
   }
-  
+
   public async runReportInBackground(
     authorization: string,
     id: number,
     email: string,
     options: { headers: { [name: string]: string } } = { headers: {} }
   ): Promise<{ response: http.IncomingMessage; body: object }> {
-    return this.request<object>("POST", `/api/2/reports/${encodeURIComponent(String(id))}/run_background`, authorization, email, {}, options);
+    return this.request<object>(
+      "POST",
+      `/api/2/reports/${encodeURIComponent(String(id))}/run_background`,
+      authorization,
+      email,
+      {},
+      options
+    );
   }
-
 }
