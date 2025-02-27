@@ -998,105 +998,15 @@ export class DefaultApi {
     authorization: string,
     generateTokenRequest: GenerateTokenRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{
-    response: http.IncomingMessage;
-    body: GenerateToken200Response;
-  }> {
-    const localVarPath = this.basePath + "/auth/oauth2/v2/token";
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling generateToken."
-      );
-    }
-
-    // verify required parameter 'generateTokenRequest' is not null or undefined
-    if (generateTokenRequest === null || generateTokenRequest === undefined) {
-      throw new Error(
-        "Required parameter generateTokenRequest was null or undefined when calling generateToken."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+  ): Promise<{ response: http.IncomingMessage; body: GenerateToken200Response }> {
+    return this.request<GenerateToken200Response>(
+      "POST",
+      "/auth/oauth2/v2/token",
       authorization,
-      "string"
+      generateTokenRequest,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "POST",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(
-        generateTokenRequest,
-        "GenerateTokenRequest"
-      ),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: GenerateToken200Response;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "GenerateToken200Response"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
   /**
    *
@@ -1308,94 +1218,15 @@ export class DefaultApi {
   public async getRateLimit(
     authorization: string,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{
-    response: http.IncomingMessage;
-    body: GetRateLimit200Response;
-  }> {
-    const localVarPath = this.basePath + "/auth/rate_limit";
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling getRateLimit."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+  ): Promise<{ response: http.IncomingMessage; body: GetRateLimit200Response }> {
+    return this.request<GetRateLimit200Response>(
+      "GET",
+      "/auth/rate_limit",
       authorization,
-      "string"
+      undefined, //No Body For GET Request
+      {}, // No QueryParams
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "GET",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: GetRateLimit200Response;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "GetRateLimit200Response"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
   /**
    *
@@ -2417,98 +2248,15 @@ export class DefaultApi {
     authorization: string,
     revokeTokenRequest?: RevokeTokenRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{
-    response: http.IncomingMessage;
-    body: GenerateToken400Response;
-  }> {
-    const localVarPath = this.basePath + "/auth/oauth2/revoke";
-    let localVarQueryParameters: any = {};
-    let localVarHeaderParams: any = (<any>Object).assign(
-      {},
-      this._defaultHeaders
-    );
-    const produces = ["application/json"];
-    // give precedence to 'application/json'
-    if (produces.indexOf("application/json") >= 0) {
-      localVarHeaderParams.Accept = "application/json";
-    } else {
-      localVarHeaderParams.Accept = produces.join(",");
-    }
-    let localVarFormParams: any = {};
-
-    // verify required parameter 'authorization' is not null or undefined
-    if (authorization === null || authorization === undefined) {
-      throw new Error(
-        "Required parameter authorization was null or undefined when calling revokeToken."
-      );
-    }
-
-    localVarHeaderParams["Authorization"] = ObjectSerializer.serialize(
+  ): Promise<{ response: http.IncomingMessage; body: GenerateToken400Response }> {
+    return this.request<GenerateToken400Response>(
+      "POST",
+      "/auth/oauth2/revoke",
       authorization,
-      "string"
+      revokeTokenRequest,
+      {},
+      options
     );
-    (<any>Object).assign(localVarHeaderParams, options.headers);
-
-    let localVarUseFormData = false;
-
-    let localVarRequestOptions: localVarRequest.Options = {
-      method: "POST",
-      qs: localVarQueryParameters,
-      headers: localVarHeaderParams,
-      uri: localVarPath,
-      useQuerystring: this._useQuerystring,
-      json: true,
-      body: ObjectSerializer.serialize(
-        revokeTokenRequest,
-        "RevokeTokenRequest"
-      ),
-    };
-
-    let authenticationPromise = Promise.resolve();
-    authenticationPromise = authenticationPromise.then(() =>
-      this.authentications.default.applyToRequest(localVarRequestOptions)
-    );
-
-    let interceptorPromise = authenticationPromise;
-    for (const interceptor of this.interceptors) {
-      interceptorPromise = interceptorPromise.then(() =>
-        interceptor(localVarRequestOptions)
-      );
-    }
-
-    return interceptorPromise.then(() => {
-      if (Object.keys(localVarFormParams).length) {
-        if (localVarUseFormData) {
-          (<any>localVarRequestOptions).formData = localVarFormParams;
-        } else {
-          localVarRequestOptions.form = localVarFormParams;
-        }
-      }
-      return new Promise<{
-        response: http.IncomingMessage;
-        body: GenerateToken400Response;
-      }>((resolve, reject) => {
-        localVarRequest(localVarRequestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (
-              response.statusCode &&
-              response.statusCode >= 200 &&
-              response.statusCode <= 299
-            ) {
-              body = ObjectSerializer.deserialize(
-                body,
-                "GenerateToken400Response"
-              );
-              resolve({ response: response, body: body });
-            } else {
-              reject(new HttpError(response, body, response.statusCode));
-            }
-          }
-        });
-      });
-    });
   }
   /**
    *
@@ -3299,8 +3047,8 @@ export class DefaultApi {
       "POST",
       "/api/2/branding/brands",
       authorization,
-      accountBrand,
-      {},
+      accountBrand, //Request body of API
+      {}, // Query params of request
       options
     );
   }
