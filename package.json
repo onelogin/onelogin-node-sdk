@@ -1,6 +1,6 @@
 {
     "name": "@onelogin/sdk",
-    "version": "3.0.0-alpha.1",
+    "version": "4.0.0",
     "description": "NodeJS client for @onelogin/sdk",
     "repository": {
         "type": "git",
