@@ -115,6 +115,9 @@ import { GenerateSessionLoginTokenRequest } from "../model/generateSessionLoginT
 import { LoginSessionToken } from "../model/loginSessionToken";
 import { VerifyFactorLoginPagesRequest } from "../model/verifyFactorLoginPagesRequest";
 import { VerifyFactorLoginPagesResponse } from "../model/verifyFactorLoginPagesResponse";
+import { validateUserRequest } from "../model/validateUserRequest";
+import { validateUserResponse } from "../model/validateUserResponse";
+import { verifyMFATokenRequest } from "../model/verifyMFATokenRequest";
 
 let defaultBasePath = "https://onelogininc.onelogin.com";
 
@@ -998,7 +1001,10 @@ export class DefaultApi {
     authorization: string,
     generateTokenRequest: GenerateTokenRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: GenerateToken200Response }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: GenerateToken200Response;
+  }> {
     return this.request<GenerateToken200Response>(
       "POST",
       "/auth/oauth2/v2/token",
@@ -1218,7 +1224,10 @@ export class DefaultApi {
   public async getRateLimit(
     authorization: string,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: GetRateLimit200Response }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: GetRateLimit200Response;
+  }> {
     return this.request<GetRateLimit200Response>(
       "GET",
       "/auth/rate_limit",
@@ -2248,7 +2257,10 @@ export class DefaultApi {
     authorization: string,
     revokeTokenRequest?: RevokeTokenRequest,
     options: { headers: { [name: string]: string } } = { headers: {} }
-  ): Promise<{ response: http.IncomingMessage; body: GenerateToken400Response }> {
+  ): Promise<{
+    response: http.IncomingMessage;
+    body: GenerateToken400Response;
+  }> {
     return this.request<GenerateToken400Response>(
       "POST",
       "/auth/oauth2/revoke",
@@ -3565,6 +3577,36 @@ export class DefaultApi {
       `/api/2/reports/${encodeURIComponent(String(id))}/run_background`,
       authorization,
       email,
+      {},
+      options
+    );
+  }
+
+  public async validateUser(
+    authorization: string,
+    req: validateUserRequest,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{ response: http.IncomingMessage; body: validateUserResponse }> {
+    return this.request<validateUserResponse>(
+      "POST",
+      `/api/2/smart-mfa`,
+      authorization,
+      req,
+      {},
+      options
+    );
+  }
+
+  public async verifyMFAToken(
+    authorization: string,
+    req: verifyMFATokenRequest,
+    options: { headers: { [name: string]: string } } = { headers: {} }
+  ): Promise<{ response: http.IncomingMessage; body: string }> {
+    return this.request<string>(
+      "POST",
+      `/api/2/smart-mfa/verify`,
+      authorization,
+      req,
       {},
       options
     );
