@@ -186,7 +186,8 @@ export class DefaultApi {
     authorization: string,
     body?: any,
     queryParameters: any = {},
-    options: { headers: { [name: string]: string } } = { headers: {} }
+    options: { headers: { [name: string]: string } } = { headers: {} },
+    responseTypeName?: string
   ): Promise<{ response: http.IncomingMessage; body: T }> {
     const localVarPath = this.basePath + path;
     let localVarHeaderParams: any = {
@@ -247,7 +248,7 @@ export class DefaultApi {
               ) {
                 body = ObjectSerializer.deserialize(
                   body,
-                  body?.constructor?.name
+                  responseTypeName || body?.constructor?.name
                 );
                 resolve({ response, body });
               } else {
@@ -301,6 +302,8 @@ export class DefaultApi {
       addAccessTokenClaimRequest,
       {},
       options
+    ,
+    "Id"
     );
   }
 
@@ -323,6 +326,8 @@ export class DefaultApi {
       ObjectSerializer.serialize(addClientAppRequest, "AddClientAppRequest"),
       {},
       options
+    ,
+    "ClientApp"
     );
   }
 
@@ -348,6 +353,8 @@ export class DefaultApi {
       requestBody, // Request body
       undefined, // No query parameters
       options
+    ,
+    "AddRoleUsers200ResponseInner[]"
     );
   }
 
@@ -373,6 +380,8 @@ export class DefaultApi {
       requestBody, // Request body
       undefined, // No query parameters needed
       options
+    ,
+    "AddRoleUsers200ResponseInner[]"
     );
   }
 
@@ -395,6 +404,8 @@ export class DefaultApi {
       addScopeRequest,
       {},
       options
+    ,
+    "Id"
     );
   }
 
@@ -415,6 +426,8 @@ export class DefaultApi {
       requestBody, // Sending requestBody
       {}, // No query parameters
       options
+    ,
+    "Array<number>"
     );
   }
 
@@ -437,6 +450,8 @@ export class DefaultApi {
       requestBody,
       undefined, // No query parameters
       options
+    ,
+    "Array<number>"
     );
   }
 
@@ -457,6 +472,8 @@ export class DefaultApi {
       schema,
       {},
       options
+    ,
+    "Schema"
     );
   }
   /**
@@ -476,6 +493,8 @@ export class DefaultApi {
       createAuthorizationServerRequest,
       {},
       options
+    ,
+    "Id"
     );
   }
 
@@ -496,6 +515,8 @@ export class DefaultApi {
       createEnvironmentVariableRequest,
       {},
       options
+    ,
+    "Envvar"
     );
   }
   /**
@@ -534,6 +555,8 @@ export class DefaultApi {
       mapping, // Body for the POST request
       undefined, // No query parameters
       options
+    ,
+    "number"
     );
   }
 
@@ -575,6 +598,8 @@ export class DefaultApi {
       role,
       {}, // No query parameters
       options
+    ,
+    "CreateRoles201ResponseInner"
     );
   }
 
@@ -597,6 +622,8 @@ export class DefaultApi {
       rule,
       {},
       options
+    ,
+    "RuleId"
     );
   }
   /**
@@ -625,6 +652,8 @@ export class DefaultApi {
         }),
       },
       options
+    ,
+    "User"
     );
   }
 
@@ -813,6 +842,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "RiskRule"
     );
   }
   /**
@@ -879,6 +910,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "void"
     );
   }
 
@@ -921,6 +954,8 @@ export class DefaultApi {
       requestBody, // Body for the request
       undefined, // No query parameters
       options
+    ,
+    "object[]"
     );
   }
 
@@ -943,6 +978,8 @@ export class DefaultApi {
       enrollFactorRequest,
       {},
       options
+    ,
+    "FactorInner"
     );
   }
 
@@ -967,6 +1004,8 @@ export class DefaultApi {
       generateMfaTokenRequest,
       {},
       options
+    ,
+    "GenerateMfaToken200Response"
     );
   }
 
@@ -1006,6 +1045,8 @@ export class DefaultApi {
       generateTokenRequest,
       {},
       options
+    ,
+    "GenerateToken200Response"
     );
   }
   /**
@@ -1025,6 +1066,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Schema"
     );
   }
   /**
@@ -1047,6 +1090,8 @@ export class DefaultApi {
       null,
       {},
       options
+    ,
+    "GetAuthorizationServer200Response"
     );
   }
 
@@ -1070,6 +1115,8 @@ export class DefaultApi {
       undefined, // No request body for GET requests
       {},
       options
+    ,
+    "Array<GetAvailableFactors200ResponseInner>"
     );
   }
 
@@ -1093,6 +1140,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<GetClientApps200ResponseInner>"
     );
   }
 
@@ -1113,6 +1162,8 @@ export class DefaultApi {
       null,
       {},
       options
+    ,
+    "Array<Device>"
     );
   }
 
@@ -1133,6 +1184,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Envvar"
     );
   }
   /**
@@ -1152,6 +1205,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Hook"
     );
   }
   /**
@@ -1189,6 +1244,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "Array<Log>"
     );
   }
   /**
@@ -1208,6 +1265,8 @@ export class DefaultApi {
       undefined, // No body needed for GET request
       undefined, // No query parameters
       options
+    ,
+    "Mapping"
     );
   }
 
@@ -1226,6 +1285,8 @@ export class DefaultApi {
       undefined, //No Body For GET Request
       {}, // No QueryParams
       options
+    ,
+    "GetRateLimit200Response"
     );
   }
   /**
@@ -1267,6 +1328,8 @@ export class DefaultApi {
       getRiskScoreRequest,
       {},
       options
+    ,
+    "GetRiskScore200Response"
     );
   }
   /**
@@ -1286,6 +1349,8 @@ export class DefaultApi {
       undefined, // No request body
       {}, // No query parameters
       options
+    ,
+    "Role"
     );
   }
 
@@ -1322,6 +1387,8 @@ export class DefaultApi {
         include_unassigned: includeUnassigned,
       }, // Query parameters
       options
+    ,
+    "Schema1[]"
     );
   }
 
@@ -1350,6 +1417,8 @@ export class DefaultApi {
       undefined, // No request body
       { limit, page, cursor, assigned }, // Query parameters
       options
+    ,
+    "RoleAppResponse[]"
     );
   }
 
@@ -1386,6 +1455,8 @@ export class DefaultApi {
         include_unassigned: includeUnassigned,
       }, // Query parameters
       options
+    ,
+    "Schema1[]"
     );
   }
 
@@ -1410,6 +1481,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Rule"
     );
   }
   /**
@@ -1438,6 +1511,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "GetScoreInsights200Response"
     );
   }
   /**
@@ -1457,6 +1532,8 @@ export class DefaultApi {
       null,
       {},
       options
+    ,
+    "User"
     );
   }
 
@@ -1484,6 +1561,8 @@ export class DefaultApi {
         ? { ignore_visibility: ignoreVisibility }
         : {},
       options
+    ,
+    "Array<GetUserApps200ResponseInner>"
     );
   }
 
@@ -1507,6 +1586,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<ListAccessTokenClaims200ResponseInner>"
     );
   }
 
@@ -1534,6 +1615,8 @@ export class DefaultApi {
       undefined, // No request body for GET
       undefined, // No query parameters
       options
+    ,
+    "Array<ListConditionValues200ResponseInner>"
     );
   }
 
@@ -1557,6 +1640,8 @@ export class DefaultApi {
       undefined, // No request body for GET
       undefined, // No query parameters
       options
+    ,
+    "Array<ListActions200ResponseInner>"
     );
   }
 
@@ -1591,6 +1676,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "Array<ListAppUsers200ResponseInner>"
     );
   }
   /**
@@ -1629,6 +1716,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "Array<Schema3>"
     );
   }
   /**
@@ -1649,6 +1738,8 @@ export class DefaultApi {
       null,
       {},
       options
+    ,
+    "Array<ListAuthorizationServers200ResponseInner>"
     );
   }
 
@@ -1678,6 +1769,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<ListConditionOperators200ResponseInner>"
     );
   }
   /**
@@ -1704,6 +1797,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<ListConditionValues200ResponseInner>"
     );
   }
   /**
@@ -1726,6 +1821,8 @@ export class DefaultApi {
       undefined, // No request body for GET
       undefined, // No query parameters
       options
+    ,
+    "Array<ListConditions200ResponseInner>"
     );
   }
 
@@ -1761,6 +1858,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "Array<Connector>"
     );
   }
   /**
@@ -1789,6 +1888,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "Array<Envvar>"
     );
   }
   /**
@@ -1817,6 +1918,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "Array<Hook>"
     );
   }
   /**
@@ -1839,6 +1942,8 @@ export class DefaultApi {
       undefined, // No request body for GET
       {}, // No query parameters
       options
+    ,
+    "Array<ListConditionValues200ResponseInner>"
     );
   }
 
@@ -1860,6 +1965,8 @@ export class DefaultApi {
       undefined, // No request body for GET
       {}, // No query parameters
       options
+    ,
+    "Array<ListActions200ResponseInner>"
     );
   }
 
@@ -1885,6 +1992,8 @@ export class DefaultApi {
       undefined, // No request body for GET
       {}, // Empty query parameters
       options
+    ,
+    "Array<ListMappingConditionOperators200ResponseInner>"
     );
   }
 
@@ -1908,6 +2017,8 @@ export class DefaultApi {
       undefined, // No request body for GET
       {}, // Empty query parameters
       options
+    ,
+    "Array<ListConditionValues200ResponseInner>"
     );
   }
 
@@ -1929,6 +2040,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<ListMappingConditions200ResponseInner>"
     );
   }
 
@@ -1963,6 +2076,8 @@ export class DefaultApi {
         has_action_type: hasActionType,
       },
       options
+    ,
+    "Array<Mapping>"
     );
   }
 
@@ -2017,6 +2132,8 @@ export class DefaultApi {
         fields,
       },
       options
+    ,
+    "Array<Role>"
     );
   }
 
@@ -2057,6 +2174,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "Array<Rule>"
     );
   }
   /**
@@ -2079,6 +2198,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<ListScopes200ResponseInner>"
     );
   }
 
@@ -2168,6 +2289,8 @@ export class DefaultApi {
       undefined,
       queryParams,
       options
+    ,
+    "Array<listUserResponse>"
     );
   }
 
@@ -2192,6 +2315,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "void"
     );
   }
 
@@ -2256,6 +2381,8 @@ export class DefaultApi {
       revokeTokenRequest,
       {},
       options
+    ,
+    "GenerateToken400Response"
     );
   }
   /**
@@ -2280,6 +2407,8 @@ export class DefaultApi {
       requestBody, // Request body
       undefined, // No query parameters
       options
+    ,
+    "SetRoleApps200ResponseInner[]"
     );
   }
 
@@ -2325,6 +2454,8 @@ export class DefaultApi {
       addAccessTokenClaimRequest,
       {},
       options
+    ,
+    "Id"
     );
   }
 
@@ -2347,6 +2478,8 @@ export class DefaultApi {
       schema,
       {},
       options
+    ,
+    "Schema"
     );
   }
   /**
@@ -2368,6 +2501,8 @@ export class DefaultApi {
       createAuthorizationServerRequest,
       {},
       options
+    ,
+    "Id"
     );
   }
 
@@ -2397,6 +2532,8 @@ export class DefaultApi {
       ),
       {},
       options
+    ,
+    "ClientApp"
     );
   }
 
@@ -2419,6 +2556,8 @@ export class DefaultApi {
       updateEnvironmentVariableRequest,
       {},
       options
+    ,
+    "Envvar"
     );
   }
   /**
@@ -2440,6 +2579,8 @@ export class DefaultApi {
       hook,
       {},
       options
+    ,
+    "Hook"
     );
   }
   /**
@@ -2461,6 +2602,8 @@ export class DefaultApi {
       mapping, // Body for the PUT request
       undefined, // No query parameters
       options
+    ,
+    "number"
     );
   }
 
@@ -2483,6 +2626,8 @@ export class DefaultApi {
       riskRule,
       {},
       options
+    ,
+    "RiskRule"
     );
   }
   /**
@@ -2504,6 +2649,8 @@ export class DefaultApi {
       role, // Request body
       {}, // No query parameters
       options
+    ,
+    "UpdateRole200Response"
     );
   }
 
@@ -2530,6 +2677,8 @@ export class DefaultApi {
       rule,
       {},
       options
+    ,
+    "RuleId"
     );
   }
   /**
@@ -2555,6 +2704,8 @@ export class DefaultApi {
       addScopeRequest,
       {},
       options
+    ,
+    "Id"
     );
   }
 
@@ -2586,6 +2737,8 @@ export class DefaultApi {
         }),
       },
       options
+    ,
+    "User"
     );
   }
 
@@ -2612,6 +2765,8 @@ export class DefaultApi {
       verifyEnrollmentRequest,
       {},
       options
+    ,
+    "Registration"
     );
   }
 
@@ -2636,6 +2791,8 @@ export class DefaultApi {
       null,
       {},
       options
+    ,
+    "Registration"
     );
   }
 
@@ -2665,6 +2822,8 @@ export class DefaultApi {
       verifyFactorRequest,
       {},
       options
+    ,
+    "VerifyFactorVoice200ResponseInner"
     );
   }
 
@@ -2688,6 +2847,8 @@ export class DefaultApi {
       verifyFactorSamlRequest,
       {},
       options
+    ,
+    "VerifyFactorSaml200Response"
     );
   }
   /**
@@ -2714,6 +2875,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "VerifyFactorVoice200ResponseInner"
     );
   }
 
@@ -2731,6 +2894,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "Groups"
     );
   }
 
@@ -2746,6 +2911,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Group"
     );
   }
 
@@ -2760,6 +2927,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "EventTypes"
     );
   }
 
@@ -2794,6 +2963,8 @@ export class DefaultApi {
       undefined,
       queryParameters,
       options
+    ,
+    "Events"
     );
   }
 
@@ -2809,6 +2980,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Event"
     );
   }
 
@@ -2827,6 +3000,8 @@ export class DefaultApi {
       email,
       {},
       options
+    ,
+    "GenerateInviteLinkResponse"
     );
   }
 
@@ -2842,6 +3017,8 @@ export class DefaultApi {
       email,
       {},
       options
+    ,
+    "Status2"
     );
   }
 
@@ -2859,6 +3036,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<ListPrivilegeResponse>"
     );
   }
 
@@ -2874,6 +3053,8 @@ export class DefaultApi {
       req,
       {},
       options
+    ,
+    "Id"
     );
   }
 
@@ -2890,6 +3071,8 @@ export class DefaultApi {
       req,
       {},
       options
+    ,
+    "Id"
     );
   }
 
@@ -2908,6 +3091,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "listPrivilegeArrayResponse"
     );
   }
 
@@ -2938,6 +3123,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "AssignedRoleResponse"
     );
   }
 
@@ -2954,6 +3141,8 @@ export class DefaultApi {
       req,
       {},
       options
+    ,
+    "StatusMessage"
     );
   }
 
@@ -2987,6 +3176,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "AssignedUsersResponse"
     );
   }
 
@@ -3003,6 +3194,8 @@ export class DefaultApi {
       req,
       {},
       options
+    ,
+    "StatusMessage"
     );
   }
 
@@ -3035,6 +3228,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<Brands>"
     );
   }
 
@@ -3050,6 +3245,8 @@ export class DefaultApi {
       accountBrand, //Request body of API
       {}, // Query params of request
       options
+    ,
+    "AccountBrand1"
     );
   }
 
@@ -3065,6 +3262,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Brand"
     );
   }
 
@@ -3081,6 +3280,8 @@ export class DefaultApi {
       accountBrand,
       {},
       options
+    ,
+    "AccountBrand1"
     );
   }
 
@@ -3112,6 +3313,8 @@ export class DefaultApi {
       messageTemplateSchema,
       {},
       options
+    ,
+    "MessageTemplate"
     );
   }
 
@@ -3127,6 +3330,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "MessageTemplate"
     );
   }
 
@@ -3145,6 +3350,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "MessageTemplate"
     );
   }
 
@@ -3163,6 +3370,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "MessageTemplateType"
     );
   }
 
@@ -3184,6 +3393,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "MessageTemplate"
     );
   }
 
@@ -3201,6 +3412,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "MessageTemplate"
     );
   }
 
@@ -3219,6 +3432,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "MessageTemplate"
     );
   }
 
@@ -3238,6 +3453,8 @@ export class DefaultApi {
       messageTemplateSchema1,
       {},
       options
+    ,
+    "MessageTemplate"
     );
   }
 
@@ -3260,6 +3477,8 @@ export class DefaultApi {
       messageTemplateSchema2,
       {},
       options
+    ,
+    "MessageTemplate"
     );
   }
 
@@ -3295,6 +3514,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<object>"
     );
   }
 
@@ -3310,6 +3531,8 @@ export class DefaultApi {
       lookupR,
       {},
       options
+    ,
+    "object"
     );
   }
 
@@ -3328,6 +3551,8 @@ export class DefaultApi {
       lookupR,
       {},
       options
+    ,
+    "Array<object>"
     );
   }
 
@@ -3346,6 +3571,8 @@ export class DefaultApi {
       customMessageSchema,
       {},
       options
+    ,
+    "object"
     );
   }
 
@@ -3382,6 +3609,8 @@ export class DefaultApi {
       req,
       {},
       options
+    ,
+    "CustomAttributeResponse"
     );
   }
 
@@ -3399,6 +3628,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "Array<CustomAttributeResponse>"
     );
   }
 
@@ -3417,6 +3648,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "CustomAttributeResponse"
     );
   }
 
@@ -3436,6 +3669,8 @@ export class DefaultApi {
       req,
       {},
       options
+    ,
+    "CustomAttributeResponse"
     );
   }
 
@@ -3470,6 +3705,8 @@ export class DefaultApi {
       verifyFactorRequest,
       {},
       options
+    ,
+    "VerifyFactorVoice200ResponseInner"
     );
   }
   public async getAppsToEmbed(
@@ -3504,6 +3741,8 @@ export class DefaultApi {
       generateSessionLoginTokenRequest,
       {},
       options
+    ,
+    "LoginSessionToken"
     );
   }
 
@@ -3522,6 +3761,8 @@ export class DefaultApi {
       verifyFactorLoginPagesRequest,
       {},
       options
+    ,
+    "VerifyFactorLoginPagesResponse"
     );
   }
   public async createSession(
@@ -3551,6 +3792,8 @@ export class DefaultApi {
       undefined,
       {},
       options
+    ,
+    "object"
     );
   }
 
@@ -3567,6 +3810,8 @@ export class DefaultApi {
       email,
       {},
       options
+    ,
+    "object"
     );
   }
 }
