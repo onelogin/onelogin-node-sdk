@@ -15,10 +15,11 @@ const { DefaultApi, GenerateTokenRequest } = require('@onelogin/sdk');
 
 const api = new DefaultApi();
 
-// Generate an access token
+// Step 1: Generate an access token
 const tokenRequest = new GenerateTokenRequest();
 tokenRequest.grantType = 'client_credentials';
 
+// Authorization format: "client_id:{YOUR_CLIENT_ID}, client_secret:{YOUR_CLIENT_SECRET}"
 const authorization = `client_id:${CLIENT_ID}, client_secret:${CLIENT_SECRET}`;
 
 api.generateToken(authorization, tokenRequest, (error, data) => {
@@ -26,13 +27,12 @@ api.generateToken(authorization, tokenRequest, (error, data) => {
     console.error('Error:', error);
   } else {
     const accessToken = data.access_token;
-    console.log('Access Token:', accessToken);
     
-    // Use the token for subsequent API calls
-    const authHeader = `Bearer ${accessToken}`;
+    // Step 2: Use the token for API calls
+    const authHeader = `bearer:${accessToken}`;
     
-    // Example: List users
-    api.listUsers(authHeader, {}, (err, users) => {
+    // Example: List users (first 100)
+    api.listUsers(authHeader, 100, (err, users) => {
       if (err) {
         console.error('Error listing users:', err);
       } else {
