@@ -104,8 +104,11 @@ Please follow the [installation](#installation) instruction and execute the foll
 ```javascript
 var OneLoginApi = require('one_login_api');
 
+// You can use either Client or DefaultApi - they are aliases
+var api = new OneLoginApi.Client()
+// or
+// var api = new OneLoginApi.DefaultApi()
 
-var api = new OneLoginApi.DefaultApi()
 var authorization = "authorization_example"; // {String} 
 var userId = 56; // {Number} Set to the id of the user.
 var activateFactorRequest = new OneLoginApi.ActivateFactorRequest(); // {ActivateFactorRequest} 
