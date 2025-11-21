@@ -51,22 +51,9 @@ The OneLogin API uses OAuth 2.0 for authentication. You'll need:
 2. Generate an access token using the `generateToken` method
 3. Use the token in the `authorization` parameter for subsequent API calls
 
-// You can use either Client or DefaultApi - they are aliases
-var api = new OneLoginApi.Client()
-// or
-// var api = new OneLoginApi.DefaultApi()
+## API Reference
 
-var authorization = "authorization_example"; // {String} 
-var userId = 56; // {Number} Set to the id of the user.
-var activateFactorRequest = new OneLoginApi.ActivateFactorRequest(); // {ActivateFactorRequest} 
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
-};
-api.activateFactor(authorization, userId, activateFactorRequest, callback);
+The SDK provides access to the full OneLogin API v2. Key features include:
 
 - **User Management**: Create, update, delete, and list users
 - **Role Management**: Manage roles and role assignments
