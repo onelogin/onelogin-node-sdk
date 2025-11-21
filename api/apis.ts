@@ -12,3 +12,6 @@ export class HttpError extends Error {
 export { RequestFile } from '../model/models';
 
 export const APIS = [DefaultApi];
+
+// Export Client as an alias to DefaultApi for better compatibility
+export { DefaultApi as Client };
