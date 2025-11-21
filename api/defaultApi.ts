@@ -251,7 +251,15 @@ export class DefaultApi {
                   responseTypeName || body?.constructor?.name
                 );
                 resolve({ response, body });
+              } else if (response.statusCode === 400) {
+                // Handle 400 Bad Request as a successful resolution with error details
+                // This allows callers to handle client errors gracefully without losing state
+                // (e.g., in PKCE flows where a 400 shouldn't clear the code verifier)
+                // Callers can check response.statusCode to detect the error condition
+                // The error information is available in the response body
+                resolve({ response, body });
               } else {
+                // For all other errors (401-599), reject the promise
                 reject(new HttpError(response, body, response.statusCode));
               }
             }
