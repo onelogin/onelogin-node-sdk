@@ -26,25 +26,22 @@ const CLIENT_SECRET = 'your_client_secret_here';
 // Authorization format: "client_id:{CLIENT_ID}, client_secret:{CLIENT_SECRET}"
 const authorization = `client_id:${CLIENT_ID}, client_secret:${CLIENT_SECRET}`;
 
-api.generateToken(authorization, tokenRequest, (error, data) => {
-  if (error) {
-    console.error('Error:', error);
-  } else {
-    const accessToken = data.access_token;
+(async () => {
+  try {
+    // Generate token
+    const tokenResponse = await api.generateToken(authorization, tokenRequest);
+    const accessToken = tokenResponse.body.access_token;
     
     // Step 2: Use the token for API calls
-    const authHeader = `bearer:${accessToken}`;
+    const authHeader = `Bearer ${accessToken}`;
     
     // Example: List users (first 100)
-    api.listUsers(authHeader, 100, (err, users) => {
-      if (err) {
-        console.error('Error listing users:', err);
-      } else {
-        console.log('Users:', users);
-      }
-    });
+    const usersResponse = await api.listUsers(authHeader, 100);
+    console.log('Users:', usersResponse.body);
+  } catch (error) {
+    console.error('Error:', error);
   }
-});
+})();
 ```
 
 ## Authentication
