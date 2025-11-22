@@ -19,7 +19,11 @@ const api = new DefaultApi();
 const tokenRequest = new GenerateTokenRequest();
 tokenRequest.grantType = 'client_credentials';
 
-// Authorization format: "client_id:{YOUR_CLIENT_ID}, client_secret:{YOUR_CLIENT_SECRET}"
+// Replace with your OneLogin API credentials
+const CLIENT_ID = 'your_client_id_here';
+const CLIENT_SECRET = 'your_client_secret_here';
+
+// Authorization format: "client_id:{CLIENT_ID}, client_secret:{CLIENT_SECRET}"
 const authorization = `client_id:${CLIENT_ID}, client_secret:${CLIENT_SECRET}`;
 
 api.generateToken(authorization, tokenRequest, (error, data) => {
