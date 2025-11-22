@@ -11,7 +11,11 @@ npm install @onelogin/sdk
 ## Quick Start
 
 ```javascript
+// CommonJS
 const { DefaultApi, GenerateTokenRequest } = require('@onelogin/sdk');
+
+// ES Module / TypeScript
+// import { DefaultApi, GenerateTokenRequest } from '@onelogin/sdk';
 
 const api = new DefaultApi();
 
@@ -23,7 +27,7 @@ tokenRequest.grantType = 'client_credentials';
 const CLIENT_ID = 'your_client_id_here';
 const CLIENT_SECRET = 'your_client_secret_here';
 
-// Authorization format: "client_id:{CLIENT_ID}, client_secret:{CLIENT_SECRET}"
+// Note: This SDK uses a custom authorization format for the token endpoint
 const authorization = `client_id:${CLIENT_ID}, client_secret:${CLIENT_SECRET}`;
 
 (async () => {
@@ -32,7 +36,7 @@ const authorization = `client_id:${CLIENT_ID}, client_secret:${CLIENT_SECRET}`;
     const tokenResponse = await api.generateToken(authorization, tokenRequest);
     const accessToken = tokenResponse.body.access_token;
     
-    // Step 2: Use the token for API calls
+    // Step 2: Use the token for API calls (standard Bearer format)
     const authHeader = `Bearer ${accessToken}`;
     
     // Example: List users (first 100)
