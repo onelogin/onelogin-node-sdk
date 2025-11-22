@@ -28,7 +28,7 @@ const CLIENT_ID = 'your_client_id_here';
 const CLIENT_SECRET = 'your_client_secret_here';
 
 // Note: This SDK uses a custom authorization format for the token endpoint
-const authorization = `client_id:${CLIENT_ID}, client_secret:${CLIENT_SECRET}`;
+const authorization = `client_id:${CLIENT_ID},client_secret:${CLIENT_SECRET}`;
 
 (async () => {
   try {
@@ -67,7 +67,7 @@ The SDK provides access to the full OneLogin API v2. Key features include:
 - **Authorization Servers**: Configure OAuth/OIDC settings
 - **Risk Management**: Track events and manage risk rules
 
-For complete API documentation, see the [OneLogin API documentation](https://developers.onelogin.com/api-docs/2/getting-started/working-with-api-credentials).
+For complete API documentation, see the [OneLogin API v2 Reference](https://developers.onelogin.com/api-docs/2).
 
 ## Development
 
