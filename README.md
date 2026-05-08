@@ -1,4 +1,6 @@
 # OneLogin Node.js SDK
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fonelogin%2Fonelogin-node-sdk.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fonelogin%2Fonelogin-node-sdk?ref=badge_shield)
+
 
 A TypeScript/JavaScript SDK for the OneLogin API, providing a simple interface to manage users, roles, apps, MFA, and more.
 
@@ -86,3 +88,6 @@ For official OneLogin support, contact [OneLogin Support](https://www.onelogin.c
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fonelogin%2Fonelogin-node-sdk.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fonelogin%2Fonelogin-node-sdk?ref=badge_large)
